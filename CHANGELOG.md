@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.1] - 2025-07-05
+
+### Added
+
+- Support for {asset} and n:asset
+
 ## [1.4.0] - 2025-04-07
 
 ### Added

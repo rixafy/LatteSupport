@@ -63,6 +63,7 @@ public class LatteDefaultConfiguration {
 		loadDefaultNetteApplicationVariables();
 
 		loadDefaultNetteFormsTags();
+		loadDefaultNetteAssetsTags();
 	}
 
 	private void loadDefaultLatteTags() {
@@ -225,6 +226,10 @@ public class LatteDefaultConfiguration {
 		addFormsTag(tag("inputError", LatteTagSettings.Type.UNPAIRED, requiredArgument("name", "string", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.CONTROL, LatteArgumentSettings.Type.PHP_EXPRESSION)));
 		addFormsTag(tag("label", LatteTagSettings.Type.AUTO_EMPTY, requiredArgument("name", "string", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.CONTROL, LatteArgumentSettings.Type.PHP_EXPRESSION)));
 		addFormsTag(tag("name", LatteTagSettings.Type.ATTR_ONLY, requiredArgument("name", "string", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.CONTROL, LatteArgumentSettings.Type.PHP_EXPRESSION)));
+	}
+
+	private void loadDefaultNetteAssetsTags() {
+		addNetteTag(tag("asset", LatteTagSettings.Type.UNPAIRED_ATTR, requiredArgument("name", "string", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.PHP_EXPRESSION)));
 	}
 
 	private void addLatteTag(LatteTagSettings tag) {
