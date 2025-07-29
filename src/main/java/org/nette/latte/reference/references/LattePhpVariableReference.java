@@ -5,7 +5,6 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
 import org.nette.latte.php.LattePhpVariableUtil;
 import org.nette.latte.php.NettePhpType;
-import org.nette.latte.psi.*;
 import org.nette.latte.psi.elements.BaseLattePhpElement;
 import org.nette.latte.utils.LattePhpCachedVariable;
 import org.nette.latte.utils.LatteUtil;

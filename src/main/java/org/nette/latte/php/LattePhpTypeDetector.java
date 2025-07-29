@@ -156,6 +156,16 @@ public class LattePhpTypeDetector {
                 return customFunction == null ? NettePhpType.MIXED : NettePhpType.create(customFunction.getFunctionReturnType());
             }
 
+            // Special handling for enum::cases() method
+            if (name.equals("cases")) {
+                for (PhpClass phpClass : phpClasses) {
+                    if (phpClass.isEnum()) {
+                        // Return array of the enum type instead of UnitEnum[]
+                        return NettePhpType.create(phpClass.getFQN() + "[]");
+                    }
+                }
+            }
+
             List<String> types = new ArrayList<>();
             for (PhpClass phpClass : phpClasses) {
                 for (Method phpMethod : phpClass.getMethods()) {
@@ -224,6 +234,17 @@ public class LattePhpTypeDetector {
 
             List<String> types = new ArrayList<>();
             for (PhpClass phpClass : phpClasses) {
+                // Check for enum cases first
+                if (phpClass.isEnum()) {
+                    for (com.jetbrains.php.lang.psi.elements.PhpEnumCase enumCase : phpClass.getEnumCases()) {
+                        if (enumCase.getName().equals(name)) {
+                            // For enum cases, the type is the enum class itself
+                            types.add(phpClass.getFQN());
+                        }
+                    }
+                }
+
+                // Check for constants
                 for (Field field : phpClass.getFields()) {
                     if (field.isConstant() && field.getModifier().isPublic() && field.getName().equals(name)) {
                         String foundType = field.getType().toString();

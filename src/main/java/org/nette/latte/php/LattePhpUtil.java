@@ -140,6 +140,29 @@ public class LattePhpUtil {
         return fields;
     }
 
+    public static List<PhpEnumCase> getEnumCasesForPhpElement(@NotNull BaseLattePhpElement psiElement, @NotNull Project project) {
+        List<PhpEnumCase> out = new ArrayList<>();
+        NettePhpType phpType = psiElement.getPrevReturnType();
+        String name = psiElement.getPhpElementName();
+
+        Collection<PhpClass> phpClasses = phpType.getPhpClasses(project);
+        if (phpClasses.size() == 0) {
+            return out;
+        }
+
+        List<PhpEnumCase> enumCases = new ArrayList<>();
+        for (PhpClass phpClass : phpClasses) {
+            if (phpClass.isEnum()) {
+                for (PhpEnumCase enumCase : phpClass.getEnumCases()) {
+                    if (enumCase.getName().equals(name)) {
+                        enumCases.add(enumCase);
+                    }
+                }
+            }
+        }
+        return enumCases;
+    }
+
     public static List<Method> getMethodsForPhpElement(@NotNull LattePhpMethod psiElement, Project project) {
         List<Method> out = new ArrayList<>();
         Collection<PhpClass> phpClasses = psiElement.getPrevReturnType().getPhpClasses(project);

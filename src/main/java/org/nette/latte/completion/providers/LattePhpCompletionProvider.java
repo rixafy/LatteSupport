@@ -5,9 +5,9 @@ import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.ProcessingContext;
+import com.jetbrains.php.lang.psi.elements.*;
 import org.nette.latte.completion.handlers.PhpVariableInsertHandler;
 import org.nette.latte.php.NettePhpType;
-import org.nette.latte.psi.*;
 import org.nette.latte.psi.*;
 import org.nette.latte.psi.elements.BaseLattePhpElement;
 import org.nette.latte.utils.LatteTagsUtil;
@@ -16,10 +16,6 @@ import org.nette.latte.utils.LatteUtil;
 import com.jetbrains.php.completion.PhpLookupElement;
 import com.jetbrains.php.completion.insert.PhpFieldInsertHandler;
 import com.jetbrains.php.completion.insert.PhpMethodInsertHandler;
-import com.jetbrains.php.lang.psi.elements.Field;
-import com.jetbrains.php.lang.psi.elements.Method;
-import com.jetbrains.php.lang.psi.elements.PhpClass;
-import com.jetbrains.php.lang.psi.elements.PhpModifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -103,6 +99,14 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 
 		boolean isMagicPrefixed = result.getPrefixMatcher().getPrefix().startsWith("__");
 		for (PhpClass phpClass : phpClasses) {
+			if (isStatic) {
+				for (PhpEnumCase enumCase : phpClass.getEnumCases()) {
+					PhpLookupElement lookupItem = getPhpLookupElement(enumCase, enumCase.getName());
+					lookupItem.handler = PhpFieldInsertHandler.getInstance();
+					result.addElement(lookupItem);
+				}
+			}
+
 			for (Method method : phpClass.getMethods()) {
 				PhpModifier modifier = method.getModifier();
 				if (modifier.isPublic() && canShowCompletionElement(isStatic, modifier)) {

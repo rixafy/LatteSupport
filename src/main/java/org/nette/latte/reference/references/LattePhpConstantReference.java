@@ -9,6 +9,7 @@ import org.nette.latte.psi.elements.BaseLattePhpElement;
 import org.nette.latte.php.LattePhpUtil;
 import com.jetbrains.php.lang.psi.elements.Field;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
+import com.jetbrains.php.lang.psi.elements.PhpEnumCase;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,6 +52,13 @@ public class LattePhpConstantReference extends PsiReferenceBase<PsiElement> impl
             }
         }
 
+        List<PhpEnumCase> enumCases = LattePhpUtil.getEnumCasesForPhpElement((BaseLattePhpElement) getElement(), project);
+        for (PhpEnumCase enumCase : enumCases) {
+            if (enumCase.getName().equals(name)) {
+                results.add(new PsiElementResolveResult(enumCase));
+            }
+        }
+
         return results.toArray(new ResolveResult[0]);
     }
 
@@ -58,7 +66,12 @@ public class LattePhpConstantReference extends PsiReferenceBase<PsiElement> impl
     @Override
     public PsiElement resolve() {
         List<Field> fields = LattePhpUtil.getFieldsForPhpElement((BaseLattePhpElement) getElement(), project);
-        return fields.size() > 0 ? fields.get(0) : null;
+        if (fields.size() > 0) {
+            return fields.get(0);
+        }
+
+        List<PhpEnumCase> enumCases = LattePhpUtil.getEnumCasesForPhpElement((BaseLattePhpElement) getElement(), project);
+        return enumCases.size() > 0 ? enumCases.get(0) : null;
     }
 
     @NotNull
@@ -80,14 +93,23 @@ public class LattePhpConstantReference extends PsiReferenceBase<PsiElement> impl
             }
         }
 
-        if (!(element instanceof Field)) {
-            return false;
+        if (element instanceof Field) {
+            PhpClass originalClass = ((Field) element).getContainingClass();
+            if (originalClass == null) {
+                return false;
+            }
+            return LattePhpUtil.isReferenceTo(originalClass, multiResolve(false), project, ((Field) element).getName());
         }
-        PhpClass originalClass = ((Field) element).getContainingClass();
-        if (originalClass == null) {
-            return false;
+
+        if (element instanceof PhpEnumCase) {
+            PhpClass originalClass = ((PhpEnumCase) element).getContainingClass();
+            if (originalClass == null) {
+                return false;
+            }
+            return LattePhpUtil.isReferenceTo(originalClass, multiResolve(false), project, ((PhpEnumCase) element).getName());
         }
-        return LattePhpUtil.isReferenceTo(originalClass, multiResolve(false), project, ((Field) element).getName());
+
+        return false;
     }
 
     @Override

@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.0] - 2025-07-30
+
+### Added
+
+- Enum support
+
 ## [1.4.1] - 2025-07-05
 
 ### Added

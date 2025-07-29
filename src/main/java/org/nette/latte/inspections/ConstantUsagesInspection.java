@@ -5,6 +5,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
+import com.jetbrains.php.lang.psi.elements.PhpEnumCase;
 import org.nette.latte.php.NettePhpType;
 import org.nette.latte.psi.LatteFile;
 import org.nette.latte.psi.LattePhpConstant;
@@ -60,6 +61,12 @@ public class ConstantUsagesInspection extends BaseLocalInspectionTool {
 								} else if (field.isInternal()) {
 									addDeprecated(manager, problems, element, "Used constant '" + constantName + "' is marked as internal", isOnTheFly);
 								}
+								isFound = true;
+							}
+						}
+
+						for (PhpEnumCase enumCase : phpClass.getEnumCases()) {
+							if (enumCase.getName().equals(constantName)) {
 								isFound = true;
 							}
 						}
