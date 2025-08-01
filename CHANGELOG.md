@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.1] - 2025-08-01
+
+### Fixed
+
+- Error inspection in multiline file includes (@vrana)
+
 ## [1.5.0] - 2025-07-30
 
 ### Added
