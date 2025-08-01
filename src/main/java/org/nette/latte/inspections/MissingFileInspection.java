@@ -42,7 +42,7 @@ public class MissingFileInspection extends BaseLocalInspectionTool {
 				if (element instanceof LatteMacroTag && tags.contains(((LatteMacroTag) element).getMacroName())) {
 					LatteMacroContent macroContent = PsiTreeUtil.findChildOfType(element, LatteMacroContent.class);
 					if (macroContent != null) {
-						String text = macroContent.getText().split(" ")[0].split(",")[0];
+						String text = macroContent.getText().split("\\s")[0].split(",")[0];
 						if (!text.contains("$") && text.contains(".")) {
 							String relativePath = text.replaceAll("[\"']", "").trim();
 
