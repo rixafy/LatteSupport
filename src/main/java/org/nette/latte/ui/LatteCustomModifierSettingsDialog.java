@@ -49,16 +49,18 @@ public class LatteCustomModifierSettingsDialog extends JDialog {
         });
 
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        setOkState();
     }
 
     public LatteCustomModifierSettingsDialog(TableView<LatteFilterSettings> tableView, Project project, LatteFilterSettings latteCustomModifierSettings) {
-        this(tableView, project);
-
         this.textName.setText(latteCustomModifierSettings.getModifierName());
         this.textHelp.setText(latteCustomModifierSettings.getModifierHelp());
         this.textDescription.setText(latteCustomModifierSettings.getModifierDescription());
         this.textInsert.setText(latteCustomModifierSettings.getModifierInsert());
         this.latteCustomModifierSettings = latteCustomModifierSettings;
+
+        this(tableView, project);
     }
 
     private void onOK() {
@@ -84,7 +86,7 @@ public class LatteCustomModifierSettingsDialog extends JDialog {
 
     private void setOkState() {
         this.buttonOK.setEnabled(
-            this.textName.getText().length() > 0 && this.textDescription.getText().length() > 0
+            this.textName.getText().length() > 0
         );
     }
 
