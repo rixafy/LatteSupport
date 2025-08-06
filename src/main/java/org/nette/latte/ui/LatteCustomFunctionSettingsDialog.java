@@ -49,16 +49,18 @@ public class LatteCustomFunctionSettingsDialog extends JDialog {
         });
 
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        setOkState();
     }
 
     public LatteCustomFunctionSettingsDialog(TableView<LatteFunctionSettings> tableView, Project project, LatteFunctionSettings latteFunctionSettings) {
-        this(tableView, project);
-
         this.textName.setText(latteFunctionSettings.getFunctionName());
         this.textReturnType.setText(latteFunctionSettings.getFunctionReturnType());
         this.textHelp.setText(latteFunctionSettings.getFunctionHelp());
         this.textDescription.setText(latteFunctionSettings.getFunctionDescription());
         this.latteFunctionSettings = latteFunctionSettings;
+
+        this(tableView, project);
     }
 
     private void onOK() {
