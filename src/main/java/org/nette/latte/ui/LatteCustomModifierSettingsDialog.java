@@ -54,13 +54,15 @@ public class LatteCustomModifierSettingsDialog extends JDialog {
     }
 
     public LatteCustomModifierSettingsDialog(TableView<LatteFilterSettings> tableView, Project project, LatteFilterSettings latteCustomModifierSettings) {
+        this(tableView, project);
+
         this.textName.setText(latteCustomModifierSettings.getModifierName());
         this.textHelp.setText(latteCustomModifierSettings.getModifierHelp());
         this.textDescription.setText(latteCustomModifierSettings.getModifierDescription());
         this.textInsert.setText(latteCustomModifierSettings.getModifierInsert());
         this.latteCustomModifierSettings = latteCustomModifierSettings;
 
-        this(tableView, project);
+        setOkState();
     }
 
     private void onOK() {

@@ -54,13 +54,15 @@ public class LatteCustomFunctionSettingsDialog extends JDialog {
     }
 
     public LatteCustomFunctionSettingsDialog(TableView<LatteFunctionSettings> tableView, Project project, LatteFunctionSettings latteFunctionSettings) {
+        this(tableView, project);
+
         this.textName.setText(latteFunctionSettings.getFunctionName());
         this.textReturnType.setText(latteFunctionSettings.getFunctionReturnType());
         this.textHelp.setText(latteFunctionSettings.getFunctionHelp());
         this.textDescription.setText(latteFunctionSettings.getFunctionDescription());
         this.latteFunctionSettings = latteFunctionSettings;
 
-        this(tableView, project);
+        setOkState();
     }
 
     private void onOK() {
