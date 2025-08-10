@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.2] - 2025-08-10
+
+### Fixed
+
+- Inconsistencies in adding custom filters and functions (@vrana)
+
 ## [1.5.1] - 2025-08-01
 
 ### Fixed
