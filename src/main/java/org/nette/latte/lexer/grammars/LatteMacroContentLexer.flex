@@ -26,7 +26,7 @@ SIGNAL=[a-zA-Z\-\:]+ "!"
 
 <YYINITIAL> {
 
-	({CLASS_NAME} | "$" | {FUNCTION_CALL} | "\"" | "'" | "{" | "(" | "[" | "|") .+ {
+	({CLASS_NAME} | "$" | {FUNCTION_CALL} | "\"" | "'" | "{" | "(" | "[" | "|") .* {
         return T_PHP_CONTENT;
     }
 

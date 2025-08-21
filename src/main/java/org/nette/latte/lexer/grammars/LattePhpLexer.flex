@@ -49,6 +49,10 @@ AS="as"
         return T_MACRO_ARGS_VAR;
     }
 
+    "$" {
+        return T_MACRO_ARGS_VAR;
+    }
+
     "\\" / {IDENTIFIER} {
         yybegin(CLASS_REFERENCE);
         return T_PHP_NAMESPACE_RESOLUTION;

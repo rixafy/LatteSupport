@@ -171,7 +171,13 @@ public class VariablesInspection extends BaseLocalInspectionTool {
 			problems.add(LatteInspectionInfo.weakWarning(variable, "Variable '" + variableName + "' is probably undefined"));
 
 		} else if (!isDefined) {
-			LatteInspectionInfo info = LatteInspectionInfo.error(variable, "Undefined variable '" + variableName + "'");
+            LatteInspectionInfo info;
+            if (!variableName.isEmpty()) {
+                info = LatteInspectionInfo.error(variable, "Undefined variable '" + variableName + "'");
+            } else {
+                info = LatteInspectionInfo.error(variable, "Incomplete variable");
+            }
+
 			IntentionManager intentionManager = IntentionManager.getInstance();
 			if (intentionManager != null) {
 				info.addFix(intentionManager.convertToFix(new AddCustomNullableVariable(variableName)));

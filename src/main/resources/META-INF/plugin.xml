@@ -28,6 +28,7 @@
 		<annotator language="Latte" implementationClass="org.nette.latte.annotator.LatteAnnotator"/>
 		<typedHandler implementation="org.nette.latte.editorActions.LatteTypedHandler"/>
 		<typedHandler implementation="org.nette.latte.editorActions.LatteCompletionAutoPopupHandler"/>
+		<typedHandler implementation="org.nette.latte.completion.LatteTypedHandler"/>
 		<lang.braceMatcher language="Latte" implementationClass="org.nette.latte.reference.LatteBraceMatcher"/>
 		<indexPatternBuilder implementation="org.nette.latte.psi.LatteIndexPatternBuilder"/>
 		<highlightErrorFilter implementation="org.nette.latte.psi.ErrorFilter"/>

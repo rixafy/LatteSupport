@@ -5,6 +5,7 @@
 ### Fixed
 
 - Autocompletion speed
+- Autocompletion was not showing when `{$` was typed
 
 ## [1.5.2] - 2025-08-10
 
