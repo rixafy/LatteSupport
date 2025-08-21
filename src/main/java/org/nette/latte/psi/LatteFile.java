@@ -169,7 +169,7 @@ public class LatteFile extends PsiFileBase {
 			contexts = contexts.stream()
 					.sorted(Comparator.comparing(PsiElement::getTextOffset))
 					.collect(Collectors.toList());*/
-			variables = findLattePhpVariables();
+			variables = allVariables;
 		}
 	}
 
