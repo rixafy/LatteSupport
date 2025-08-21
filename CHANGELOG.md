@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.3] - 2025-08-21
+
+### Fixed
+
+- Autocompletion speed
+
 ## [1.5.2] - 2025-08-10
 
 ### Fixed

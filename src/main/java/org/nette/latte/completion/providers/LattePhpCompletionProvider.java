@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
-
 	private final LattePhpFunctionCompletionProvider functionCompletionProvider;
 	private final LattePhpClassCompletionProvider classCompletionProvider;
 	private final LattePhpNamespaceCompletionProvider namespaceCompletionProvider;
@@ -54,9 +53,21 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 			attachPhpCompletions(parameters, context, result, (BaseLattePhpElement) element, false);
 
 		} else if (!(element instanceof LatteMacroModifier) && !(element instanceof LattePhpString) && !(element instanceof LatteFilePath) && !(element instanceof LatteLinkDestination)) {
-			classCompletionProvider.addCompletions(parameters, context, result);
-			namespaceCompletionProvider.addCompletions(parameters, context, result);
+			String prefix = result.getPrefixMatcher().getPrefix();
+
+			boolean looksLikeVariable = prefix.startsWith("$") || prefix.contains("$");
+			boolean isLattePhpVariable = (element instanceof LattePhpVariable) && !((LattePhpVariable) element).isDefinition();
+			int invocation = parameters.getInvocationCount();
+			boolean allowHeavy = invocation >= 2 || prefix.length() >= 2;
+
+			// Class name contexts: allow heavy providers only when allowed
 			if (isInClassDefinition(element)) {
+				if (allowHeavy) {
+					classCompletionProvider.addCompletions(parameters, context, result);
+					namespaceCompletionProvider.addCompletions(parameters, context, result);
+				} else {
+					result.restartCompletionOnAnyPrefixChange();
+				}
 				return;
 			}
 
@@ -64,13 +75,31 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 			boolean parentTemplateType = LatteUtil.matchParentMacroName(element, LatteTagsUtil.Type.TEMPLATE_TYPE.getTagName());
 			if (parentType || parentTemplateType || LatteUtil.matchParentMacroName(element, LatteTagsUtil.Type.VAR.getTagName())) {
 				attachVarTypes(result);
- 				if (parentType || parentTemplateType || isInTypeDefinition(current)) {
+				if (parentType || parentTemplateType || isInTypeDefinition(current)) {
 					return;
 				}
 			}
 
+			// Variable-first behavior: keep autopopup cheap
+			if (isLattePhpVariable || looksLikeVariable) {
+				variableCompletionProvider.addCompletions(parameters, context, result);
+				if (invocation >= 2) {
+					functionCompletionProvider.addCompletions(parameters, context, result);
+					classCompletionProvider.addCompletions(parameters, context, result);
+					namespaceCompletionProvider.addCompletions(parameters, context, result);
+				}
+				return;
+			}
+
+			// General PHP content: variables first, heavy providers only when allowed
 			variableCompletionProvider.addCompletions(parameters, context, result);
-			functionCompletionProvider.addCompletions(parameters, context, result);
+			if (allowHeavy) {
+				classCompletionProvider.addCompletions(parameters, context, result);
+				namespaceCompletionProvider.addCompletions(parameters, context, result);
+				functionCompletionProvider.addCompletions(parameters, context, result);
+			} else {
+                result.restartCompletionOnAnyPrefixChange();
+			}
 		}
 	}
 
