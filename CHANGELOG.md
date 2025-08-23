@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.4] - 2025-08-23
+
+### Fixed
+
+- IntelliJ freezes while typing in non-closed latte tags
+
 ## [1.5.3] - 2025-08-21
 
 ### Fixed

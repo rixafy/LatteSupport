@@ -26,7 +26,8 @@ SIGNAL=[a-zA-Z\-\:]+ "!"
 
 <YYINITIAL> {
 
-	({CLASS_NAME} | "$" | {FUNCTION_CALL} | "\"" | "'" | "{" | "(" | "[" | "|") .* {
+	// Do not consume '}' to allow macro closing; keep tokens bounded per line
+	({CLASS_NAME} | "$" | {FUNCTION_CALL} | "\"" | "'" | "{" | "(" | "[" | "|") [^}\r\n]* {
         return T_PHP_CONTENT;
     }
 
@@ -48,6 +49,11 @@ SIGNAL=[a-zA-Z\-\:]+ "!"
 
     {SIGNAL} {
         return T_LINK_DESTINATION;
+    }
+
+    // Explicitly expose macro close to the parser
+    "}" {
+        return T_MACRO_TAG_CLOSE;
     }
 
 	[^] {

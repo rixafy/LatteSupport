@@ -326,6 +326,18 @@ AS="as"
 		return T_PHP_SINGLE_QUOTE_RIGHT;
 	}
 
+	// Safe break for unterminated string on macro close or line break
+	"}" | "\r\n" | "\n" {
+		pushState(YYINITIAL);
+		yypushback(yytext().length());
+		return T_MACRO_ARGS_STRING;
+	}
+
+	<<EOF>> {
+		pushState(YYINITIAL);
+		return T_MACRO_ARGS_STRING;
+	}
+
 	{FILE_IMPORT} {
 		return T_FILE_PATH;
 	}
@@ -339,6 +351,18 @@ AS="as"
 	"\"" {
 		pushState(YYINITIAL);
 		return T_PHP_DOUBLE_QUOTE_RIGHT;
+	}
+
+	// Safe break for unterminated string on macro close or line break
+	"}" | "\r\n" | "\n" {
+		pushState(YYINITIAL);
+		yypushback(yytext().length());
+		return T_MACRO_ARGS_STRING;
+	}
+
+	<<EOF>> {
+		pushState(YYINITIAL);
+		return T_MACRO_ARGS_STRING;
 	}
 
 	{FILE_IMPORT} {
