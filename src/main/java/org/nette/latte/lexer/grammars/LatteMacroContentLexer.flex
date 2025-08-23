@@ -26,8 +26,13 @@ SIGNAL=[a-zA-Z\-\:]+ "!"
 
 <YYINITIAL> {
 
-	// Do not consume '}' to allow macro closing; keep tokens bounded per line
-	({CLASS_NAME} | "$" | {FUNCTION_CALL} | "\"" | "'" | "{" | "(" | "[" | "|") [^}\r\n]* {
+	// Inline Latte expression: consume up to and including the first '}' on the same line as part of content
+	"{" [^}\r\n]* "}" {
+        return T_PHP_CONTENT;
+    }
+
+	// General PHP-ish starters: produce content but do not consume macro closer '}' or newline
+	({CLASS_NAME} | "$" | {FUNCTION_CALL} | "\"" | "'" | "(" | "[" | "|") [^}\r\n]* {
         return T_PHP_CONTENT;
     }
 
