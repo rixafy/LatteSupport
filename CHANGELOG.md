@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.5.5] - 2025-08-25
+
+### Fixed
+
+- Autocompletion in `{var}`, `{varType}` and `{templateType}`
+
 ## [1.5.4] - 2025-08-23
 
 ### Fixed

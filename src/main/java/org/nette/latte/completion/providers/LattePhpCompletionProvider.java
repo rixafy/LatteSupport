@@ -52,7 +52,13 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 		} else if (element instanceof LattePhpProperty || (element instanceof LattePhpMethod && !((LattePhpMethod) element).isStatic())) {
 			attachPhpCompletions(parameters, context, result, (BaseLattePhpElement) element, false);
 
-		} else if (!(element instanceof LatteMacroModifier) && !(element instanceof LattePhpString) && !(element instanceof LatteFilePath) && !(element instanceof LatteLinkDestination)) {
+		} else if (
+                !(element instanceof LatteMacroModifier)
+                    && !(element instanceof LattePhpString)
+                    && !(element instanceof LatteFilePath)
+                    && !(element instanceof LatteLinkDestination)
+                    && !(parameters.getPosition().getParent() instanceof LatteMacroCloseTag)
+        ) {
 			String prefix = result.getPrefixMatcher().getPrefix();
 
 			boolean looksLikeVariable = prefix.startsWith("$") || prefix.contains("$");
@@ -76,6 +82,12 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 			if (parentType || parentTemplateType || LatteUtil.matchParentMacroName(element, LatteTagsUtil.Type.VAR.getTagName())) {
 				attachVarTypes(result);
 				if (parentType || parentTemplateType || isInTypeDefinition(current)) {
+                    if (allowHeavy) {
+                        classCompletionProvider.addCompletions(parameters, context, result);
+                        namespaceCompletionProvider.addCompletions(parameters, context, result);
+                    } else {
+                        result.restartCompletionOnAnyPrefixChange();
+                    }
 					return;
 				}
 			}
