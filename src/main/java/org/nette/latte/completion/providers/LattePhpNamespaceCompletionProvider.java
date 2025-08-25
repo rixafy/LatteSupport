@@ -27,6 +27,26 @@ public class LattePhpNamespaceCompletionProvider extends BaseLatteCompletionProv
 			return;
 		}
 
+        /*
+
+        Maybe autocomplete namespaces only if \ is before?
+        Currently it's bugged, if you type App\Mod.. and accept the Model namespace,
+        you'll end with App\App\Model, that's why it is disabled for now
+
+
+        String prefix = result.getPrefixMatcher().getPrefix();
+        boolean hasBackslash = false;
+        int offset = params.getOffset();
+        int candidateIndex = offset - prefix.length() - 1;
+        CharSequence chars = params.getEditor().getDocument().getCharsSequence();
+        if (candidateIndex >= 0 && candidateIndex < chars.length()) {
+            hasBackslash = chars.charAt(candidateIndex) == '\\';
+        }
+
+        if (!hasBackslash) {
+            return;
+        }*/
+
 		String namespaceName = getNamespaceName(curr);
 		Collection<String> namespaceNames = LattePhpUtil.getAllExistingNamespacesByName(curr.getProject(), namespaceName);
 		Collection<PhpNamespace> namespaces = LattePhpUtil.getAlNamespaces(curr.getProject(), namespaceNames);

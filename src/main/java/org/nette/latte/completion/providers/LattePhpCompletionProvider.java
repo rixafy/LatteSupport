@@ -70,7 +70,7 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 			if (isInClassDefinition(element)) {
 				if (allowHeavy) {
 					classCompletionProvider.addCompletions(parameters, context, result);
-					namespaceCompletionProvider.addCompletions(parameters, context, result);
+					//namespaceCompletionProvider.addCompletions(parameters, context, result);
 				} else {
 					result.restartCompletionOnAnyPrefixChange();
 				}
@@ -84,7 +84,7 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 				if (parentType || parentTemplateType || isInTypeDefinition(current)) {
                     if (allowHeavy) {
                         classCompletionProvider.addCompletions(parameters, context, result);
-                        namespaceCompletionProvider.addCompletions(parameters, context, result);
+                        //namespaceCompletionProvider.addCompletions(parameters, context, result);
                     } else {
                         result.restartCompletionOnAnyPrefixChange();
                     }
@@ -98,7 +98,7 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 				if (invocation >= 2) {
 					functionCompletionProvider.addCompletions(parameters, context, result);
 					classCompletionProvider.addCompletions(parameters, context, result);
-					namespaceCompletionProvider.addCompletions(parameters, context, result);
+					//namespaceCompletionProvider.addCompletions(parameters, context, result);
 				}
 				return;
 			}
@@ -107,7 +107,7 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
 			variableCompletionProvider.addCompletions(parameters, context, result);
 			if (allowHeavy) {
 				classCompletionProvider.addCompletions(parameters, context, result);
-				namespaceCompletionProvider.addCompletions(parameters, context, result);
+				//namespaceCompletionProvider.addCompletions(parameters, context, result);
 				functionCompletionProvider.addCompletions(parameters, context, result);
 			} else {
                 result.restartCompletionOnAnyPrefixChange();
