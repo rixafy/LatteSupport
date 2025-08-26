@@ -47,6 +47,8 @@
 		<!-- needed? -->
 		<referencesSearch implementation="org.nette.latte.reference.LatteReferenceSearch"/>
 
+		<implicitUsageProvider implementation="org.nette.latte.reference.LatteImplicitUsageProvider"/>
+
 		<stubElementTypeHolder class="org.nette.latte.psi.LatteTypes" externalIdPrefix="latte."/>
 		<stubIndex implementation="org.nette.latte.indexes.extensions.LatteFilterIndex"/>
 		<stubIndex implementation="org.nette.latte.indexes.extensions.LattePhpClassIndex"/>

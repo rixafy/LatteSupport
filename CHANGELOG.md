@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.0] - Unreleased
+
+### Fixed
+
+- Usage info in unused PHP fields and methods
+
 ## [1.5.5] - 2025-08-25
 
 ### Fixed
