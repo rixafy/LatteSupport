@@ -9,6 +9,7 @@ import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.nette.latte.psi.LatteFile;
+import org.nette.latte.utils.LattePresenterUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,73 +25,85 @@ public class LinkResolver extends PresenterResolver {
         //cache.clear();
     }
 
-    public @Nullable PsiElement resolveAction(String action, @Nullable String presenter) {
-        String key = presenter + ":" + action;
+    public @Nullable PsiElement resolveAction(PhpClass presenter, String action) {
+        String key = (presenter != null ? presenter.getFQN() : "null") + ":" + action;
         /*if (cache.containsKey(key)) {
             return cache.get(key);
         }*/
 
-        PsiElement result = calculateAction(action, presenter);
+        PsiElement result = calculateAction(presenter, action);
         //cache.put(key, result);
         return result;
     }
 
-    private @Nullable PsiElement calculateAction(String action, @Nullable String presenter) {
+    private @Nullable PsiElement calculateAction(PhpClass presenterClass, String action) {
         List<String> actions = new ArrayList<>(action.equals("this") ? guessActionName() : List.of(action));
-        List<String> presenterNames = guessPresenterNames(presenter);
-        List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, false);
-
-        if (matchingPresenters.isEmpty()) {
-            return null;
-        }
-
-        for (PhpClass presenterClass : matchingPresenters) {
-            for (String actionName : actions) {
-                Method method = findMethod(presenterClass, List.of("action" + StringUtils.capitalize(actionName), "render" + StringUtils.capitalize(actionName), "startup"));
-                if (method != null && (!method.getName().equals("startup") || method.getClass().getName().equals(presenterClass.getName()))) {
-                    return method;
+        if (presenterClass == null) {
+            // Fallback: guess presenter from file context when not provided
+            List<String> presenterNames = guessPresenterNames();
+            List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, false);
+            if (matchingPresenters.isEmpty()) {
+                return null;
+            }
+            for (PhpClass candidate : matchingPresenters) {
+                for (String actionName : actions) {
+                    Method method = findMethod(candidate, List.of("action" + StringUtils.capitalize(actionName), "render" + StringUtils.capitalize(actionName), "startup"));
+                    if (method != null && (!method.getName().equals("startup") || method.getClass().getName().equals(candidate.getName()))) {
+                        return method;
+                    }
                 }
             }
-        }
 
-        return matchingPresenters.get(0);
-    }
-
-    public @Nullable PsiElement resolveSignal(String signal, @Nullable String presenter) {
-        String key = presenter + ":" + signal + "!";
-        /*if (cache.containsKey(key)) {
-            return cache.get(key);
-        }*/
-
-        PsiElement result = calculateSignal(signal, presenter);
-        //cache.put(key, result);
-        return result;
-    }
-
-    private @Nullable PsiElement calculateSignal(String signal, String presenter) {
-        List<String> presenterNames = guessPresenterNames(presenter);
-        List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, false);
-
-        if (matchingPresenters.isEmpty()) {
             return null;
         }
 
-        for (PhpClass presenterClass : matchingPresenters) {
-            PsiElement method = findMethod(presenterClass, List.of("handle" + StringUtils.capitalize(signal)));
-            if (method != null) {
+        for (String actionName : actions) {
+            Method method = findMethod(presenterClass, List.of(LattePresenterUtil.actionToMethod(actionName), "render" + StringUtils.capitalize(actionName), "startup"));
+            if (method != null && (!method.getName().equals("startup") || method.getClass().getName().equals(presenterClass.getName()))) {
                 return method;
             }
         }
 
-        return matchingPresenters.get(0);
+        return null;
+    }
+
+    public @Nullable PsiElement resolveSignal(PhpClass presenter, String signal) {
+        String key = (presenter != null ? presenter.getFQN() : "null") + ":" + signal + "!";
+        /*if (cache.containsKey(key)) {
+            return cache.get(key);
+        }*/
+
+        PsiElement result = calculateSignal(presenter, signal);
+        //cache.put(key, result);
+        return result;
+    }
+
+    private @Nullable PsiElement calculateSignal(PhpClass presenterClass, String signal) {
+        if (presenterClass == null) {
+            List<String> presenterNames = guessPresenterNames();
+            List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, false);
+            if (matchingPresenters.isEmpty()) {
+                return null;
+            }
+            for (PhpClass candidate : matchingPresenters) {
+                PsiElement method = findMethod(candidate, List.of(LattePresenterUtil.signalToMethod(signal)));
+                if (method != null) {
+                    return method;
+                }
+            }
+
+            return null;
+        }
+
+        return findMethod(presenterClass, List.of(LattePresenterUtil.signalToMethod(signal)));
     }
 
     public List<LookupElement> getActionsForAutoComplete(PhpClass presenter) {
         List<LookupElement> actions = new ArrayList<>();
         for (Method method : presenter.getMethods()) {
-            if (method.getName().startsWith("action") || method.getName().startsWith("render")) {
+            if (LattePresenterUtil.isAction(method)) {
                 String className = method.getContainingClass() != null ? method.getContainingClass().getName() : presenter.getName();
-                actions.add(LookupElementBuilder.create(StringUtils.uncapitalize(method.getName().substring(6))).withTailText(" in " + className).withIcon(AllIcons.Actions.Execute));
+                actions.add(LookupElementBuilder.create(LattePresenterUtil.methodToLink(method.getName())).withTailText(" in " + className).withIcon(AllIcons.Actions.Execute));
             }
         }
 
@@ -100,9 +113,9 @@ public class LinkResolver extends PresenterResolver {
     public List<LookupElement> getSignalsForAutoComplete(PhpClass presenter) {
         List<LookupElement> signals = new ArrayList<>();
         for (Method method : presenter.getMethods()) {
-            if (method.getName().startsWith("handle") && !method.getName().equals("handleInvalidLink")) {
+            if (LattePresenterUtil.isSignal(method) && !method.getName().equals("handleInvalidLink")) {
                 String className = method.getContainingClass() != null ? method.getContainingClass().getName() : presenter.getName();
-                signals.add(LookupElementBuilder.create(StringUtils.uncapitalize(method.getName().substring(6)) + "!").withTailText(" in " + className).withIcon(AllIcons.Actions.Lightning));
+                signals.add(LookupElementBuilder.create(LattePresenterUtil.methodToLink(method.getName()) + "!").withTailText(" in " + className).withIcon(AllIcons.Actions.Lightning));
             }
         }
 

@@ -6,9 +6,9 @@ import com.intellij.icons.AllIcons;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.nette.latte.psi.LatteFile;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,20 +25,20 @@ abstract class PresenterResolver {
         //presenters = null;
     }
 
-    public @Nullable PhpClass resolvePresenter(String presenter, boolean preferAbstract) {
-        String key = presenter + preferAbstract;
+    public @Nullable PhpClass resolvePresenter(String presenter, List<String> previousPresenters, boolean preferAbstract) {
+        String key = presenter + previousPresenters.toString() + preferAbstract;
         /*if (presenterCache.containsKey(key)) {
             return presenterCache.get(key);
         }*/
 
-        PhpClass result = calculatePresenter(presenter, preferAbstract);
+        PhpClass result = calculatePresenter(presenter, previousPresenters, preferAbstract);
 
         //presenterCache.put(key, result);
         return result;
     }
 
-    private @Nullable PhpClass calculatePresenter(String presenter, boolean preferAbstract) {
-        List<PhpClass> matchingPresenters = getMatchingPresenters(List.of(presenter), preferAbstract);
+    private @Nullable PhpClass calculatePresenter(String presenter, List<String> previousPresenters, boolean preferAbstract) {
+        List<PhpClass> matchingPresenters = getMatchingPresenters(List.of(presenter), preferAbstract, previousPresenters);
 
         if (matchingPresenters.isEmpty()) {
             return null;
@@ -58,15 +58,15 @@ abstract class PresenterResolver {
         return null;
     }
 
-    public @Nullable PhpClass findPresenter(@Nullable String presenter, boolean onlyAbstract) {
-        List<String> presenterNames = guessPresenterNames(presenter);
-        List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, onlyAbstract);
-
-        if (matchingPresenters.isEmpty()) {
-            return null;
+    public @Nullable PhpClass findPresenter(List<String> previousPresenters, boolean preferAbstract) {
+        for (String name : guessPresenterNames()) {
+            List<PhpClass> matching = getMatchingPresenters(List.of(name), preferAbstract, previousPresenters);
+            if (!matching.isEmpty()) {
+                return matching.get(0);
+            }
         }
 
-        return matchingPresenters.get(0);
+        return null;
     }
 
     public List<LookupElement> getPresentersForAutoComplete(@Nullable String parent, boolean fullQualified, boolean root) {
@@ -76,7 +76,7 @@ abstract class PresenterResolver {
         if (parent != null) {
             parentClass = getMatchingPresenters(List.of(parent), true).stream().findFirst().orElse(null);
         } else {
-            String guessFromTemplate = guessPresenterNames(null).stream().findFirst().orElse(null);
+            String guessFromTemplate = guessPresenterNames().stream().findFirst().orElse(null);
             if (guessFromTemplate != null) {
                 PhpClass templatePresenter = getMatchingPresenters(List.of(guessFromTemplate), true).stream().findFirst().orElse(null);
                 if (templatePresenter != null) {
@@ -171,48 +171,92 @@ abstract class PresenterResolver {
     }
 
     protected List<PhpClass> getMatchingPresenters(List<String> presenterNames, boolean preferAbstract) {
+        return getMatchingPresenters(presenterNames, preferAbstract, new ArrayList<>());
+    }
+
+    protected List<PhpClass> getMatchingPresenters(List<String> presenterNames, boolean preferAbstract, List<String> previousPresenters) {
         List<PhpClass> presenters = getPresenters();
 
-        HashMap<String, PhpClass> matchingPresenters = new HashMap<>();
-        HashMap<String, Integer> collisionScore = new HashMap<>();
+        HashMap<String, PhpClass> candidates = new HashMap<>();
+        HashMap<String, Integer> namespaceScore = new HashMap<>();
+        HashMap<String, Integer> distanceScore = new HashMap<>();
+
+        String templatePath = null;
+        try {
+            templatePath = file.getOriginalFile().getContainingDirectory().getVirtualFile().getPath();
+        } catch (Exception ignored) {}
+
         for (String presenterName : presenterNames) {
             for (PhpClass presenter : presenters) {
                 if (presenter.getName().equals(presenterName + "Presenter") || (presenter.isAbstract() && presenter.getName().contains(presenterName + "Presenter"))) {
-                    Integer howDifferent = StringUtils.difference(file.getOriginalFile().getContainingDirectory().getVirtualFile().getPath(), presenter.getContainingFile().getContainingDirectory().getVirtualFile().getPath()).length();
+                    String fqn = presenter.getFQN();
+                    String fqnLower = fqn.toLowerCase();
 
-                    if (matchingPresenters.containsKey(presenterName)) {
-                        if (howDifferent < collisionScore.get(presenterName)) {
-                            matchingPresenters.put(presenterName, presenter);
-                            collisionScore.put(presenterName, howDifferent);
+                    int score = 0;
+                    if (previousPresenters != null) {
+                        for (String prev : previousPresenters) {
+                            if (prev == null) continue;
+                            String needle = "\\\\" + prev.toLowerCase();
+                            if (fqnLower.contains(needle)) {
+                                score += 1; // only +1 per previous presenter name, not per occurrence
+                            }
                         }
+                    }
 
-                    } else {
-                        matchingPresenters.put(presenterName, presenter);
-                        collisionScore.put(presenterName, howDifferent);
+                    int distance = Integer.MAX_VALUE;
+                    try {
+                        String presenterPath = presenter.getContainingFile().getContainingDirectory().getVirtualFile().getPath();
+                        if (templatePath != null) {
+                            int commonPrefixLength = 0;
+                            int maxLength = Math.min(templatePath.length(), presenterPath.length());
+                            while (commonPrefixLength < maxLength &&
+                                    templatePath.charAt(commonPrefixLength) == presenterPath.charAt(commonPrefixLength)) {
+                                commonPrefixLength++;
+                            }
+
+                            distance = templatePath.length() + presenterPath.length() - 2 * commonPrefixLength;
+                        }
+                    } catch (Exception ignored) {
+                    }
+
+                    if (!candidates.containsKey(fqn)) {
+                        candidates.put(fqn, presenter);
+                        namespaceScore.put(fqn, score);
+                        distanceScore.put(fqn, distance);
                     }
                 }
             }
         }
 
+        List<PhpClass> ordered = new ArrayList<>(candidates.values());
+        ordered.sort((a, b) -> {
+            int scoreA = namespaceScore.getOrDefault(a.getFQN(), 0);
+            int scoreB = namespaceScore.getOrDefault(b.getFQN(), 0);
+            if (scoreA != scoreB) {
+                return Integer.compare(scoreB, scoreA); // higher score first
+            }
+            int distA = distanceScore.getOrDefault(a.getFQN(), Integer.MAX_VALUE);
+            int distB = distanceScore.getOrDefault(b.getFQN(), Integer.MAX_VALUE);
+            return Integer.compare(distA, distB); // smaller distance first
+        });
+
         if (preferAbstract) {
             List<PhpClass> abstracts = new ArrayList<>();
-
-            for (PhpClass presenter : matchingPresenters.values()) {
+            for (PhpClass presenter : ordered) {
                 if (presenter.isAbstract()) {
                     abstracts.add(presenter);
                 }
             }
-
             if (!abstracts.isEmpty()) {
                 return abstracts;
             }
         }
 
-        return matchingPresenters.isEmpty() ? new ArrayList<>() : new ArrayList<>(matchingPresenters.values());
+        return ordered;
     }
 
-    protected List<String> guessPresenterNames(@Nullable String fallback) {
-        List<String> names = new ArrayList<>(fallback == null ? List.of() : List.of(fallback));
+    protected List<String> guessPresenterNames() {
+        List<String> names = new ArrayList<>();
 
         if (this.file.getFirstLatteTemplateType() != null) {
             String namespace = this.file.getFirstLatteTemplateType().getTypes().get(0);

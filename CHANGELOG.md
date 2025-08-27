@@ -2,6 +2,10 @@
 
 ## [1.6.0] - Unreleased
 
+### Added
+
+- Link references from presenter actions
+
 ### Fixed
 
 - Usage info in unused PHP fields and methods

@@ -51,6 +51,7 @@ public class LattePhpVariableReference extends PsiReferenceBase<PsiElement> impl
         for (LattePhpCachedVariable variableDefinition : variables) {
             results.add(new PsiElementResolveResult(variableDefinition.getElement()));
         }
+
         return results.toArray(new ResolveResult[0]);
     }
 
@@ -91,6 +92,7 @@ public class LattePhpVariableReference extends PsiReferenceBase<PsiElement> impl
         if (element instanceof LattePhpVariable && ((LattePhpVariable) element).isDefinition()) {
             return ((LattePhpVariable) element).getVariableName().equals(variableName);
         }
+
         return super.isReferenceTo(element);
     }
 }

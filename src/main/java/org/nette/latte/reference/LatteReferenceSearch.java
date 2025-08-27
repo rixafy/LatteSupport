@@ -2,58 +2,52 @@ package org.nette.latte.reference;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.QueryExecutorBase;
-import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.*;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
+import org.nette.latte.LatteFileType;
 import org.nette.latte.php.NettePhpType;
-import org.nette.latte.psi.LattePhpClassUsage;
+import org.nette.latte.psi.LatteLinkDestination;
 import org.nette.latte.psi.LattePhpStaticVariable;
 import org.nette.latte.psi.LattePhpVariable;
-import org.nette.latte.reference.references.LattePhpClassReference;
-import org.nette.latte.reference.references.LattePhpStaticVariableReference;
-import org.nette.latte.reference.references.LattePhpVariableReference;
 import org.nette.latte.php.LattePhpUtil;
+import org.nette.latte.utils.LattePresenterUtil;
 import org.nette.latte.utils.LatteUtil;
 import com.jetbrains.php.lang.psi.elements.Field;
+import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.List;
 
 public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, ReferencesSearch.SearchParameters> {
 
     @Override
     public void processQuery(ReferencesSearch.SearchParameters searchParameters, @NotNull Processor<? super PsiReference> processor) {
-        if (searchParameters.getElementToSearch() instanceof Field) {
-            processField((Field) searchParameters.getElementToSearch(), searchParameters.getScopeDeterminedByUser(), processor);
+        PsiElement target = searchParameters.getElementToSearch();
+        SearchScope scope = latteOnly(searchParameters.getEffectiveSearchScope());
 
-        } else if (searchParameters.getElementToSearch() instanceof PhpClass) {
-            processClass((PhpClass) searchParameters.getElementToSearch(), searchParameters.getScopeDeterminedByUser(), processor);
+        if (target instanceof Field) {
+            processField((Field) target, scope, processor);
+
+        } else if (target instanceof PhpClass) {
+            processPresenterLinkDestinations((PhpClass) target, scope, processor);
+
+        } else if (target instanceof Method) {
+            processMethodLinkDestinations((Method) target, scope, processor);
         }
     }
 
-    private void processClass(@NotNull PhpClass phpClass, @NotNull SearchScope searchScope, @NotNull Processor<? super PsiReference> processor) {
-        ApplicationManager.getApplication().runReadAction(() -> {
-            String fieldName = phpClass.getFQN();
+    private static SearchScope latteOnly(SearchScope scope) {
+        if (scope instanceof GlobalSearchScope) {
+            return GlobalSearchScope.getScopeRestrictedByFileTypes((GlobalSearchScope) scope, LatteFileType.INSTANCE);
+        }
 
-            String searchString = fieldName.startsWith("\\") ? fieldName.substring(1) : fieldName;
-            if (searchString.length() == 0) {
-                return;
-            }
-
-            PsiSearchHelper.getInstance(phpClass.getProject())
-                    .processElementsWithWord((psiElement, i) -> {
-                        PsiElement currentClass = psiElement.getParent();
-                        if (currentClass instanceof LattePhpClassUsage) {
-                            String value = ((LattePhpClassUsage) currentClass).getClassName();
-                            processor.process(new LattePhpClassReference((LattePhpClassUsage) currentClass, new TextRange(0, value.length())));
-                        }
-                        return true;
-                    }, searchScope, searchString, UsageSearchContext.IN_CODE, true);
-        });
+        return scope;
     }
 
     private void processField(@NotNull Field field, @NotNull SearchScope searchScope, @NotNull Processor<? super PsiReference> processor) {
@@ -63,30 +57,92 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
             }
             String fieldName = field.getName();
 
-            PsiSearchHelper.getInstance(field.getProject())
-                    .processElementsWithWord((psiElement, i) -> {
-                        PsiElement currentMethod = psiElement.getParent();
-                        if (currentMethod instanceof LattePhpStaticVariable) {
-                            String value = ((LattePhpStaticVariable) currentMethod).getVariableName();
-                            processor.process(new LattePhpStaticVariableReference((LattePhpStaticVariable) currentMethod, new TextRange(0, value.length() + 1)));
+            PsiSearchHelper.getInstance(field.getProject()).processElementsWithWordAsync((psiElement, i) -> {
+                PsiElement currentMethod = psiElement.getParent();
 
-                        } else if (currentMethod instanceof LattePhpVariable && field.getContainingClass() != null) {
-                            NettePhpType type = LatteUtil.findFirstLatteTemplateType(currentMethod.getContainingFile());
-                            if (type == null) {
-                                return true;
-                            }
+                if (currentMethod instanceof LattePhpStaticVariable) {
+                    String variableName = ((LattePhpStaticVariable) currentMethod).getVariableName();
+                    if (!variableName.equals(fieldName)) { // performance
+                        return true;
+                    }
 
-                            Collection<PhpClass> classes = type.getPhpClasses(psiElement.getProject());
-                            for (PhpClass phpClass : classes) {
-                                if (LattePhpUtil.isReferenceFor(field.getContainingClass(), phpClass)) {
-                                    String value = ((LattePhpVariable) currentMethod).getVariableName();
-                                    processor.process(new LattePhpVariableReference((LattePhpVariable) currentMethod, new TextRange(0, value.length() + 1)));
+                    for (PsiReference ref : currentMethod.getReferences()) {
+                        if (ref.isReferenceTo(field)) {
+                            processor.process(ref);
+                        }
+                    }
+
+                } else if (currentMethod instanceof LattePhpVariable && field.getContainingClass() != null) {
+                    String variableName = ((LattePhpVariable) currentMethod).getVariableName();
+                    if (!variableName.equals(fieldName)) { // performance
+                        return true;
+                    }
+
+                    NettePhpType type = LatteUtil.findFirstLatteTemplateType(currentMethod.getContainingFile());
+                    if (type == null) {
+                        return true;
+                    }
+
+                    Collection<PhpClass> classes = type.getPhpClasses(psiElement.getProject());
+                    for (PhpClass phpClass : classes) {
+                        if (LattePhpUtil.isReferenceFor(field.getContainingClass(), phpClass)) {
+                            for (PsiReference ref : currentMethod.getReferences()) {
+                                if (ref.isReferenceTo(field)) {
+                                    processor.process(ref);
                                 }
                             }
                         }
-                        return true;
-                    }, searchScope, "$" + fieldName, UsageSearchContext.IN_CODE, true);
-            // ProjectScope.getProjectScope(field.getProject())
+                    }
+                }
+
+                return true;
+            }, searchScope, "$" + fieldName, UsageSearchContext.IN_CODE, true);
+        });
+    }
+
+    private void processPresenterLinkDestinations(@NotNull PhpClass presenter, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
+        ApplicationManager.getApplication().runReadAction(() -> {
+            String className = presenter.getName();
+            if (!LattePresenterUtil.isPresenter(className)) return;
+
+            String presenterToken = LattePresenterUtil.presenterToLink(className);
+            if (presenterToken.isEmpty()) return;
+
+            PsiSearchHelper.getInstance(presenter.getProject()).processElementsWithWordAsync((psi, i) -> {
+                if (psi.getParent() instanceof LatteLinkDestination link) {
+                    if (link.getLinkDestination().contains(presenterToken)) {
+                        for (PsiReference ref : link.getReferences()) {
+                            if (ref.isReferenceTo(presenter)) {
+                                processor.process(ref);
+                            }
+                        }
+                    }
+                }
+                return true;
+            }, scope, presenterToken, UsageSearchContext.ANY, true);
+        });
+    }
+
+    private void processMethodLinkDestinations(@NotNull Method method, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
+        ApplicationManager.getApplication().runReadAction(() -> {
+            Project project = method.getProject();
+            String needle = LattePresenterUtil.methodToLink(method.getName());
+            if (needle.isEmpty() || method.getContainingClass() == null) return;
+
+            for (String word : List.of(needle, "this")) {
+                PsiSearchHelper.getInstance(project).processElementsWithWordAsync((psi, i) -> {
+                    if (psi.getParent() instanceof LatteLinkDestination link) {
+                        if (link.getLinkDestination().equals("this") || link.getLinkDestination().contains(LattePresenterUtil.methodToLink(method.getName()))) {
+                            for (PsiReference ref : link.getReferences()) {
+                                if (ref.isReferenceTo(method)) {
+                                    processor.process(ref);
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                }, scope, word, UsageSearchContext.ANY, true);
+            }
         });
     }
 }

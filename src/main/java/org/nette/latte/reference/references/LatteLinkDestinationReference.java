@@ -1,6 +1,5 @@
 package org.nette.latte.reference.references;
 
-import com.intellij.codeInsight.highlighting.HighlightedReference;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
@@ -8,26 +7,29 @@ import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.util.text.Strings;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
+import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.nette.latte.psi.LatteFile;
+import org.nette.latte.psi.LatteLinkDestination;
 import org.nette.latte.psi.elements.LatteLinkDestinationElement;
+import org.nette.latte.utils.LattePresenterUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LatteLinkDestinationReference extends PsiReferenceBase<LatteLinkDestinationElement> implements HighlightedReference {
+public class LatteLinkDestinationReference extends PsiReferenceBase<LatteLinkDestinationElement> {
     private final String text;
     private final String currentPresenter;
-    private final String previousPresenter;
+    @NotNull private final List<String> previousPresenters;
 
-    public LatteLinkDestinationReference(@NotNull LatteLinkDestinationElement element, TextRange rangeInElement, boolean soft, String text, String currentPresenter, String previousPresenter) {
+    public LatteLinkDestinationReference(@NotNull LatteLinkDestinationElement element, TextRange rangeInElement, boolean soft, String text, String currentPresenter, @NotNull List<String> previousPresenters) {
         super(element, rangeInElement, soft);
         this.text = text;
         this.currentPresenter = currentPresenter;
-        this.previousPresenter = previousPresenter;
+        this.previousPresenters = previousPresenters;
     }
 
     @Override
@@ -37,14 +39,24 @@ public class LatteLinkDestinationReference extends PsiReferenceBase<LatteLinkDes
             return null;
         }
 
+        PhpClass presenterClass = null;
+        if (currentPresenter != null) {
+            presenterClass = file.getLinkResolver().resolvePresenter(currentPresenter, previousPresenters, false);
+
+        } else if (!previousPresenters.isEmpty()) {
+            String lastPrev = previousPresenters.get(previousPresenters.size() - 1);
+            List<String> context = new ArrayList<>(previousPresenters.subList(0, previousPresenters.size() - 1));
+            presenterClass = file.getLinkResolver().resolvePresenter(lastPrev, context, false);
+        }
+
         if (text.endsWith("!")) {
-            return file.getLinkResolver().resolveSignal(text.substring(0, text.length() - 1), currentPresenter);
+            return file.getLinkResolver().resolveSignal(presenterClass, text.substring(0, text.length() - 1));
 
         } else if (!text.equals(Strings.capitalize(text))) {
-            return file.getLinkResolver().resolveAction(text, currentPresenter);
+            return file.getLinkResolver().resolveAction(presenterClass, text);
 
         } else {
-            return file.getLinkResolver().resolvePresenter(text, !text.equals(currentPresenter));
+            return file.getLinkResolver().resolvePresenter(text, previousPresenters, !text.equals(currentPresenter));
         }
     }
 
@@ -59,19 +71,22 @@ public class LatteLinkDestinationReference extends PsiReferenceBase<LatteLinkDes
 
         PhpClass presenter = null;
         if (currentPresenter != null) {
-            presenter = file.getLinkResolver().resolvePresenter(currentPresenter, false);
-        } else if (previousPresenter != null) {
-            presenter = file.getLinkResolver().resolvePresenter(previousPresenter, false);
+            presenter = file.getLinkResolver().resolvePresenter(currentPresenter, previousPresenters, false);
+        } else if (!previousPresenters.isEmpty()) {
+            String lastPrev = previousPresenters.get(previousPresenters.size() - 1);
+            List<String> context = new ArrayList<>(previousPresenters.subList(0, previousPresenters.size() - 1));
+            presenter = file.getLinkResolver().resolvePresenter(lastPrev, context, false);
         }
 
         String cleanLinkDestination = myElement.getLinkDestination().replace("IntellijIdeaRulezzz", "");
 
         if (text.isEmpty() || text.equals(StringUtils.capitalize(text))) {
-            variants.addAll(file.getLinkResolver().getPresentersForAutoComplete(previousPresenter, myElement.getLinkDestination().startsWith(":"), !cleanLinkDestination.trim().contains(":")));
+            String parentForAutocomplete = !previousPresenters.isEmpty() ? previousPresenters.get(previousPresenters.size() - 1) : null;
+            variants.addAll(file.getLinkResolver().getPresentersForAutoComplete(parentForAutocomplete, myElement.getLinkDestination().startsWith(":"), !cleanLinkDestination.trim().contains(":")));
         }
 
         if ((presenter == null || !presenter.isAbstract()) && (text.isEmpty() || !text.equals(StringUtils.capitalize(text))) && !cleanLinkDestination.equals(":")) {
-            PhpClass templatePresenter = file.getLinkResolver().findPresenter(null, false);
+            PhpClass templatePresenter = file.getLinkResolver().findPresenter(previousPresenters, false);
             if (presenter == null && templatePresenter != null) {
                 presenter = templatePresenter;
             }
@@ -92,5 +107,43 @@ public class LatteLinkDestinationReference extends PsiReferenceBase<LatteLinkDes
         }
 
         return variants.toArray();
+    }
+
+    @Override
+    public boolean isReferenceTo(@NotNull PsiElement element) {
+        // Optimizations to avoid heavy resolve() calls
+
+        if (element instanceof PhpClass cls) {
+            if (!LattePresenterUtil.isPresenter(cls.getName()) || !LattePresenterUtil.matchPresenterName(currentPresenter, cls.getName())) {
+                boolean matched = false;
+                for (String previousPresenter : previousPresenters) {
+                    if (LattePresenterUtil.matchPresenterName(previousPresenter, cls.getName())) {
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched) {
+                    return false;
+                }
+            }
+
+        } else if (element instanceof Method method) {
+            String methodName = LattePresenterUtil.methodToLink(method.getName());
+            if (!text.startsWith(methodName) && !text.contains(":" + methodName) && !text.equals("this")) {
+                return false;
+            }
+        }
+
+        return super.isReferenceTo(element);
+    }
+
+    @Override
+    public PsiElement handleElementRename(@NotNull String newName) {
+        if (getElement() instanceof LatteLinkDestination) {
+            getElement().setName(newName);
+        }
+
+        return getElement();
     }
 }

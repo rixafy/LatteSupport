@@ -14,9 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import org.nette.latte.psi.*;
 import org.nette.latte.reference.references.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class LatteReferenceContributor extends PsiReferenceContributor {
     public void registerReferenceProviders(@NotNull PsiReferenceRegistrar registrar) {
         registrar.registerReferenceProvider(

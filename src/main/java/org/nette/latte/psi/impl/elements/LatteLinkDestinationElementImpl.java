@@ -57,24 +57,27 @@ public abstract class LatteLinkDestinationElementImpl extends LattePsiElementImp
 				}
 			}
 
-			String currentPresenter = !presenters.isEmpty() ? presenters.get(presenters.size() - 1) : null;
-			String previousPresenter = presenters.size() > 1 ? presenters.get(presenters.size() - 2) : null;
+            String currentPresenter = !presenters.isEmpty() ? presenters.get(presenters.size() - 1) : null;
+            List<String> previousPresenters = new ArrayList<>(presenters);
+            if (!previousPresenters.isEmpty()) {
+               previousPresenters.remove(previousPresenters.size() - 1);
+            }
 
-			if (currentPresenter != null && currentPresenter.equals("IntellijIdeaRulezzz")) {
-				currentPresenter = null;
-			}
+            if (currentPresenter != null && currentPresenter.equals("IntellijIdeaRulezzz")) {
+               currentPresenter = null;
+            }
 
-			int textRangeIndex = 0;
+            int textRangeIndex = 0;
 
-			for (String entity : wholeText.split(":")) {
-				if (!entity.isEmpty()) {
-					references.add(new LatteLinkDestinationReference(this, new TextRange(textRangeIndex, textRangeIndex + entity.length()), true, entity.replace("IntellijIdeaRulezzz", ""), currentPresenter, previousPresenter));
-					textRangeIndex += entity.length() + 1;
+            for (String entity : wholeText.split(":")) {
+               if (!entity.isEmpty()) {
+                   references.add(new LatteLinkDestinationReference(this, new TextRange(textRangeIndex, textRangeIndex + entity.length()), true, entity.replace("IntellijIdeaRulezzz", ""), currentPresenter, previousPresenters));
+                   textRangeIndex += entity.length() + 1;
 
-				} else {
-					textRangeIndex++;
-				}
-			}
+               } else {
+                   textRangeIndex++;
+               }
+            }
 		}
 
 		return references.toArray(new PsiReference[0]);
