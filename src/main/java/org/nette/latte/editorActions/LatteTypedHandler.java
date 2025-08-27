@@ -19,8 +19,8 @@ import java.util.Set;
  */
 public class LatteTypedHandler extends TypedHandlerDelegate {
 
-	private static Map<Character, Character> pairs = new HashMap<Character, Character>(3);
-	private static Set<Character> chars = new HashSet<Character>(3);
+	private static final Map<Character, Character> pairs = new HashMap<Character, Character>(3);
+	private static final Set<Character> chars = new HashSet<Character>(3);
 
 	static {
 		pairs.put('{', '}');
@@ -32,13 +32,13 @@ public class LatteTypedHandler extends TypedHandlerDelegate {
 	}
 
 	@Override
-	public Result beforeCharTyped(char charTyped, Project project, Editor editor, PsiFile file, FileType fileType) {
+	public @NotNull Result beforeCharTyped(char charTyped, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file, @NotNull FileType fileType) {
 		// ignores typing '}' before '}'
-		if (chars.contains(charTyped) && project != null && file.getViewProvider().getLanguages().contains(LatteLanguage.INSTANCE)) {
+		if (chars.contains(charTyped) && file.getViewProvider().getLanguages().contains(LatteLanguage.INSTANCE)) {
 			CaretModel caretModel = editor.getCaretModel();
-			String text = editor.getDocument().getText();
+			CharSequence charsSeq = editor.getDocument().getCharsSequence();
 			int offset = caretModel.getOffset();
-			if (text.length() > offset && text.charAt(offset) == charTyped) {
+			if (offset < charsSeq.length() && charsSeq.charAt(offset) == charTyped) {
 				caretModel.moveToOffset(offset + 1);
 				return Result.STOP;
 			}
@@ -47,13 +47,13 @@ public class LatteTypedHandler extends TypedHandlerDelegate {
 	}
 
 	@Override
-	public Result charTyped(char charTyped, Project project, @NotNull Editor editor, @NotNull PsiFile file) {
+	public @NotNull Result charTyped(char charTyped, @NotNull Project project, @NotNull Editor editor, @NotNull PsiFile file) {
 		// auto-inserts '}' after typing '{'
-		if (pairs.containsKey(charTyped) && project != null && file.getViewProvider().getLanguages().contains(LatteLanguage.INSTANCE)) {
+		if (pairs.containsKey(charTyped) && file.getViewProvider().getLanguages().contains(LatteLanguage.INSTANCE)) {
 			int offset = editor.getCaretModel().getOffset();
-			String text = editor.getDocument().getText();
+			CharSequence charsSeq = editor.getDocument().getCharsSequence();
 			Character pairChar = pairs.get(charTyped);
-			if (text.length() == offset || text.charAt(offset) != pairChar) {
+			if (offset >= charsSeq.length() || charsSeq.charAt(offset) != pairChar) {
 				editor.getDocument().insertString(offset, pairChar.toString());
 				return Result.STOP;
 			}

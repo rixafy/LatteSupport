@@ -33,32 +33,38 @@ public class LatteUtil {
 
     public static String getSpacesBeforeCaret(@NotNull Editor editor) {
         int startOffset = editor.getCaretModel().getOffset();
-        String fileText = editor.getDocument().getText();
-        if (fileText.length() < startOffset) {
+        CharSequence chars = editor.getDocument().getCharsSequence();
+        if (startOffset <= 0 || chars.length() < startOffset) {
             return "";
         }
 
         StringBuilder out = new StringBuilder();
-        int position = 1;
-        char letter = fileText.charAt(startOffset - position);
-        while (letter != '\n' && startOffset > 1) {
+        int idx = startOffset - 1;
+        while (idx >= 0) {
+            char letter = chars.charAt(idx);
+            if (letter == '\n') {
+                break;
+            }
             if (letter == '\t' || letter == ' ') {
                 out.append(letter);
             }
-            position = position + 1;
-            int current = startOffset - position;
-            if (current < 0) {
-                break;
-            }
-            letter = fileText.charAt(current);
+            idx--;
         }
         return out.reverse().toString();
     }
 
     public static boolean isStringAtCaret(@NotNull Editor editor, @NotNull String string) {
         int startOffset = editor.getCaretModel().getOffset();
-        String fileText = editor.getDocument().getText();
-        return fileText.length() >= startOffset + string.length() && fileText.substring(startOffset, startOffset + string.length()).equals(string);
+        CharSequence chars = editor.getDocument().getCharsSequence();
+        int len = string.length();
+        if (len == 0) return true;
+        if (startOffset < 0 || startOffset + len > chars.length()) return false;
+        for (int i = 0; i < len; i++) {
+            if (chars.charAt(startOffset + i) != string.charAt(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Nullable

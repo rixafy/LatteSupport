@@ -39,10 +39,10 @@ public class LatteCompletionAutoPopupHandler extends CompletionAutoPopupHandler 
 
 		} else if (allowedPairs.containsKey(charTyped)) {
 			int offset = editor.getCaretModel().getOffset();
-			String text = editor.getDocument().getText();
+			CharSequence chars = editor.getDocument().getCharsSequence();
 
 			Character pairChar = allowedPairs.get(charTyped);
-			if (offset > 0 && text.length() - 1 >= offset && text.charAt(offset - 1) == pairChar) {
+			if (offset > 0 && offset - 1 < chars.length() && chars.charAt(offset - 1) == pairChar) {
 				AutoPopupController.getInstance(project).scheduleAutoPopup(editor);
 				return Result.STOP;
 			}
