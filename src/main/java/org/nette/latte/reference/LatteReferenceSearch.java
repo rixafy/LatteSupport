@@ -15,7 +15,6 @@ import org.nette.latte.psi.LatteLinkDestination;
 import org.nette.latte.psi.LattePhpStaticVariable;
 import org.nette.latte.psi.LattePhpVariable;
 import org.nette.latte.php.LattePhpUtil;
-import org.nette.latte.utils.LatteLogger;
 import org.nette.latte.utils.LattePresenterUtil;
 import org.nette.latte.utils.LatteUtil;
 import com.jetbrains.php.lang.psi.elements.Field;
