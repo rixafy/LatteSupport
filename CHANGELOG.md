@@ -4,6 +4,7 @@
 
 ### Added
 
+- References to presenter controls
 - Link references from presenter actions
 
 ### Fixed

@@ -26,6 +26,7 @@ public class LatteLookAheadLexer extends LookAheadLexer {
 	private static final String IDENTIFIER_FILES = "files";
 	private static final String IDENTIFIER_LINKS = "links";
 	private static final String IDENTIFIER_TYPES = "types";
+	private static final String IDENTIFIER_CONTROLS = "controls";
 
 	private final Map<String, Boolean> lastValid = new HashMap<>();
 	private final Map<String, Boolean> replaceAs = new HashMap<>();
@@ -39,11 +40,17 @@ public class LatteLookAheadLexer extends LookAheadLexer {
 
 	@Override
 	protected void addToken(int endOffset, IElementType type) {
-		boolean wasLinkDestination = false;
-		if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, '#', ':'))) && needReplaceAsMacro(IDENTIFIER_LINKS)) {
-			type = LatteTypes.T_LINK_DESTINATION;
-			wasLinkDestination = true;
-		}
+        boolean wasControlDestination = false;
+        if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_CONTROL || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, ':', '-'))) && needReplaceAsMacro(IDENTIFIER_CONTROLS)) {
+            type = LatteTypes.T_CONTROL;
+            wasControlDestination = true;
+        }
+
+        boolean wasLinkDestination = false;
+        if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_CONTROL || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, '#', ':'))) && needReplaceAsMacro(IDENTIFIER_LINKS)) {
+            type = LatteTypes.T_LINK_DESTINATION;
+            wasLinkDestination = true;
+        }
 
 		boolean wasTypeDefinition = false;
 		boolean isMacroSeparator = type == LatteTypes.T_PHP_MACRO_SEPARATOR;
@@ -67,6 +74,7 @@ public class LatteLookAheadLexer extends LookAheadLexer {
 		if (!TAG_TAGS.contains(type)) {
 			checkMacroType(IDENTIFIER_FILES, type, LatteTagsUtil.FILE_TAGS_LIST, wasFilePath);
 			checkMacroType(IDENTIFIER_LINKS, type, LatteTagsUtil.LINK_TAGS_LIST, wasLinkDestination);
+            checkMacroType(IDENTIFIER_CONTROLS, type, LatteTagsUtil.CONTROL_TAGS_LIST, wasControlDestination);
 			checkMacroType(IDENTIFIER_TYPES, type, LatteTagsUtil.TYPE_TAGS_LIST, wasTypeDefinition);
 		}
 	}

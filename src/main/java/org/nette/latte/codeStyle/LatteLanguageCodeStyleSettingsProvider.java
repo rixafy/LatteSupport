@@ -64,6 +64,8 @@ public class LatteLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
 	@Override
 	public String getCodeSample(@NotNull SettingsType settingsType) {
 		return "{contentType text/html}\n" +
+				"{include test.latte}\n" +
+				"{control myForm}\n" +
 				"{* comment *}\n" +
 				"{var $string = \"abc\", $number = 123}\n\n" +
 				"{foreach $data as $key => $value}\n" +

@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import org.nette.latte.LatteFileType;
 import org.nette.latte.LatteLanguage;
+import org.nette.latte.completion.resolvers.ControlResolver;
 import org.nette.latte.php.NettePhpType;
 import org.nette.latte.psi.elements.LattePhpVariableElement;
 import org.nette.latte.completion.resolvers.LinkResolver;
@@ -27,6 +28,7 @@ public class LatteFile extends PsiFileBase {
 	@Nullable NettePhpType templateType = null;
 	@Nullable List<LattePhpClassUsage> templateTypes = null;
 	@NotNull LinkResolver linkResolver = new LinkResolver(this);
+	@NotNull ControlResolver controlResolver = new ControlResolver(this);
 
 	public LatteFile(@NotNull FileViewProvider viewProvider) {
 		super(viewProvider, LatteLanguage.INSTANCE);
@@ -224,5 +226,9 @@ public class LatteFile extends PsiFileBase {
 	@NotNull
 	public LinkResolver getLinkResolver() {
 		return linkResolver;
+	}
+
+	public ControlResolver getControlResolver() {
+		return controlResolver;
 	}
 }

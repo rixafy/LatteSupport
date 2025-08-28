@@ -117,7 +117,7 @@ abstract class PresenterResolver {
                                 .create((root ? ":" : "") + name + ":")
                                 .withPresentableText(":" + name)
                                 .withTailText(": from " + presenter.getName())
-                                .withIcon(AllIcons.Actions.GroupByModule)
+                                .withIcon(AllIcons.Actions.GroupByTestProduction)
                         );
                     }
                 }
@@ -131,7 +131,7 @@ abstract class PresenterResolver {
                             .create(name + ":")
                             .withPresentableText(name)
                             .withTailText(": from " + presenter.getName())
-                            .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByModule : AllIcons.Nodes.Property)
+                            .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
                     );
                 }
 
@@ -144,7 +144,7 @@ abstract class PresenterResolver {
                                 .create(name + ":")
                                 .withPresentableText(name)
                                 .withTailText(": from " + presenter.getName())
-                                .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByModule : AllIcons.Nodes.Property)
+                                .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
                         );
                     }
 
@@ -153,7 +153,7 @@ abstract class PresenterResolver {
                             .create(name + ":")
                             .withPresentableText(name)
                             .withTailText(": from " + presenter.getName())
-                            .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByModule : AllIcons.Nodes.Property)
+                            .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
                     );
                 }
             }

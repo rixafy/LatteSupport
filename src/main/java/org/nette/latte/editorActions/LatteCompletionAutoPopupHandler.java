@@ -21,6 +21,7 @@ public class LatteCompletionAutoPopupHandler extends CompletionAutoPopupHandler 
 	}};
 
 	final private Set<Character> allowedCharacters = new HashSet<Character>() {{
+		add(':');
 		add('$');
 		add('|');
 		add('{');

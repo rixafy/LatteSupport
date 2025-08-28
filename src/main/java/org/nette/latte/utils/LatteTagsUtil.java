@@ -10,7 +10,6 @@ import java.util.List;
 public class LatteTagsUtil {
 
     public enum Type {
-
         BLOCK("block"),
         CAPTURE("capture"),
         DEFAULT("default"),
@@ -40,6 +39,8 @@ public class LatteTagsUtil {
         TEMPLATE_TYPE("templateType"),
         VAR("var"),
         VAR_TYPE("varType"),
+        CONTROL("control"),
+        FORM("form"),
         WHILE("while");
 
         final private String tagName;
@@ -58,6 +59,11 @@ public class LatteTagsUtil {
             Type.LINK.getTagName(),
             Type.PLINK.getTagName(),
             Type.N_HREF.getTagName()
+    );
+
+    public static final List<String> CONTROL_TAGS_LIST = Arrays.asList(
+            Type.CONTROL.getTagName(),
+            Type.FORM.getTagName()
     );
 
     public static final List<String> FILE_TAGS_LIST = Arrays.asList(

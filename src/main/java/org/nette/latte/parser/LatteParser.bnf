@@ -141,13 +141,18 @@ htmlEmptyTag    ::= T_HTML_OPEN_TAG_OPEN htmlTagContent (T_HTML_OPEN_TAG_CLOSE |
                      }
 
 // PHP tokens
-phpContent       ::= (phpForeach | phpFor | phpArrayOfVariables | phpArray | phpKeyArrayItem | blockName | linkDestination | filePath | phpInternalExpression)+
+phpContent       ::= (phpForeach | phpFor | phpArrayOfVariables | phpArray | phpKeyArrayItem | blockName | linkDestination | control | filePath | phpInternalExpression)+
 
 blockName        ::= "#" T_PHP_IDENTIFIER
 
 linkDestination    ::= T_LINK_DESTINATION T_LINK_DESTINATION* {
                         mixin="org.nette.latte.psi.impl.elements.LatteLinkDestinationElementImpl"
                         implements="org.nette.latte.psi.elements.LatteLinkDestinationElement"
+                    }
+
+control    ::= T_CONTROL T_CONTROL* {
+                        mixin="org.nette.latte.psi.impl.elements.LatteControlElementImpl"
+                        implements="org.nette.latte.psi.elements.LatteControlElement"
                     }
 
 filePath    ::= T_FILE_PATH T_FILE_PATH* {

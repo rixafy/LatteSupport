@@ -8,12 +8,14 @@ import com.intellij.psi.PsiReference;
 import com.intellij.psi.search.*;
 import com.intellij.psi.search.searches.ReferencesSearch;
 import com.intellij.util.Processor;
+import org.apache.commons.lang3.StringUtils;
 import org.nette.latte.LatteFileType;
 import org.nette.latte.php.NettePhpType;
 import org.nette.latte.psi.LatteLinkDestination;
 import org.nette.latte.psi.LattePhpStaticVariable;
 import org.nette.latte.psi.LattePhpVariable;
 import org.nette.latte.php.LattePhpUtil;
+import org.nette.latte.utils.LatteLogger;
 import org.nette.latte.utils.LattePresenterUtil;
 import org.nette.latte.utils.LatteUtil;
 import com.jetbrains.php.lang.psi.elements.Field;
@@ -39,6 +41,7 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
 
         } else if (target instanceof Method) {
             processMethodLinkDestinations((Method) target, scope, processor);
+            processMethodControlDestinations((Method) target, scope, processor);
         }
     }
 
@@ -142,6 +145,38 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
                     }
                     return true;
                 }, scope, word, UsageSearchContext.ANY, true);
+            }
+        });
+    }
+
+    private void processMethodControlDestinations(@NotNull Method method, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
+        ApplicationManager.getApplication().runReadAction(() -> {
+            Project project = method.getProject();
+            String name = method.getName();
+
+            java.util.List<String> words = new java.util.ArrayList<>();
+            if (name.startsWith("createComponent")) {
+                words.add(StringUtils.uncapitalize(name.substring("createComponent".length())));
+            } else if (name.startsWith("render")) {
+                words.add(StringUtils.uncapitalize(name.substring("render".length())));
+            }
+
+            if (words.isEmpty()) return;
+
+            for (String word : words) {
+                PsiSearchHelper.getInstance(project).processElementsWithWordAsync((psi, i) -> {
+                    if (psi.getParent() instanceof org.nette.latte.psi.LatteControl control) {
+                        String text = control.getControlDestination();
+                        if (text.contains(word)) {
+                            for (PsiReference ref : control.getReferences()) {
+                                if (ref.isReferenceTo(method)) {
+                                    processor.process(ref);
+                                }
+                            }
+                        }
+                    }
+                    return true;
+                }, scope, org.apache.commons.lang3.StringUtils.uncapitalize(word), UsageSearchContext.ANY, true);
             }
         });
     }

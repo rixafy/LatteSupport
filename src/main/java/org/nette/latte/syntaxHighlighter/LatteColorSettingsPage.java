@@ -21,6 +21,7 @@ public class LatteColorSettingsPage implements ColorSettingsPage {
 		new AttributesDescriptor("Block name", LatteSyntaxHighlighter.MACRO_BLOCK_NAME),
 		new AttributesDescriptor("Destination link", LatteSyntaxHighlighter.MACRO_LINK_DESTINATION),
 		new AttributesDescriptor("Destination file", LatteSyntaxHighlighter.MACRO_FILE_PATH),
+		new AttributesDescriptor("Control name", LatteSyntaxHighlighter.MACRO_CONTROL),
 		new AttributesDescriptor("Attribute n:tag Name", LatteSyntaxHighlighter.HTML_NATTR_NAME),
 		new AttributesDescriptor("Attribute n:tag Value", LatteSyntaxHighlighter.HTML_NATTR_VALUE),
 		new AttributesDescriptor("PHP variable", LatteSyntaxHighlighter.MACRO_ARGS_VAR),
