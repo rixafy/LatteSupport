@@ -188,6 +188,12 @@ abstract class PresenterResolver {
 
         for (String presenterName : presenterNames) {
             for (PhpClass presenter : presenters) {
+
+                // exact FQL match
+                if (presenter.getFQN().equals(presenterName)) {
+                    return List.of(presenter);
+                }
+
                 if (presenter.getName().equals(presenterName + "Presenter") || (presenter.isAbstract() && presenter.getName().contains(presenterName + "Presenter"))) {
                     String fqn = presenter.getFQN();
                     String fqnLower = fqn.toLowerCase();
@@ -260,6 +266,7 @@ abstract class PresenterResolver {
 
         if (this.file.getFirstLatteTemplateType() != null) {
             String namespace = this.file.getFirstLatteTemplateType().getTypes().get(0);
+            names.add(namespace.replaceAll("Template$", "") + "Presenter");
             String[] parts = namespace.split("\\\\");
             String className = parts[parts.length - 1];
             names.add(className.replace("Template", ""));
