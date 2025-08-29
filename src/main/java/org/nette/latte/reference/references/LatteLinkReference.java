@@ -113,7 +113,7 @@ public class LatteLinkReference extends PsiReferenceBase<LatteLinkElement> {
     public boolean isReferenceTo(@NotNull PsiElement element) {
         // Optimizations to avoid heavy resolve() calls
 
-        if (element instanceof PhpClass cls) {
+        if (element instanceof PhpClass cls && currentPresenter != null) {
             if (!LattePresenterUtil.isPresenter(cls.getName()) || !LattePresenterUtil.matchPresenterName(currentPresenter, cls.getName())) {
                 boolean matched = false;
                 for (String previousPresenter : previousPresenters) {

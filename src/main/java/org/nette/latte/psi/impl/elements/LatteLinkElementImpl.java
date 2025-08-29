@@ -18,6 +18,7 @@ import java.util.List;
 public abstract class LatteLinkElementImpl extends LattePsiElementImpl implements LatteLinkElement {
 	private @Nullable List<PsiReference> references = null;
 	private @Nullable PsiElement identifier = null;
+	private @Nullable String link = null;
 
 	public LatteLinkElementImpl(@NotNull ASTNode node) {
 		super(node);
@@ -28,6 +29,7 @@ public abstract class LatteLinkElementImpl extends LattePsiElementImpl implement
 		super.subtreeChanged();
 		identifier = null;
 		references = null;
+		link = null;
 	}
 
 	@Override
@@ -39,15 +41,24 @@ public abstract class LatteLinkElementImpl extends LattePsiElementImpl implement
 		return identifier;
 	}
 
+    @Override
+    public String getName() {
+        return getLink();
+    }
+
 	@Override
 	public @NotNull String getLink() {
-		return this.getText();
+        if (link == null) {
+            link = getText();
+        }
+
+		return link;
 	}
 
 	@Override
 	public PsiReference @NotNull [] getReferences() {
 		if (references == null) {
-			String wholeText = this.getLink();
+			String wholeText = getLink();
 
 			references = new ArrayList<>();
 			List<String> presenters = new ArrayList<>();

@@ -17,6 +17,7 @@ import java.util.List;
 public abstract class LatteControlElementImpl extends LattePsiElementImpl implements LatteControlElement {
     private @Nullable List<PsiReference> references = null;
     private @Nullable PsiElement identifier = null;
+    private @Nullable String control = null;
 
     public LatteControlElementImpl(@NotNull ASTNode node) {
         super(node);
@@ -39,8 +40,17 @@ public abstract class LatteControlElementImpl extends LattePsiElementImpl implem
     }
 
     @Override
+    public String getName() {
+        return getControl();
+    }
+
+    @Override
     public @NotNull String getControl() {
-        return this.getText();
+        if (control == null) {
+            control = getText();
+        }
+
+        return control;
     }
 
     @Override
