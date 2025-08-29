@@ -9,7 +9,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
 import org.nette.latte.completion.handlers.MacroCustomFunctionInsertHandler;
+import org.nette.latte.completion.matchers.StartsWithMatcher;
 import org.nette.latte.config.LatteConfiguration;
+import org.nette.latte.psi.LatteMacroOpenTag;
 import org.nette.latte.psi.LattePhpContent;
 import org.nette.latte.settings.LatteFunctionSettings;
 import org.nette.latte.php.LattePhpUtil;
@@ -32,16 +34,21 @@ public class LattePhpFunctionCompletionProvider extends BaseLatteCompletionProvi
 
 	@Override
 	protected void addCompletions(
-			@NotNull CompletionParameters params,
-			ProcessingContext ctx,
-			@NotNull CompletionResultSet results
+            @NotNull CompletionParameters params,
+            @NotNull ProcessingContext ctx,
+            @NotNull CompletionResultSet results
 	) {
 		PsiElement curr = params.getPosition().getOriginalElement();
-		if (PsiTreeUtil.getParentOfType(curr, LattePhpContent.class) == null) {
-			return;
-		}
+        PrefixMatcher prefixMatcher = results.getPrefixMatcher();
 
-		PrefixMatcher prefixMatcher = results.getPrefixMatcher();
+        // When typing after {, we suggest only functions that start with the prefix to avoid noise
+        if (params.getPosition().getParent() instanceof LatteMacroOpenTag) {
+            results = results.withPrefixMatcher(new StartsWithMatcher(prefixMatcher.getPrefix()));
+
+        } else if (PsiTreeUtil.getParentOfType(curr, LattePhpContent.class) == null) {
+            return;
+        }
+
 		String prefix = prefixMatcher.getPrefix();
 		if (prefix.contains("\\")) {
 			int index = prefix.lastIndexOf("\\");

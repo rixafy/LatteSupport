@@ -113,7 +113,7 @@ public class LatteCompletionContributor extends CompletionContributor {
 		List<LookupElement> lookupElements = new ArrayList<>(macros.size());
 		for (LatteTagSettings macro : macros.values()) {
 			if (macro.getType() != LatteTagSettings.Type.ATTR_ONLY && (!isEndTag || macro.getType() == LatteTagSettings.Type.PAIR)) {
-				lookupElements.add(createBuilderForMacro(macro, isEndTag));
+				lookupElements.add(PrioritizedLookupElement.withPriority(createBuilderForMacro(macro, isEndTag), 1000));
 			}
 		}
 		return lookupElements;
@@ -166,8 +166,10 @@ public class LatteCompletionContributor extends CompletionContributor {
 		if (tag.isDeprecated()) {
 			builder = builder.withStrikeoutness(true);
 		}
-		builder = builder.withPresentableText("{" + (isEndTag ? "/" : "") + name);
-		return builder.withIcon(LatteIcons.MACRO);
+
+		return builder.withPresentableText("{" + (isEndTag ? "/" : "") + name)
+                .withLookupString(name)
+                .withIcon(LatteIcons.MACRO);
 	}
 
 	private LookupElementBuilder createBuilderForTag(String name) {
