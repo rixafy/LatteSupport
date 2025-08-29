@@ -191,12 +191,12 @@ public class LatteDefaultConfiguration {
 	private void loadDefaultNetteApplicationTags() {
 		addNetteTag(tag("cache", LatteTagSettings.Type.PAIR, "if => expr, key, …", requiredArgument("name[:part]", "string", LatteArgumentSettings.Type.KEY_VALUE), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
 		addNetteTag(tag("control", LatteTagSettings.Type.UNPAIRED, requiredArgument("name[:part]", "string", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
-		addNetteTag(tag("link", LatteTagSettings.Type.UNPAIRED, requiredArgument("destination", "string", LatteArgumentSettings.Type.LINK_DESTINATION, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
-		addNetteTag(tag("href", LatteTagSettings.Type.ATTR_ONLY, requiredArgument("destination", "string", LatteArgumentSettings.Type.LINK_DESTINATION, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
+		addNetteTag(tag("link", LatteTagSettings.Type.UNPAIRED, requiredArgument("destination", "string", LatteArgumentSettings.Type.LINK, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
+		addNetteTag(tag("href", LatteTagSettings.Type.ATTR_ONLY, requiredArgument("destination", "string", LatteArgumentSettings.Type.LINK, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
 		addNetteTag(tag("nonce", LatteTagSettings.Type.ATTR_ONLY));
-		addNetteTag(tag("plink", LatteTagSettings.Type.UNPAIRED, requiredArgument("destination", "string", LatteArgumentSettings.Type.LINK_DESTINATION, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
+		addNetteTag(tag("plink", LatteTagSettings.Type.UNPAIRED, requiredArgument("destination", "string", LatteArgumentSettings.Type.LINK, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
 
-		LatteTagSettings ifCurrent = tag("ifCurrent", LatteTagSettings.Type.PAIR, requiredArgument("destination", "string", LatteArgumentSettings.Type.LINK_DESTINATION, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION));
+		LatteTagSettings ifCurrent = tag("ifCurrent", LatteTagSettings.Type.PAIR, requiredArgument("destination", "string", LatteArgumentSettings.Type.LINK, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION));
 		ifCurrent.setDeprecated(true);
 		ifCurrent.setDeprecatedMessage("Tag {ifCurrent} is deprecated in Latte 2.6. Use custom function isLinkCurrent() instead.");
 		addNetteTag(ifCurrent);

@@ -90,7 +90,7 @@ public class LatteControlReference extends PsiReferenceBase<LatteControlElement>
             for (Method method : file.getControlResolver().getComponents()) {
                 if (method.getContainingClass() != null) {
                     String name = StringUtils.uncapitalize(method.getName().substring("createComponent".length()));
-                    variants.add(LookupElementBuilder.create(name).withTailText(" in " + method.getContainingClass().getName()).withIcon(AllIcons.Actions.GroupByModule));
+                    variants.add(LookupElementBuilder.create(name).withTailText(" from " + method.getContainingClass().getName()).withIcon(AllIcons.Actions.GroupByModule));
                 }
             }
 

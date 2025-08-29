@@ -11,7 +11,7 @@ import com.intellij.util.Processor;
 import org.apache.commons.lang3.StringUtils;
 import org.nette.latte.LatteFileType;
 import org.nette.latte.php.NettePhpType;
-import org.nette.latte.psi.LatteLinkDestination;
+import org.nette.latte.psi.LatteLink;
 import org.nette.latte.psi.LattePhpStaticVariable;
 import org.nette.latte.psi.LattePhpVariable;
 import org.nette.latte.php.LattePhpUtil;
@@ -36,11 +36,11 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
             processField((Field) target, scope, processor);
 
         } else if (target instanceof PhpClass) {
-            processPresenterLinkDestinations((PhpClass) target, scope, processor);
+            processPresenterLinks((PhpClass) target, scope, processor);
 
         } else if (target instanceof Method) {
-            processMethodLinkDestinations((Method) target, scope, processor);
-            processMethodControlDestinations((Method) target, scope, processor);
+            processMethodLinks((Method) target, scope, processor);
+            processMethodControls((Method) target, scope, processor);
         }
     }
 
@@ -102,7 +102,7 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
         });
     }
 
-    private void processPresenterLinkDestinations(@NotNull PhpClass presenter, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
+    private void processPresenterLinks(@NotNull PhpClass presenter, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
         ApplicationManager.getApplication().runReadAction(() -> {
             String className = presenter.getName();
             if (!LattePresenterUtil.isPresenter(className)) return;
@@ -111,8 +111,8 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
             if (presenterToken.isEmpty()) return;
 
             PsiSearchHelper.getInstance(presenter.getProject()).processElementsWithWordAsync((psi, i) -> {
-                if (psi.getParent() instanceof LatteLinkDestination link) {
-                    if (link.getLinkDestination().contains(presenterToken)) {
+                if (psi.getParent() instanceof LatteLink link) {
+                    if (link.getLink().contains(presenterToken)) {
                         for (PsiReference ref : link.getReferences()) {
                             if (ref.isReferenceTo(presenter)) {
                                 processor.process(ref);
@@ -125,7 +125,7 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
         });
     }
 
-    private void processMethodLinkDestinations(@NotNull Method method, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
+    private void processMethodLinks(@NotNull Method method, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
         ApplicationManager.getApplication().runReadAction(() -> {
             Project project = method.getProject();
             String needle = LattePresenterUtil.methodToLink(method.getName());
@@ -133,8 +133,8 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
 
             for (String word : List.of(needle, "this")) {
                 PsiSearchHelper.getInstance(project).processElementsWithWordAsync((psi, i) -> {
-                    if (psi.getParent() instanceof LatteLinkDestination link) {
-                        if (link.getLinkDestination().equals("this") || link.getLinkDestination().contains(LattePresenterUtil.methodToLink(method.getName()))) {
+                    if (psi.getParent() instanceof LatteLink link) {
+                        if (link.getLink().equals("this") || link.getLink().contains(LattePresenterUtil.methodToLink(method.getName()))) {
                             for (PsiReference ref : link.getReferences()) {
                                 if (ref.isReferenceTo(method)) {
                                     processor.process(ref);
@@ -148,7 +148,7 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
         });
     }
 
-    private void processMethodControlDestinations(@NotNull Method method, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
+    private void processMethodControls(@NotNull Method method, @NotNull SearchScope scope, @NotNull Processor<? super PsiReference> processor) {
         ApplicationManager.getApplication().runReadAction(() -> {
             Project project = method.getProject();
             String name = method.getName();
@@ -165,7 +165,7 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
             for (String word : words) {
                 PsiSearchHelper.getInstance(project).processElementsWithWordAsync((psi, i) -> {
                     if (psi.getParent() instanceof org.nette.latte.psi.LatteControl control) {
-                        String text = control.getControlDestination();
+                        String text = control.getControl();
                         if (text.contains(word)) {
                             for (PsiReference ref : control.getReferences()) {
                                 if (ref.isReferenceTo(method)) {

@@ -53,7 +53,7 @@ SIGNAL=[a-zA-Z\-\:]+ "!"
     }
 
     {SIGNAL} {
-        return T_LINK_DESTINATION;
+        return T_LINK;
     }
 
     // Explicitly expose macro close to the parser

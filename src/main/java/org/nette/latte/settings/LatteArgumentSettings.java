@@ -130,7 +130,7 @@ public class LatteArgumentSettings implements Serializable {
 		CONTENT_TYPE("content-type"),
 
 		/** match with default, Foo:detail, handleFoo!, ... */
-		LINK_DESTINATION("destination"),
+		LINK("destination"),
 
 		/** match with PHP_EXPRESSION or KEY_VALUE */
 		LINK_PARAMETERS("param|name => param"),

@@ -13,19 +13,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.nette.latte.psi.LatteFile;
-import org.nette.latte.psi.LatteLinkDestination;
-import org.nette.latte.psi.elements.LatteLinkDestinationElement;
+import org.nette.latte.psi.LatteLink;
+import org.nette.latte.psi.elements.LatteLinkElement;
 import org.nette.latte.utils.LattePresenterUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LatteLinkDestinationReference extends PsiReferenceBase<LatteLinkDestinationElement> {
+public class LatteLinkReference extends PsiReferenceBase<LatteLinkElement> {
     private final String text;
     private final String currentPresenter;
     @NotNull private final List<String> previousPresenters;
 
-    public LatteLinkDestinationReference(@NotNull LatteLinkDestinationElement element, TextRange rangeInElement, boolean soft, String text, String currentPresenter, @NotNull List<String> previousPresenters) {
+    public LatteLinkReference(@NotNull LatteLinkElement element, TextRange rangeInElement, boolean soft, String text, String currentPresenter, @NotNull List<String> previousPresenters) {
         super(element, rangeInElement, soft);
         this.text = text;
         this.currentPresenter = currentPresenter;
@@ -78,14 +78,14 @@ public class LatteLinkDestinationReference extends PsiReferenceBase<LatteLinkDes
             presenter = file.getLinkResolver().resolvePresenter(lastPrev, context, false);
         }
 
-        String cleanLinkDestination = myElement.getLinkDestination().replace("IntellijIdeaRulezzz", "");
+        String cleanLink = myElement.getLink().replace("IntellijIdeaRulezzz", "");
 
         if (text.isEmpty() || text.equals(StringUtils.capitalize(text))) {
             String parentForAutocomplete = !previousPresenters.isEmpty() ? previousPresenters.get(previousPresenters.size() - 1) : null;
-            variants.addAll(file.getLinkResolver().getPresentersForAutoComplete(parentForAutocomplete, myElement.getLinkDestination().startsWith(":"), !cleanLinkDestination.trim().contains(":")));
+            variants.addAll(file.getLinkResolver().getPresentersForAutoComplete(parentForAutocomplete, myElement.getLink().startsWith(":"), !cleanLink.trim().contains(":")));
         }
 
-        if ((presenter == null || !presenter.isAbstract()) && (text.isEmpty() || !text.equals(StringUtils.capitalize(text))) && !cleanLinkDestination.equals(":")) {
+        if ((presenter == null || !presenter.isAbstract()) && (text.isEmpty() || !text.equals(StringUtils.capitalize(text))) && !cleanLink.equals(":")) {
             PhpClass templatePresenter = file.getLinkResolver().findPresenter(previousPresenters, false);
             if (presenter == null && templatePresenter != null) {
                 presenter = templatePresenter;
@@ -140,7 +140,7 @@ public class LatteLinkDestinationReference extends PsiReferenceBase<LatteLinkDes
 
     @Override
     public PsiElement handleElementRename(@NotNull String newName) {
-        if (getElement() instanceof LatteLinkDestination) {
+        if (getElement() instanceof LatteLink) {
             getElement().setName(newName);
         }
 

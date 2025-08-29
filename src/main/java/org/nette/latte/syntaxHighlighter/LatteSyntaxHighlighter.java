@@ -27,7 +27,7 @@ public class LatteSyntaxHighlighter extends SyntaxHighlighterBase {
 	public static final TextAttributesKey MACRO_MODIFIERS = createTextAttributesKey("LATTE_MACRO_MODIFIERS", DefaultLanguageHighlighterColors.METADATA);
 	public static final TextAttributesKey MACRO_COMMENT = createTextAttributesKey("LATTE_MACRO_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
 	public static final TextAttributesKey MACRO_BLOCK_NAME = createTextAttributesKey("LATTE_MACRO_BLOCK_NAME", DefaultLanguageHighlighterColors.STATIC_METHOD);
-	public static final TextAttributesKey MACRO_LINK_DESTINATION = createTextAttributesKey("LATTE_MACRO_LINK_DESTINATION", DefaultLanguageHighlighterColors.NUMBER);
+	public static final TextAttributesKey MACRO_LINK = createTextAttributesKey("LATTE_MACRO_LINK", DefaultLanguageHighlighterColors.NUMBER);
 	public static final TextAttributesKey MACRO_CONTROL = createTextAttributesKey("LATTE_MACRO_CONTROL", TextAttributesKey.createTextAttributesKey("DOC_TEMPLATE_PARAMETER"));
 	public static final TextAttributesKey MACRO_FILE_PATH = createTextAttributesKey("LATTE_MACRO_FILE_PATH", DefaultLanguageHighlighterColors.CLASS_REFERENCE);
 	public static final TextAttributesKey PHP_KEYWORD = createTextAttributesKey("LATTE_PHP_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
@@ -129,8 +129,8 @@ public class LatteSyntaxHighlighter extends SyntaxHighlighterBase {
 		} else if (token == LatteTypes.T_BLOCK_NAME) {
 			return pack(MACRO_BLOCK_NAME);
 
-		} else if (token == LatteTypes.T_LINK_DESTINATION) {
-			return pack(MACRO_LINK_DESTINATION);
+		} else if (token == LatteTypes.T_LINK) {
+			return pack(MACRO_LINK);
 
 		} else if (token == LatteTypes.T_CONTROL) {
 			return pack(MACRO_CONTROL);

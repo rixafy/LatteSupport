@@ -16,7 +16,7 @@ public class LatteImplicitUsageProvider implements ImplicitUsageProvider {
 
     @Override
     public boolean isImplicitUsage(@NotNull PsiElement element) {
-        if (!(element instanceof Field)) {
+        if (!(element instanceof Field)/* && !(element instanceof PhpClass) && !(element instanceof Method)*/) {
             return false;
         }
 
@@ -25,7 +25,7 @@ public class LatteImplicitUsageProvider implements ImplicitUsageProvider {
 
     @Override
     public boolean isImplicitRead(@NotNull PsiElement element) {
-        if (!(element instanceof Field)) {
+        if (!(element instanceof Field)/* && !(element instanceof PhpClass) && !(element instanceof Method)*/) {
             return false;
         }
 

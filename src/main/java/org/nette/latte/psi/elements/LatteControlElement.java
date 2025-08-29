@@ -11,5 +11,5 @@ public interface LatteControlElement extends LattePsiNamedElement {
     }
 
     @NotNull
-    String getControlDestination();
+    String getControl();
 }

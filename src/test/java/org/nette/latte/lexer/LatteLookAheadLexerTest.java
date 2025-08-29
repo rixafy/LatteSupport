@@ -18,7 +18,7 @@ public class LatteLookAheadLexerTest {
 			Pair.create(T_MACRO_OPEN_TAG_OPEN, "{"),
 			Pair.create(T_MACRO_NAME, "link"),
 			Pair.create(T_WHITESPACE, " "),
-			Pair.create(T_LINK_DESTINATION, "default"),
+			Pair.create(T_LINK, "default"),
 			Pair.create(T_MACRO_TAG_CLOSE, "}"),
 		});
 	}

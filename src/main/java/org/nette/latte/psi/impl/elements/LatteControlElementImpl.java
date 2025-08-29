@@ -39,14 +39,14 @@ public abstract class LatteControlElementImpl extends LattePsiElementImpl implem
     }
 
     @Override
-    public @NotNull String getControlDestination() {
+    public @NotNull String getControl() {
         return this.getText();
     }
 
     @Override
     public PsiReference @NotNull [] getReferences() {
         if (references == null) {
-            String wholeText = this.getControlDestination();
+            String wholeText = this.getControl();
 
             references = new ArrayList<>();
 

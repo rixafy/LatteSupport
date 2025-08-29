@@ -449,7 +449,7 @@ public class LattePhpLexerTest {
 			Pair.create(T_MACRO_OPEN_TAG_OPEN, "{"),
 			Pair.create(T_MACRO_NAME, "link"),
 			Pair.create(T_WHITESPACE, " "),
-			Pair.create(T_LINK_DESTINATION, "default"),
+			Pair.create(T_LINK, "default"),
 			Pair.create(T_MACRO_TAG_CLOSE, "}"),
 		});
 
@@ -458,9 +458,9 @@ public class LattePhpLexerTest {
 			Pair.create(T_MACRO_OPEN_TAG_OPEN, "{"),
 			Pair.create(T_MACRO_NAME, "link"),
 			Pair.create(T_WHITESPACE, " "),
-			Pair.create(T_LINK_DESTINATION, "Presenter"),
-			Pair.create(T_LINK_DESTINATION, ":"),
-			Pair.create(T_LINK_DESTINATION, "default"),
+			Pair.create(T_LINK, "Presenter"),
+			Pair.create(T_LINK, ":"),
+			Pair.create(T_LINK, "default"),
 			Pair.create(T_MACRO_TAG_CLOSE, "}"),
 		});
 
@@ -469,10 +469,10 @@ public class LattePhpLexerTest {
 			Pair.create(T_MACRO_OPEN_TAG_OPEN, "{"),
 			Pair.create(T_MACRO_NAME, "link"),
 			Pair.create(T_WHITESPACE, " "),
-			Pair.create(T_LINK_DESTINATION, ":"),
-			Pair.create(T_LINK_DESTINATION, "Presenter"),
-			Pair.create(T_LINK_DESTINATION, ":"),
-			Pair.create(T_LINK_DESTINATION, "default"),
+			Pair.create(T_LINK, ":"),
+			Pair.create(T_LINK, "Presenter"),
+			Pair.create(T_LINK, ":"),
+			Pair.create(T_LINK, "default"),
 			Pair.create(T_MACRO_TAG_CLOSE, "}"),
 		});
 
@@ -483,7 +483,7 @@ public class LattePhpLexerTest {
 			Pair.create(T_HTML_TAG_NATTR_NAME, "n:href"),
 			Pair.create(T_HTML_TAG_ATTR_EQUAL_SIGN, "="),
 			Pair.create(T_HTML_TAG_ATTR_DQ, "\""),
-			Pair.create(T_LINK_DESTINATION, "default"),
+			Pair.create(T_LINK, "default"),
 			Pair.create(T_HTML_TAG_ATTR_DQ, "\""),
 			Pair.create(T_HTML_TAG_CLOSE, ">"),
 			Pair.create(T_HTML_CLOSE_TAG_OPEN, "</"),
@@ -496,7 +496,7 @@ public class LattePhpLexerTest {
 			Pair.create(T_MACRO_OPEN_TAG_OPEN, "{"),
 			Pair.create(T_MACRO_NAME, "link"),
 			Pair.create(T_WHITESPACE, " "),
-			Pair.create(T_LINK_DESTINATION, "default"),
+			Pair.create(T_LINK, "default"),
 			Pair.create(T_WHITESPACE, " "),
 			Pair.create(T_PHP_IDENTIFIER, "id"),
 			Pair.create(T_WHITESPACE, " "),

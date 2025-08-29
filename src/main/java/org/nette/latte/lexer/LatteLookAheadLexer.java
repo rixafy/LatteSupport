@@ -40,16 +40,16 @@ public class LatteLookAheadLexer extends LookAheadLexer {
 
 	@Override
 	protected void addToken(int endOffset, IElementType type) {
-        boolean wasControlDestination = false;
+        boolean wasControl = false;
         if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_CONTROL || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, ':', '-'))) && needReplaceAsMacro(IDENTIFIER_CONTROLS)) {
             type = LatteTypes.T_CONTROL;
-            wasControlDestination = true;
+            wasControl = true;
         }
 
-        boolean wasLinkDestination = false;
+        boolean wasLink = false;
         if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_CONTROL || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, '#', ':'))) && needReplaceAsMacro(IDENTIFIER_LINKS)) {
-            type = LatteTypes.T_LINK_DESTINATION;
-            wasLinkDestination = true;
+            type = LatteTypes.T_LINK;
+            wasLink = true;
         }
 
 		boolean wasTypeDefinition = false;
@@ -73,8 +73,8 @@ public class LatteLookAheadLexer extends LookAheadLexer {
 		super.addToken(endOffset, type);
 		if (!TAG_TAGS.contains(type)) {
 			checkMacroType(IDENTIFIER_FILES, type, LatteTagsUtil.FILE_TAGS_LIST, wasFilePath);
-			checkMacroType(IDENTIFIER_LINKS, type, LatteTagsUtil.LINK_TAGS_LIST, wasLinkDestination);
-            checkMacroType(IDENTIFIER_CONTROLS, type, LatteTagsUtil.CONTROL_TAGS_LIST, wasControlDestination);
+			checkMacroType(IDENTIFIER_LINKS, type, LatteTagsUtil.LINK_TAGS_LIST, wasLink);
+            checkMacroType(IDENTIFIER_CONTROLS, type, LatteTagsUtil.CONTROL_TAGS_LIST, wasControl);
 			checkMacroType(IDENTIFIER_TYPES, type, LatteTagsUtil.TYPE_TAGS_LIST, wasTypeDefinition);
 		}
 	}

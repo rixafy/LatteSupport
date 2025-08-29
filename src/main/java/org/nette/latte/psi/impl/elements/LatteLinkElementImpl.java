@@ -7,19 +7,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.nette.latte.psi.LatteTypes;
-import org.nette.latte.psi.elements.LatteLinkDestinationElement;
+import org.nette.latte.psi.elements.LatteLinkElement;
 import org.nette.latte.psi.impl.LattePsiElementImpl;
 import org.nette.latte.psi.impl.LattePsiImplUtil;
-import org.nette.latte.reference.references.LatteLinkDestinationReference;
+import org.nette.latte.reference.references.LatteLinkReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LatteLinkDestinationElementImpl extends LattePsiElementImpl implements LatteLinkDestinationElement {
+public abstract class LatteLinkElementImpl extends LattePsiElementImpl implements LatteLinkElement {
 	private @Nullable List<PsiReference> references = null;
 	private @Nullable PsiElement identifier = null;
 
-	public LatteLinkDestinationElementImpl(@NotNull ASTNode node) {
+	public LatteLinkElementImpl(@NotNull ASTNode node) {
 		super(node);
 	}
 
@@ -33,21 +33,21 @@ public abstract class LatteLinkDestinationElementImpl extends LattePsiElementImp
 	@Override
 	public @Nullable PsiElement getNameIdentifier() {
 		if (identifier == null) {
-			identifier = LattePsiImplUtil.findFirstChildWithType(this, LatteTypes.T_LINK_DESTINATION);
+			identifier = LattePsiImplUtil.findFirstChildWithType(this, LatteTypes.T_LINK);
 		}
 
 		return identifier;
 	}
 
 	@Override
-	public @NotNull String getLinkDestination() {
+	public @NotNull String getLink() {
 		return this.getText();
 	}
 
 	@Override
 	public PsiReference @NotNull [] getReferences() {
 		if (references == null) {
-			String wholeText = this.getLinkDestination();
+			String wholeText = this.getLink();
 
 			references = new ArrayList<>();
 			List<String> presenters = new ArrayList<>();
@@ -71,7 +71,7 @@ public abstract class LatteLinkDestinationElementImpl extends LattePsiElementImp
 
             for (String entity : wholeText.split(":")) {
                if (!entity.isEmpty()) {
-                   references.add(new LatteLinkDestinationReference(this, new TextRange(textRangeIndex, textRangeIndex + entity.length()), true, entity.replace("IntellijIdeaRulezzz", ""), currentPresenter, previousPresenters));
+                   references.add(new LatteLinkReference(this, new TextRange(textRangeIndex, textRangeIndex + entity.length()), true, entity.replace("IntellijIdeaRulezzz", ""), currentPresenter, previousPresenters));
                    textRangeIndex += entity.length() + 1;
 
                } else {
