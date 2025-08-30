@@ -1,16 +1,16 @@
 # Changelog
 
-## [1.6.0] - Unreleased
+## [1.6.0] - 2025-08-31
 
 ### Added
 
-- References to presenter components via `{control ...}` and autocompletion
-- Link references from presenter actions `actionDefault` => `{link default}`
+- References to presenter components via `{control ...}` etc. (bidirectional)
+- Autocompletion of presenter components (and their render methods)
+- Link references from presenter methods and class `actionSomething` => `{link something}`
 - Usage info in unused PHP fields that are used in latte
 
 ### Fixed
 
-- Usage info in unused PHP fields that are used in latte
 - Autocompletion of global functions at the start of the macro
 - Indentation of HTML content inside tags on new lines
 

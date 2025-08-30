@@ -61,7 +61,7 @@ public class ControlResolver extends PresenterResolver {
 
         List<Method> components = new ArrayList<>();
         for (Method method : presenterClass.getMethods()) {
-            if (method.getName().startsWith("createComponent")) {
+            if (method.getName().startsWith("createComponent") && !method.getName().equals("createComponent")) {
                 components.add(method);
             }
         }
