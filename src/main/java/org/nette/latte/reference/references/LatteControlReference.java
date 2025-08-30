@@ -13,13 +13,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.nette.latte.psi.LatteFile;
-import org.nette.latte.psi.elements.LatteControlElement;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class LatteControlReference extends PsiReferenceBase<LatteControlElement> {
+public class LatteControlReference extends PsiReferenceBase<PsiElement> {
     public enum SegmentType { Component, RenderMethod, Subcomponent }
 
     private final String text;
@@ -27,7 +26,7 @@ public class LatteControlReference extends PsiReferenceBase<LatteControlElement>
     private final @Nullable String mainComponent;   // For RenderMethod context: the initial component name
     private final SegmentType type;
 
-    public LatteControlReference(@NotNull LatteControlElement element, TextRange rangeInElement, boolean soft, String text, @Nullable String previousSegment, @Nullable String mainComponent, SegmentType type) {
+    public LatteControlReference(@NotNull PsiElement element, TextRange rangeInElement, boolean soft, String text, @Nullable String previousSegment, @Nullable String mainComponent, SegmentType type) {
         super(element, rangeInElement, soft);
         this.text = text;
         this.previousSegment = previousSegment;
@@ -122,6 +121,10 @@ public class LatteControlReference extends PsiReferenceBase<LatteControlElement>
 
     @Override
     public boolean isReferenceTo(@NotNull PsiElement element) {
+        return false; // so rename won't start rename of php classes or methods
+    }
+
+    public boolean isRefTo(@NotNull PsiElement element) {
         if (element instanceof Method method) {
             String name = method.getName();
             if (type == SegmentType.Component) {
@@ -132,6 +135,12 @@ public class LatteControlReference extends PsiReferenceBase<LatteControlElement>
                 if (!name.equals("createComponent" + StringUtils.capitalize(text))) return false;
             }
         }
+
         return super.isReferenceTo(element);
+    }
+
+    @Override
+    public PsiElement handleElementRename(@NotNull String newName) {
+        return getElement();
     }
 }

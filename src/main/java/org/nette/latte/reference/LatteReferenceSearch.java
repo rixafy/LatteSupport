@@ -15,6 +15,8 @@ import org.nette.latte.psi.LatteLink;
 import org.nette.latte.psi.LattePhpStaticVariable;
 import org.nette.latte.psi.LattePhpVariable;
 import org.nette.latte.php.LattePhpUtil;
+import org.nette.latte.psi.elements.LatteControlPartElement;
+import org.nette.latte.reference.references.LatteControlReference;
 import org.nette.latte.utils.LattePresenterUtil;
 import org.nette.latte.utils.LatteUtil;
 import com.jetbrains.php.lang.psi.elements.Field;
@@ -167,9 +169,15 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
                     if (psi.getParent() instanceof org.nette.latte.psi.LatteControl control) {
                         String text = control.getControl();
                         if (text.contains(word)) {
-                            for (PsiReference ref : control.getReferences()) {
-                                if (ref.isReferenceTo(method)) {
-                                    processor.process(ref);
+                            for (PsiElement child : control.getChildren()) {
+                                if (child instanceof LatteControlPartElement) {
+                                    for (PsiReference ref : child.getReferences()) {
+                                        if (ref instanceof LatteControlReference latteControlReference) {
+                                            if (latteControlReference.isRefTo(method)) {
+                                                processor.process(ref);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

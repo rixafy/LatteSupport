@@ -150,9 +150,14 @@ link    ::= T_LINK T_LINK* {
                         implements="org.nette.latte.psi.elements.LatteLinkElement"
                     }
 
-control    ::= T_CONTROL T_CONTROL* {
+control    ::= controlPart+ {
                         mixin="org.nette.latte.psi.impl.elements.LatteControlElementImpl"
                         implements="org.nette.latte.psi.elements.LatteControlElement"
+                    }
+
+controlPart ::= T_CONTROL {
+                        mixin="org.nette.latte.psi.impl.elements.LatteControlPartElementImpl"
+                        implements="org.nette.latte.psi.elements.LatteControlPartElement"
                     }
 
 filePath    ::= T_FILE_PATH T_FILE_PATH* {

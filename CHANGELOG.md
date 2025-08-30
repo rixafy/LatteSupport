@@ -9,7 +9,8 @@
 
 ### Fixed
 
-- Usage info in unused PHP fields and methods
+- Usage info in unused PHP fields that are used in latte
+- Autocompletion of global methods at the start of the macro
 
 ## [1.5.5] - 2025-08-25
 

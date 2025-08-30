@@ -3,6 +3,7 @@ package org.nette.latte.completion.resolvers;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.icons.AllIcons;
+import com.intellij.psi.PsiDirectory;
 import com.jetbrains.php.PhpIndex;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
@@ -272,11 +273,14 @@ abstract class PresenterResolver {
             names.add(className.replace("Template", ""));
         }
 
-        String directoryName = file.getOriginalFile().getContainingDirectory().getName();
-        directoryName = directoryName.substring(0, 1).toUpperCase() + directoryName.substring(1);
+        PsiDirectory containingDirectory = file.getOriginalFile().getContainingDirectory();
+        if (containingDirectory != null) {
+            String directoryName = containingDirectory.getName();
+            directoryName = directoryName.substring(0, 1).toUpperCase() + directoryName.substring(1);
 
-        if (!names.contains(directoryName)) {
-            names.add(directoryName);
+            if (!names.contains(directoryName)) {
+                names.add(directoryName);
+            }
         }
 
         String fileName = file.getOriginalFile().getName().replace(".latte", "");

@@ -58,6 +58,7 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
                     && !(element instanceof LatteFilePath)
                     && !(element instanceof LatteLink)
                     && !(element instanceof LatteControl)
+                    && !(element instanceof LatteControlPart)
                     && !(parameters.getPosition().getParent() instanceof LatteMacroCloseTag)
         ) {
 			String prefix = result.getPrefixMatcher().getPrefix();
