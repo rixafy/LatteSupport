@@ -45,6 +45,7 @@ public class LatteLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSet
 			consumer.showStandardOptions("USE_TAB_CHARACTER");
 			consumer.showStandardOptions("INDENT_SIZE");
 			consumer.showStandardOptions("TAB_SIZE");
+			consumer.showStandardOptions("CONTINUATION_INDENT_SIZE");
 		}
 	}
 
