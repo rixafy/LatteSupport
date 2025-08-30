@@ -41,7 +41,7 @@ public class LatteLookAheadLexer extends LookAheadLexer {
 	@Override
 	protected void addToken(int endOffset, IElementType type) {
         boolean wasControl = false;
-        if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_CONTROL || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, ':', '-'))) && needReplaceAsMacro(IDENTIFIER_CONTROLS)) {
+        if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_PHP_ADDITIVE_OPERATOR || type == LatteTypes.T_CONTROL || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, ':', '-'))) && needReplaceAsMacro(IDENTIFIER_CONTROLS)) {
             type = LatteTypes.T_CONTROL;
             wasControl = true;
         }
