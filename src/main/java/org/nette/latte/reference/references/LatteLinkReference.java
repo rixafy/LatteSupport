@@ -20,12 +20,12 @@ import org.nette.latte.utils.LattePresenterUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LatteLinkReference extends PsiReferenceBase<LatteLinkElement> {
+public class LatteLinkReference extends PsiReferenceBase<PsiElement> {
     private final String text;
     private final String currentPresenter;
     @NotNull private final List<String> previousPresenters;
 
-    public LatteLinkReference(@NotNull LatteLinkElement element, TextRange rangeInElement, boolean soft, String text, String currentPresenter, @NotNull List<String> previousPresenters) {
+    public LatteLinkReference(@NotNull PsiElement element, TextRange rangeInElement, boolean soft, String text, String currentPresenter, @NotNull List<String> previousPresenters) {
         super(element, rangeInElement, soft);
         this.text = text;
         this.currentPresenter = currentPresenter;
@@ -34,7 +34,7 @@ public class LatteLinkReference extends PsiReferenceBase<LatteLinkElement> {
 
     @Override
     public @Nullable PsiElement resolve() {
-        LatteFile file = myElement.getLatteFile();
+        LatteFile file = (LatteFile) myElement.getContainingFile();
         if (file == null || text.equals(":")) {
             return null;
         }
@@ -64,7 +64,7 @@ public class LatteLinkReference extends PsiReferenceBase<LatteLinkElement> {
     public Object @NotNull [] getVariants() {
         List<LookupElement> variants = new ArrayList<>();
 
-        LatteFile file = myElement.getLatteFile();
+        LatteFile file = (LatteFile) myElement.getContainingFile();
         if (file == null) {
             return variants.toArray();
         }
@@ -78,11 +78,18 @@ public class LatteLinkReference extends PsiReferenceBase<LatteLinkElement> {
             presenter = file.getLinkResolver().resolvePresenter(lastPrev, context, false);
         }
 
-        String cleanLink = myElement.getLink().replace("IntellijIdeaRulezzz", "");
+        String parentLinkText;
+        PsiElement parent = myElement.getParent();
+        if (parent instanceof LatteLinkElement lle) {
+            parentLinkText = lle.getLink();
+        } else {
+            parentLinkText = parent != null ? parent.getText() : "";
+        }
+        String cleanLink = parentLinkText.replace("IntellijIdeaRulezzz", "");
 
         if (text.isEmpty() || text.equals(StringUtils.capitalize(text))) {
             String parentForAutocomplete = !previousPresenters.isEmpty() ? previousPresenters.get(previousPresenters.size() - 1) : null;
-            variants.addAll(file.getLinkResolver().getPresentersForAutoComplete(parentForAutocomplete, myElement.getLink().startsWith(":"), !cleanLink.trim().contains(":")));
+            variants.addAll(file.getLinkResolver().getPresentersForAutoComplete(parentForAutocomplete, parentLinkText.startsWith(":"), !cleanLink.trim().contains(":")));
         }
 
         if ((presenter == null || !presenter.isAbstract()) && (text.isEmpty() || !text.equals(StringUtils.capitalize(text))) && !cleanLink.equals(":")) {
@@ -111,6 +118,10 @@ public class LatteLinkReference extends PsiReferenceBase<LatteLinkElement> {
 
     @Override
     public boolean isReferenceTo(@NotNull PsiElement element) {
+        return false; // so rename won't start rename of php classes or methods
+    }
+
+    public boolean isRefTo(@NotNull PsiElement element) {
         // Optimizations to avoid heavy resolve() calls
 
         if (element instanceof PhpClass cls && currentPresenter != null) {
@@ -140,10 +151,6 @@ public class LatteLinkReference extends PsiReferenceBase<LatteLinkElement> {
 
     @Override
     public PsiElement handleElementRename(@NotNull String newName) {
-        if (getElement() instanceof LatteLink) {
-            getElement().setName(newName);
-        }
-
         return getElement();
     }
 }

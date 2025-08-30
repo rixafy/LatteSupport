@@ -145,9 +145,14 @@ phpContent       ::= (phpForeach | phpFor | phpArrayOfVariables | phpArray | php
 
 blockName        ::= "#" T_PHP_IDENTIFIER
 
-link    ::= T_LINK T_LINK* {
+link    ::= linkPart+ {
                         mixin="org.nette.latte.psi.impl.elements.LatteLinkElementImpl"
                         implements="org.nette.latte.psi.elements.LatteLinkElement"
+                    }
+
+linkPart ::= T_LINK {
+                        mixin="org.nette.latte.psi.impl.elements.LatteLinkPartElementImpl"
+                        implements="org.nette.latte.psi.elements.LatteLinkPartElement"
                     }
 
 control    ::= controlPart+ {

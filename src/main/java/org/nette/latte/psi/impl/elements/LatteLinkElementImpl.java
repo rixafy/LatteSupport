@@ -1,22 +1,15 @@
 package org.nette.latte.psi.impl.elements;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.*;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.nette.latte.psi.LatteTypes;
 import org.nette.latte.psi.elements.LatteLinkElement;
 import org.nette.latte.psi.impl.LattePsiElementImpl;
 import org.nette.latte.psi.impl.LattePsiImplUtil;
-import org.nette.latte.reference.references.LatteLinkReference;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class LatteLinkElementImpl extends LattePsiElementImpl implements LatteLinkElement {
-	private @Nullable List<PsiReference> references = null;
 	private @Nullable PsiElement identifier = null;
 	private @Nullable String link = null;
 
@@ -28,7 +21,6 @@ public abstract class LatteLinkElementImpl extends LattePsiElementImpl implement
 	public void subtreeChanged() {
 		super.subtreeChanged();
 		identifier = null;
-		references = null;
 		link = null;
 	}
 
@@ -53,44 +45,5 @@ public abstract class LatteLinkElementImpl extends LattePsiElementImpl implement
         }
 
 		return link;
-	}
-
-	@Override
-	public PsiReference @NotNull [] getReferences() {
-		if (references == null) {
-			String wholeText = getLink();
-
-			references = new ArrayList<>();
-			List<String> presenters = new ArrayList<>();
-			for (String presenter : wholeText.trim().split(":")) {
-				if (!presenter.isEmpty() && presenter.equals(StringUtils.capitalize(presenter))) {
-					presenters.add(presenter);
-				}
-			}
-
-            String currentPresenter = !presenters.isEmpty() ? presenters.get(presenters.size() - 1) : null;
-            List<String> previousPresenters = new ArrayList<>(presenters);
-            if (!previousPresenters.isEmpty()) {
-               previousPresenters.remove(previousPresenters.size() - 1);
-            }
-
-            if (currentPresenter != null && currentPresenter.equals("IntellijIdeaRulezzz")) {
-               currentPresenter = null;
-            }
-
-            int textRangeIndex = 0;
-
-            for (String entity : wholeText.split(":")) {
-               if (!entity.isEmpty()) {
-                   references.add(new LatteLinkReference(this, new TextRange(textRangeIndex, textRangeIndex + entity.length()), true, entity.replace("IntellijIdeaRulezzz", ""), currentPresenter, previousPresenters));
-                   textRangeIndex += entity.length() + 1;
-
-               } else {
-                   textRangeIndex++;
-               }
-            }
-		}
-
-		return references.toArray(new PsiReference[0]);
 	}
 }

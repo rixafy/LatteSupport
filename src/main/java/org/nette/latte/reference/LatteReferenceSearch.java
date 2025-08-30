@@ -17,6 +17,7 @@ import org.nette.latte.psi.LattePhpVariable;
 import org.nette.latte.php.LattePhpUtil;
 import org.nette.latte.psi.elements.LatteControlPartElement;
 import org.nette.latte.reference.references.LatteControlReference;
+import org.nette.latte.reference.references.LatteLinkReference;
 import org.nette.latte.utils.LattePresenterUtil;
 import org.nette.latte.utils.LatteUtil;
 import com.jetbrains.php.lang.psi.elements.Field;
@@ -115,9 +116,15 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
             PsiSearchHelper.getInstance(presenter.getProject()).processElementsWithWordAsync((psi, i) -> {
                 if (psi.getParent() instanceof LatteLink link) {
                     if (link.getLink().contains(presenterToken)) {
-                        for (PsiReference ref : link.getReferences()) {
-                            if (ref.isReferenceTo(presenter)) {
-                                processor.process(ref);
+                        for (PsiElement child : link.getChildren()) {
+                            if (child instanceof org.nette.latte.psi.elements.LatteLinkPartElement) {
+                                for (PsiReference ref : child.getReferences()) {
+                                    if (ref instanceof LatteLinkReference latteLinkReference) {
+                                        if (latteLinkReference.isRefTo(presenter)) {
+                                            processor.process(ref);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -137,9 +144,15 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
                 PsiSearchHelper.getInstance(project).processElementsWithWordAsync((psi, i) -> {
                     if (psi.getParent() instanceof LatteLink link) {
                         if (link.getLink().equals("this") || link.getLink().contains(LattePresenterUtil.methodToLink(method.getName()))) {
-                            for (PsiReference ref : link.getReferences()) {
-                                if (ref.isReferenceTo(method)) {
-                                    processor.process(ref);
+                            for (PsiElement child : link.getChildren()) {
+                                if (child instanceof org.nette.latte.psi.elements.LatteLinkPartElement) {
+                                    for (PsiReference ref : child.getReferences()) {
+                                        if (ref instanceof LatteLinkReference latteLinkReference) {
+                                            if (latteLinkReference.isRefTo(method)) {
+                                                processor.process(ref);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

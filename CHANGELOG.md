@@ -4,13 +4,13 @@
 
 ### Added
 
-- References to presenter controls
-- Link references from presenter actions
+- References to presenter components via `{control ...}` and autocompletion
+- Link references from presenter actions `actionDefault` => `{link default}`
 
 ### Fixed
 
 - Usage info in unused PHP fields that are used in latte
-- Autocompletion of global methods at the start of the macro
+- Autocompletion of global functions at the start of the macro
 
 ## [1.5.5] - 2025-08-25
 

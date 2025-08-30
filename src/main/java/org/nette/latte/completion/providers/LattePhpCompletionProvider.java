@@ -56,8 +56,7 @@ public class LattePhpCompletionProvider extends BaseLatteCompletionProvider {
                 !(element instanceof LatteMacroModifier)
                     && !(element instanceof LattePhpString)
                     && !(element instanceof LatteFilePath)
-                    && !(element instanceof LatteLink)
-                    && !(element instanceof LatteControl)
+                    && !(element instanceof LatteLinkPart)
                     && !(element instanceof LatteControlPart)
                     && !(parameters.getPosition().getParent() instanceof LatteMacroCloseTag)
         ) {
