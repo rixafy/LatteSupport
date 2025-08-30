@@ -41,7 +41,8 @@ public class LinkResolver extends PresenterResolver {
         if (presenterClass == null) {
             List<PhpClass> matchingPresenters = getMatchingPresenters(null, false);
             if (matchingPresenters.isEmpty()) {
-                return null;
+                // TODO: This is the lLast resort, REMOVE when refactoring is added
+                matchingPresenters = getPresenters();
             }
             for (PhpClass candidate : matchingPresenters) {
                 for (String actionName : actions) {
@@ -80,7 +81,8 @@ public class LinkResolver extends PresenterResolver {
         if (presenterClass == null) {
             List<PhpClass> matchingPresenters = getMatchingPresenters(null, false);
             if (matchingPresenters.isEmpty()) {
-                return null;
+                // TODO: This is the lLast resort, REMOVE when refactoring is added
+                matchingPresenters = getPresenters();
             }
             for (PhpClass candidate : matchingPresenters) {
                 PsiElement method = findMethod(candidate, List.of(LattePresenterUtil.signalToMethod(signal)));

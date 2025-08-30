@@ -36,12 +36,13 @@ public class ControlResolver extends PresenterResolver {
         List<PhpClass> matchingPresenters = getMatchingPresenters(null, false);
 
         if (matchingPresenters.isEmpty()) {
-            return null;
+            // TODO: This is the lLast resort, REMOVE when refactoring is added
+            matchingPresenters = getPresenters();
         }
 
         for (PhpClass presenterClass : matchingPresenters) {
             Method method = findMethod(presenterClass, List.of("createComponent" + StringUtils.capitalize(component)));
-            if (method != null && (!method.getName().equals("startup") || method.getClass().getName().equals(presenterClass.getName()))) {
+            if (method != null) {
                 return method;
             }
         }

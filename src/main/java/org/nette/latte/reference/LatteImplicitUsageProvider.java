@@ -12,10 +12,12 @@ import com.jetbrains.php.lang.psi.elements.Field;
 import org.jetbrains.annotations.NotNull;
 import org.nette.latte.LatteFileType;
 
+// This marks method as used (gray color to some light color in IDE)
 public class LatteImplicitUsageProvider implements ImplicitUsageProvider {
 
     @Override
     public boolean isImplicitUsage(@NotNull PsiElement element) {
+        // Classes and methods are disabled because of high amount of resolve() in link and control references
         if (!(element instanceof Field)/* && !(element instanceof PhpClass) && !(element instanceof Method)*/) {
             return false;
         }
@@ -25,6 +27,7 @@ public class LatteImplicitUsageProvider implements ImplicitUsageProvider {
 
     @Override
     public boolean isImplicitRead(@NotNull PsiElement element) {
+        // Classes and methods are disabled because of high amount of resolve() in link and control references
         if (!(element instanceof Field)/* && !(element instanceof PhpClass) && !(element instanceof Method)*/) {
             return false;
         }

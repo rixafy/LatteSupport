@@ -6,15 +6,17 @@
 
 - References to presenter components via `{control ...}` and autocompletion
 - Link references from presenter actions `actionDefault` => `{link default}`
+- Usage info in unused PHP fields that are used in latte
 
 ### Fixed
 
 - Usage info in unused PHP fields that are used in latte
 - Autocompletion of global functions at the start of the macro
+- Indentation of HTML content inside tags on new lines
 
 ### Improved
 
-- Presenter resolving
+- Presenter name resolving, when using `{templateType}`
 
 ## [1.5.5] - 2025-08-25
 
