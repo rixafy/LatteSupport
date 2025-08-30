@@ -22,250 +22,251 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class LatteCustomMacroSettingsForm implements Configurable {
-	private JPanel panel1;
-	private JPanel panelConfigTableView;
-	private JCheckBox enableCustomMacrosCheckBox;
-	private JButton buttonHelp;
+    private JPanel panel1;
+    private JPanel panelConfigTableView;
+    private JCheckBox enableCustomMacrosCheckBox;
+    private JButton buttonHelp;
 
-	private TableView<LatteTagSettings> tableView;
-	private Project project;
-	private boolean changed = false;
-	private ListTableModel<LatteTagSettings> modelList;
+    private TableView<LatteTagSettings> tableView;
+    private Project project;
+    private boolean changed = false;
+    private ListTableModel<LatteTagSettings> modelList;
 
-	public LatteCustomMacroSettingsForm(Project project) {
-		this.project = project;
+    public LatteCustomMacroSettingsForm(Project project) {
+        this.project = project;
 
-		this.tableView = new TableView<>();
-		this.modelList = new ListTableModel<>(
-				new MacroNameColumn(),
-				new TypeColumn(),
-				new AllowedModifiersColumn(),
-				new ArgumentsColumn(),
-				new IsMultiLineColumn(),
-				new IsDeprecatedColumn(),
-				new VendorColumn()
-		);
+        this.tableView = new TableView<>();
+        this.modelList = new ListTableModel<>(
+            new MacroNameColumn(),
+            new TypeColumn(),
+            new AllowedModifiersColumn(),
+            new ArgumentsColumn(),
+            new IsMultiLineColumn(),
+            new IsDeprecatedColumn(),
+            new VendorColumn()
+        );
 
-		this.attachItems();
+        this.attachItems();
 
-		this.tableView.setModelAndUpdateColumns(this.modelList);
-		this.tableView.getModel().addTableModelListener(e -> LatteCustomMacroSettingsForm.this.changed = true);
+        this.tableView.setModelAndUpdateColumns(this.modelList);
+        this.tableView.getModel().addTableModelListener(e -> LatteCustomMacroSettingsForm.this.changed = true);
 
-		buttonHelp.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				LatteIdeHelper.openUrl(LatteConfiguration.LATTE_HELP_URL + "en/tags");
-			}
-		});
+        buttonHelp.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                LatteIdeHelper.openUrl(LatteConfiguration.LATTE_HELP_URL + "en/tags");
+            }
+        });
 
-		enableCustomMacrosCheckBox.setSelected(getSettings().enableDefaultVariables);
+        enableCustomMacrosCheckBox.setSelected(getSettings().enableDefaultVariables);
 
-		enableCustomMacrosCheckBox.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				LatteCustomMacroSettingsForm.this.changed = true;
-			}
-		});
-	}
+        enableCustomMacrosCheckBox.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                LatteCustomMacroSettingsForm.this.changed = true;
+            }
+        });
+    }
 
-	private void attachItems() {
+    private void attachItems() {
 
-		if(this.getSettings().tagSettings == null) {
-			return;
-		}
+        if (this.getSettings().tagSettings == null) {
+            return;
+        }
 
-		for (LatteTagSettings customMacroSettings : this.getSettings().tagSettings) {
-			this.modelList.addRow(customMacroSettings);
-		}
-	}
+        for (LatteTagSettings customMacroSettings : this.getSettings().tagSettings) {
+            this.modelList.addRow(customMacroSettings);
+        }
+    }
 
-	@Nls
-	@Override
-	public String getDisplayName() {
-		return null;
-	}
+    @Nls
+    @Override
+    public String getDisplayName() {
+        return null;
+    }
 
-	@Nullable
-	@Override
-	public String getHelpTopic() {
-		return null;
-	}
+    @Nullable
+    @Override
+    public String getHelpTopic() {
+        return null;
+    }
 
-	@Nullable
-	@Override
-	public JComponent createComponent() {
-		ToolbarDecorator tablePanel = ToolbarDecorator.createDecorator(this.tableView, new ElementProducer<LatteTagSettings>() {
-			@Override
-			public LatteTagSettings createElement() {
-				//IdeFocusManager.getInstance(TwigSettingsForm.this.project).requestFocus(TwigNamespaceDialog.getWindows(), true);
-				return null;
-			}
+    @Nullable
+    @Override
+    public JComponent createComponent() {
+        ToolbarDecorator tablePanel = ToolbarDecorator.createDecorator(this.tableView, new ElementProducer<LatteTagSettings>() {
+            @Override
+            public LatteTagSettings createElement() {
+                //IdeFocusManager.getInstance(TwigSettingsForm.this.project).requestFocus(TwigNamespaceDialog.getWindows(), true);
+                return null;
+            }
 
-			@Override
-			public boolean canCreateElement() {
-				return true;
-			}
-		});
+            @Override
+            public boolean canCreateElement() {
+                return true;
+            }
+        });
 
-		tablePanel.setEditAction(anActionButton ->
-				LatteCustomMacroSettingsForm.this.openMacroDialog(LatteCustomMacroSettingsForm.this.tableView.getSelectedObject())
-		);
+        tablePanel.setEditAction(anActionButton ->
+            LatteCustomMacroSettingsForm.this.openMacroDialog(LatteCustomMacroSettingsForm.this.tableView.getSelectedObject())
+        );
 
-		tablePanel.setAddAction(anActionButton ->
-				LatteCustomMacroSettingsForm.this.openMacroDialog(null)
-		);
+        tablePanel.setAddAction(anActionButton ->
+            LatteCustomMacroSettingsForm.this.openMacroDialog(null)
+        );
 
-		tablePanel.disableUpAction();
-		tablePanel.disableDownAction();
+        tablePanel.disableUpAction();
+        tablePanel.disableDownAction();
 
-		this.panelConfigTableView.add(tablePanel.createPanel());
+        this.panelConfigTableView.add(tablePanel.createPanel());
 
-		return this.panel1;
-	}
+        return this.panel1;
+    }
 
-	@Override
-	public boolean isModified() {
-		return this.changed;
-	}
+    @Override
+    public boolean isModified() {
+        return this.changed;
+    }
 
-	@Override
-	public void apply() throws ConfigurationException {
-		getSettings().tagSettings = new ArrayList<>(this.tableView.getListTableModel().getItems());
-		getSettings().enableCustomMacros = enableCustomMacrosCheckBox.isSelected();
+    @Override
+    public void apply() throws ConfigurationException {
+        getSettings().tagSettings = new ArrayList<>(this.tableView.getListTableModel().getItems());
+        getSettings().enableCustomMacros = enableCustomMacrosCheckBox.isSelected();
 
-		this.changed = false;
-	}
+        this.changed = false;
+    }
 
-	private LatteSettings getSettings() {
-		return LatteSettings.getInstance(this.project);
-	}
+    private LatteSettings getSettings() {
+        return LatteSettings.getInstance(this.project);
+    }
 
-	private void resetList() {
-		// clear list, easier?
-		while(this.modelList.getRowCount() > 0) {
-			this.modelList.removeRow(0);
-		}
-	}
+    private void resetList() {
+        // clear list, easier?
+        while (this.modelList.getRowCount() > 0) {
+            this.modelList.removeRow(0);
+        }
+    }
 
-	@Override
-	public void reset() {
-		this.resetList();
-		this.attachItems();
-		this.changed = false;
-	}
+    @Override
+    public void reset() {
+        this.resetList();
+        this.attachItems();
+        this.changed = false;
+    }
 
-	@Override
-	public void disposeUIResources() {
+    @Override
+    public void disposeUIResources() {
 
-	}
+    }
 
-	private static class MacroNameColumn extends ColumnInfo<LatteTagSettings, String> {
+    private static class MacroNameColumn extends ColumnInfo<LatteTagSettings, String> {
 
-		public MacroNameColumn() {
-			super("Name");
-		}
+        public MacroNameColumn() {
+            super("Name");
+        }
 
-		@Nullable
-		@Override
-		public String valueOf(LatteTagSettings customMacroSettings) {
-			return customMacroSettings.getMacroName();
-		}
-	}
-	private static class TypeColumn extends ColumnInfo<LatteTagSettings, String> {
+        @Nullable
+        @Override
+        public String valueOf(LatteTagSettings customMacroSettings) {
+            return customMacroSettings.getMacroName();
+        }
+    }
 
-		public TypeColumn() {
-			super("Type");
-		}
+    private static class TypeColumn extends ColumnInfo<LatteTagSettings, String> {
 
-		@Nullable
-		@Override
-		public String valueOf(LatteTagSettings latteVariableSettings) {
-			return latteVariableSettings.getMacroType();
-		}
-	}
+        public TypeColumn() {
+            super("Type");
+        }
 
-	private static class AllowedModifiersColumn extends ColumnInfo<LatteTagSettings, String> {
+        @Nullable
+        @Override
+        public String valueOf(LatteTagSettings latteVariableSettings) {
+            return latteVariableSettings.getMacroType();
+        }
+    }
 
-		public AllowedModifiersColumn() {
-			super("Allowed modifiers");
-		}
+    private static class AllowedModifiersColumn extends ColumnInfo<LatteTagSettings, String> {
 
-		@Nullable
-		@Override
-		public String valueOf(LatteTagSettings customMacroSettings) {
-			return customMacroSettings.isAllowedModifiers() ? "yes" : "no";
-		}
-	}
+        public AllowedModifiersColumn() {
+            super("Allowed modifiers");
+        }
 
-	private static class ArgumentsColumn extends ColumnInfo<LatteTagSettings, String> {
+        @Nullable
+        @Override
+        public String valueOf(LatteTagSettings customMacroSettings) {
+            return customMacroSettings.isAllowedModifiers() ? "yes" : "no";
+        }
+    }
 
-		public ArgumentsColumn() {
-			super("Arguments");
-		}
+    private static class ArgumentsColumn extends ColumnInfo<LatteTagSettings, String> {
 
-		@Nullable
-		@Override
-		public String valueOf(LatteTagSettings customMacroSettings) {
-			return customMacroSettings.getArguments();
-		}
-	}
+        public ArgumentsColumn() {
+            super("Arguments");
+        }
 
-	private static class IsMultiLineColumn extends ColumnInfo<LatteTagSettings, String> {
+        @Nullable
+        @Override
+        public String valueOf(LatteTagSettings customMacroSettings) {
+            return customMacroSettings.getArguments();
+        }
+    }
 
-		public IsMultiLineColumn() {
-			super("Multi line");
-		}
+    private static class IsMultiLineColumn extends ColumnInfo<LatteTagSettings, String> {
 
-		@Nullable
-		@Override
-		public String valueOf(LatteTagSettings customMacroSettings) {
-			return customMacroSettings.isMultiLine() ? "yes" : "no";
-		}
-	}
+        public IsMultiLineColumn() {
+            super("Multi line");
+        }
 
-	private static class IsDeprecatedColumn extends ColumnInfo<LatteTagSettings, String> {
+        @Nullable
+        @Override
+        public String valueOf(LatteTagSettings customMacroSettings) {
+            return customMacroSettings.isMultiLine() ? "yes" : "no";
+        }
+    }
 
-		public IsDeprecatedColumn() {
-			super("Deprecated");
-		}
+    private static class IsDeprecatedColumn extends ColumnInfo<LatteTagSettings, String> {
 
-		@Nullable
-		@Override
-		public String valueOf(LatteTagSettings customMacroSettings) {
-			return customMacroSettings.isDeprecated() ? "yes" : "no";
-		}
-	}
+        public IsDeprecatedColumn() {
+            super("Deprecated");
+        }
 
-	private class VendorColumn extends VendorTypeColumn<LatteTagSettings> {
+        @Nullable
+        @Override
+        public String valueOf(LatteTagSettings customMacroSettings) {
+            return customMacroSettings.isDeprecated() ? "yes" : "no";
+        }
+    }
 
-		public VendorColumn() {
-			super("Vendor");
-		}
+    private class VendorColumn extends VendorTypeColumn<LatteTagSettings> {
 
-		@Nullable
-		@Override
-		public LatteConfiguration.VendorResult valueOf(LatteTagSettings customMacroSettings) {
-			return LatteConfiguration.getInstance(project).getVendorForTag(customMacroSettings.getMacroName());
-		}
-	}
+        public VendorColumn() {
+            super("Vendor");
+        }
 
-	private void openMacroDialog(@Nullable LatteTagSettings customMacroSettings) {
-		LatteCustomMacroSettingsDialog latteVariableDialog;
-		if(customMacroSettings == null) {
-			latteVariableDialog = new LatteCustomMacroSettingsDialog(this.tableView, project);
-		} else {
-			latteVariableDialog = new LatteCustomMacroSettingsDialog(this.tableView, project, customMacroSettings);
-		}
+        @Nullable
+        @Override
+        public LatteConfiguration.VendorResult valueOf(LatteTagSettings customMacroSettings) {
+            return LatteConfiguration.getInstance(project).getVendorForTag(customMacroSettings.getMacroName());
+        }
+    }
 
-		Dimension dim = new Dimension();
-		dim.setSize(500, 130);
-		latteVariableDialog.setTitle("LatteCustomTagSettings");
-		latteVariableDialog.setMinimumSize(dim);
-		latteVariableDialog.pack();
-		latteVariableDialog.setLocationRelativeTo(this.panel1);
+    private void openMacroDialog(@Nullable LatteTagSettings customMacroSettings) {
+        LatteCustomMacroSettingsDialog latteVariableDialog;
+        if (customMacroSettings == null) {
+            latteVariableDialog = new LatteCustomMacroSettingsDialog(this.tableView, project);
+        } else {
+            latteVariableDialog = new LatteCustomMacroSettingsDialog(this.tableView, project, customMacroSettings);
+        }
 
-		latteVariableDialog.setVisible(true);
-	}
+        Dimension dim = new Dimension();
+        dim.setSize(500, 130);
+        latteVariableDialog.setTitle("LatteCustomTagSettings");
+        latteVariableDialog.setMinimumSize(dim);
+        latteVariableDialog.pack();
+        latteVariableDialog.setLocationRelativeTo(this.panel1);
+
+        latteVariableDialog.setVisible(true);
+    }
 }

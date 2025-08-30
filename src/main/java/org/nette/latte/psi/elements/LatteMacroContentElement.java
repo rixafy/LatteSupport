@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface LatteMacroContentElement extends LattePsiElement {
 
-	@Nullable LattePhpContent getFirstPhpContent();
+    @Nullable LattePhpContent getFirstPhpContent();
 
-	@NotNull
-	List<LattePhpContent> getPhpContentList();
+    @NotNull
+    List<LattePhpContent> getPhpContentList();
 
-	@Nullable PsiElement getMacroNameElement();
+    @Nullable PsiElement getMacroNameElement();
 
 }

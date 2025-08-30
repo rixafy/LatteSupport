@@ -3,9 +3,9 @@ package org.nette.latte;
 import com.intellij.lang.Language;
 
 public class LatteLanguage extends Language {
-	public static final LatteLanguage INSTANCE = new LatteLanguage();
+    public static final LatteLanguage INSTANCE = new LatteLanguage();
 
-	private LatteLanguage() {
-		super("Latte");
-	}
+    private LatteLanguage() {
+        super("Latte");
+    }
 }

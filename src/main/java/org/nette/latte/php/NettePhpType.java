@@ -74,7 +74,7 @@ public class NettePhpType {
 
     public static @NotNull NettePhpType create(final @NotNull List<String> types) {
         Set<String> temp = new LinkedHashSet<>(
-                Arrays.asList(String.join("|", types).split("\\|"))
+            Arrays.asList(String.join("|", types).split("\\|"))
         );
         return create(null, String.join("|", temp));
     }
@@ -413,9 +413,9 @@ public class NettePhpType {
             return;
         }
         depthTypes.addAll(
-                currentTypes.stream()
-                        .map(type -> type + String.join("", Collections.nCopies(subDepth, "[]")))
-                        .collect(Collectors.toList())
+            currentTypes.stream()
+                .map(type -> type + String.join("", Collections.nCopies(subDepth, "[]")))
+                .collect(Collectors.toList())
         );
     }
 
@@ -506,8 +506,8 @@ public class NettePhpType {
         @NotNull
         String getPart() {
             return arrayOf == null || isNative
-                    ? part
-                    : (arrayOf.getPart() + String.join("", Collections.nCopies(depth, "[]")));
+                ? part
+                : (arrayOf.getPart() + String.join("", Collections.nCopies(depth, "[]")));
         }
 
         @NotNull

@@ -7,22 +7,22 @@ import org.nette.latte.psi.LatteFile;
 import org.jetbrains.annotations.NotNull;
 
 public class LatteStructureViewModel extends StructureViewModelBase implements StructureViewModel.ElementInfoProvider {
-	public LatteStructureViewModel(PsiFile psiFile) {
-		super(psiFile, new LatteStructureViewTreeElement(psiFile));
-	}
+    public LatteStructureViewModel(PsiFile psiFile) {
+        super(psiFile, new LatteStructureViewTreeElement(psiFile));
+    }
 
-	@NotNull
-	public Sorter[] getSorters() {
-		return new Sorter[]{Sorter.ALPHA_SORTER};
-	}
+    @NotNull
+    public Sorter[] getSorters() {
+        return new Sorter[]{Sorter.ALPHA_SORTER};
+    }
 
-	@Override
-	public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
-		return false;
-	}
+    @Override
+    public boolean isAlwaysShowsPlus(StructureViewTreeElement element) {
+        return false;
+    }
 
-	@Override
-	public boolean isAlwaysLeaf(StructureViewTreeElement element) {
-		return element instanceof LatteFile;
-	}
+    @Override
+    public boolean isAlwaysLeaf(StructureViewTreeElement element) {
+        return element instanceof LatteFile;
+    }
 }

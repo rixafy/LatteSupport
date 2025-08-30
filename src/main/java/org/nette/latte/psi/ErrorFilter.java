@@ -14,30 +14,31 @@ import org.nette.latte.LatteLanguage;
 import org.jetbrains.annotations.NotNull;
 
 public class ErrorFilter extends HighlightErrorFilter {
-	public ErrorFilter() {
-	}
+    public ErrorFilter() {
+    }
 
-	public boolean shouldHighlightErrorElement(@NotNull PsiErrorElement element) {
-		PsiFile templateLanguageFile = PsiUtilCore.getTemplateLanguageFile(element.getContainingFile());
-		if (templateLanguageFile == null) {
-			return true;
-		}
-		Language language = templateLanguageFile.getLanguage();
-		if (language != LatteLanguage.INSTANCE) {
-			return true;
-		}
-		if (element.getParent() instanceof XmlElement) {
-			return false;
-		}
-		if (element.getParent().getLanguage() == LatteLanguage.INSTANCE) {
-			return true;
-		}
-		PsiElement nextSibling;
-		for (nextSibling = PsiTreeUtil.nextLeaf(element); nextSibling instanceof PsiWhiteSpace; nextSibling = nextSibling.getNextSibling());
+    public boolean shouldHighlightErrorElement(@NotNull PsiErrorElement element) {
+        PsiFile templateLanguageFile = PsiUtilCore.getTemplateLanguageFile(element.getContainingFile());
+        if (templateLanguageFile == null) {
+            return true;
+        }
+        Language language = templateLanguageFile.getLanguage();
+        if (language != LatteLanguage.INSTANCE) {
+            return true;
+        }
+        if (element.getParent() instanceof XmlElement) {
+            return false;
+        }
+        if (element.getParent().getLanguage() == LatteLanguage.INSTANCE) {
+            return true;
+        }
+        PsiElement nextSibling;
+        for (nextSibling = PsiTreeUtil.nextLeaf(element); nextSibling instanceof PsiWhiteSpace; nextSibling = nextSibling.getNextSibling())
+            ;
 
-		PsiElement psiElement = nextSibling == null ? null : PsiTreeUtil.findCommonParent(nextSibling, element);
-		boolean nextIsOuterLanguageElement = nextSibling instanceof OuterLanguageElement || nextSibling instanceof LatteMacroClassic;
-		return !nextIsOuterLanguageElement || psiElement == null || psiElement instanceof PsiFile;
-	}
+        PsiElement psiElement = nextSibling == null ? null : PsiTreeUtil.findCommonParent(nextSibling, element);
+        boolean nextIsOuterLanguageElement = nextSibling instanceof OuterLanguageElement || nextSibling instanceof LatteMacroClassic;
+        return !nextIsOuterLanguageElement || psiElement == null || psiElement instanceof PsiFile;
+    }
 
 }

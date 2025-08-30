@@ -35,7 +35,7 @@ public class LatteIdeHelper {
     public static boolean holdsReadLock() {
         Application app = ApplicationManager.getApplication();
         try {
-            return ((ApplicationEx)app).holdsReadLock();
+            return ((ApplicationEx) app).holdsReadLock();
         } catch (IllegalStateException e) {
             return false;
         }
@@ -56,31 +56,31 @@ public class LatteIdeHelper {
     }
 
     public static void doNotify(
-            @NotNull String title,
-            @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String content,
-            @NotNull NotificationType type,
-            @Nullable Project project
+        @NotNull String title,
+        @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String content,
+        @NotNull NotificationType type,
+        @Nullable Project project
     ) {
         doNotify(title, content, type, project, null);
     }
 
     public static void doNotify(
-            @NotNull String title,
-            @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String content,
-            @NotNull NotificationType type,
-            @Nullable Project project,
-            @Nullable NotificationAction notificationAction
+        @NotNull String title,
+        @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String content,
+        @NotNull NotificationType type,
+        @Nullable Project project,
+        @Nullable NotificationAction notificationAction
     ) {
         doNotify(title, content, type, project, false, notificationAction);
     }
 
     public static Notification doNotify(
-            @NotNull String title,
-            @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String content,
-            @NotNull NotificationType type,
-            @Nullable Project project,
-            boolean important,
-            @Nullable NotificationAction notificationAction
+        @NotNull String title,
+        @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String content,
+        @NotNull NotificationType type,
+        @Nullable Project project,
+        boolean important,
+        @Nullable NotificationAction notificationAction
     ) {
         Notification notification = new Notification(NOTIFICATION_GROUP, title, content, type);
         notification.setImportant(important);

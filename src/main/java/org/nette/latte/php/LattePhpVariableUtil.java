@@ -25,8 +25,8 @@ public class LattePhpVariableUtil {
 
     public static @NotNull Map<PsiElement, LattePhpCachedVariable> getAllVariablesInFile(PsiElement psiElement) {
         LatteFile file = psiElement instanceof LatteFile
-                ? (LatteFile) psiElement
-                : PsiTreeUtil.getParentOfType(psiElement, LatteFile.class);
+            ? (LatteFile) psiElement
+            : PsiTreeUtil.getParentOfType(psiElement, LatteFile.class);
         if (file == null) {
             return Collections.emptyMap();
         }

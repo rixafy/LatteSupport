@@ -7,10 +7,10 @@ import org.nette.latte.psi.LatteTypes;
 
 public class LatteMacroContentLexerAdapter extends MergingLexerAdapter {
 
-	public LatteMacroContentLexerAdapter() {
-		super(
-				new FlexAdapter(new LatteMacroContentLexer(null)),
-				TokenSet.create(LatteTypes.T_PHP_CONTENT, LatteTypes.T_MACRO_ARGS)
-		);
-	}
+    public LatteMacroContentLexerAdapter() {
+        super(
+            new FlexAdapter(new LatteMacroContentLexer(null)),
+            TokenSet.create(LatteTypes.T_PHP_CONTENT, LatteTypes.T_MACRO_ARGS)
+        );
+    }
 }

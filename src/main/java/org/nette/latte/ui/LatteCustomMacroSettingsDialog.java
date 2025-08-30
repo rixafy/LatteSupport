@@ -83,15 +83,15 @@ public class LatteCustomMacroSettingsDialog extends JDialog {
             return;
         }
 
-        for(LatteTagSettings.Type type: values) {
+        for (LatteTagSettings.Type type : values) {
             macroType.addItem(type.toString());
         }
     }
 
     private void onOK() {
         LatteTagSettings settings = new LatteTagSettings(
-                this.textVarName.getText(),
-                LatteTagSettings.Type.valueOf((String) this.macroType.getSelectedItem())
+            this.textVarName.getText(),
+            LatteTagSettings.Type.valueOf((String) this.macroType.getSelectedItem())
         );
         settings.setVendor(LatteConfiguration.Vendor.CUSTOM);
 

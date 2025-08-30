@@ -30,7 +30,7 @@ abstract public class LattePhpStubType<S extends StubElement<?>, P extends PsiEl
         int i = dataStream.readVarInt();
 
         List<String> types = new ArrayList<>();
-        for(int j = 0; j < i; ++j) {
+        for (int j = 0; j < i; ++j) {
             String s = dataStream.readNameString();
             if (s != null) {
                 types.add(s);

@@ -9,16 +9,16 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LatteStructureViewFactory implements PsiStructureViewFactory{
-	@Nullable
-	@Override
-	public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
-		return new TreeBasedStructureViewBuilder() {
-			@NotNull
-			@Override
-			public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
-				return new LatteStructureViewModel(psiFile);
-			}
-		};
-	}
+public class LatteStructureViewFactory implements PsiStructureViewFactory {
+    @Nullable
+    @Override
+    public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
+        return new TreeBasedStructureViewBuilder() {
+            @NotNull
+            @Override
+            public StructureViewModel createStructureViewModel(@Nullable Editor editor) {
+                return new LatteStructureViewModel(psiFile);
+            }
+        };
+    }
 }

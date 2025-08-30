@@ -90,7 +90,7 @@ public class LattePhpMethodReference extends PsiReferenceBase<PsiElement> implem
             if (!isFunction) {
                 return null;
             }
-            ResolveResult[] result =  multiResolve(false);
+            ResolveResult[] result = multiResolve(false);
             return result.length == 1 ? result[0].getElement() : null;
 
         } else {

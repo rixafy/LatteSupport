@@ -21,67 +21,67 @@ import java.util.List;
 
 public class ConstantUsagesInspection extends BaseLocalInspectionTool {
 
-	@NotNull
-	@Override
-	public String getShortName() {
-		return "LatteConstantUsages";
-	}
+    @NotNull
+    @Override
+    public String getShortName() {
+        return "LatteConstantUsages";
+    }
 
-	@Nullable
-	@Override
-	public ProblemDescriptor[] checkFile(@NotNull PsiFile file, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
-		if (!(file instanceof LatteFile)) {
-			return null;
-		}
+    @Nullable
+    @Override
+    public ProblemDescriptor[] checkFile(@NotNull PsiFile file, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
+        if (!(file instanceof LatteFile)) {
+            return null;
+        }
 
-		final List<ProblemDescriptor> problems = new ArrayList<>();
-		file.acceptChildren(new PsiRecursiveElementWalkingVisitor() {
-			@Override
-			public void visitElement(PsiElement element) {
-				if (element instanceof LattePhpConstant) {
-					NettePhpType phpType = ((LattePhpConstant) element).getPrevReturnType();
+        final List<ProblemDescriptor> problems = new ArrayList<>();
+        file.acceptChildren(new PsiRecursiveElementWalkingVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                if (element instanceof LattePhpConstant) {
+                    NettePhpType phpType = ((LattePhpConstant) element).getPrevReturnType();
 
-					Collection<PhpClass> phpClasses = phpType.getPhpClasses(element.getProject());
-					if (phpClasses.size() == 0) {
-						return;
-					}
+                    Collection<PhpClass> phpClasses = phpType.getPhpClasses(element.getProject());
+                    if (phpClasses.size() == 0) {
+                        return;
+                    }
 
-					boolean isFound = false;
-					String constantName = ((LattePhpConstant) element).getConstantName();
-					for (PhpClass phpClass : phpClasses) {
-						for (Field field : phpClass.getFields()) {
-							if (field.isConstant() && field.getName().equals(constantName)) {
-								PhpModifier modifier = field.getModifier();
-								if (modifier.isPrivate()) {
-									addProblem(manager, problems, element, "Used private constant '" + constantName + "'", isOnTheFly);
-								} else if (modifier.isProtected()) {
-									addProblem(manager, problems, element, "Used protected constant '" + constantName + "'", isOnTheFly);
-								} else if (field.isDeprecated()) {
-									addDeprecated(manager, problems, element, "Used constant '" + constantName + "' is marked as deprecated", isOnTheFly);
-								} else if (field.isInternal()) {
-									addDeprecated(manager, problems, element, "Used constant '" + constantName + "' is marked as internal", isOnTheFly);
-								}
-								isFound = true;
-							}
-						}
+                    boolean isFound = false;
+                    String constantName = ((LattePhpConstant) element).getConstantName();
+                    for (PhpClass phpClass : phpClasses) {
+                        for (Field field : phpClass.getFields()) {
+                            if (field.isConstant() && field.getName().equals(constantName)) {
+                                PhpModifier modifier = field.getModifier();
+                                if (modifier.isPrivate()) {
+                                    addProblem(manager, problems, element, "Used private constant '" + constantName + "'", isOnTheFly);
+                                } else if (modifier.isProtected()) {
+                                    addProblem(manager, problems, element, "Used protected constant '" + constantName + "'", isOnTheFly);
+                                } else if (field.isDeprecated()) {
+                                    addDeprecated(manager, problems, element, "Used constant '" + constantName + "' is marked as deprecated", isOnTheFly);
+                                } else if (field.isInternal()) {
+                                    addDeprecated(manager, problems, element, "Used constant '" + constantName + "' is marked as internal", isOnTheFly);
+                                }
+                                isFound = true;
+                            }
+                        }
 
-						for (PhpEnumCase enumCase : phpClass.getEnumCases()) {
-							if (enumCase.getName().equals(constantName)) {
-								isFound = true;
-							}
-						}
-					}
+                        for (PhpEnumCase enumCase : phpClass.getEnumCases()) {
+                            if (enumCase.getName().equals(constantName)) {
+                                isFound = true;
+                            }
+                        }
+                    }
 
-					if (!isFound) {
-						addProblem(manager, problems, element, "Constant '" + constantName + "' not found for type '" + phpType.toString() + "'", isOnTheFly);
-					}
+                    if (!isFound) {
+                        addProblem(manager, problems, element, "Constant '" + constantName + "' not found for type '" + phpType.toString() + "'", isOnTheFly);
+                    }
 
-				} else {
-					super.visitElement(element);
-				}
-			}
-		});
+                } else {
+                    super.visitElement(element);
+                }
+            }
+        });
 
-		return problems.toArray(new ProblemDescriptor[0]);
-	}
+        return problems.toArray(new ProblemDescriptor[0]);
+    }
 }

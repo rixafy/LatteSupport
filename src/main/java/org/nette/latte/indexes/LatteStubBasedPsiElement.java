@@ -10,7 +10,7 @@ import org.nette.latte.psi.elements.LattePsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LatteStubBasedPsiElement<T extends StubElement> extends StubBasedPsiElementBase<T>implements LattePsiElement {
+public class LatteStubBasedPsiElement<T extends StubElement> extends StubBasedPsiElementBase<T> implements LattePsiElement {
     private LatteFile file = null;
 
     public LatteStubBasedPsiElement(@NotNull T stub, @NotNull IStubElementType nodeType) {
@@ -26,7 +26,8 @@ public class LatteStubBasedPsiElement<T extends StubElement> extends StubBasedPs
         return this.getClass().getSimpleName() + "(" + getNode().getElementType() + ")('" + getNode().getText() + "')";
     }
 
-    @Nullable public LatteFile getLatteFile() {
+    @Nullable
+    public LatteFile getLatteFile() {
         if (file == null) {
             PsiFile containingFile = getContainingFile();
             file = containingFile instanceof LatteFile ? (LatteFile) containingFile : null;

@@ -10,26 +10,26 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class LattePsiElementImpl extends ASTWrapperPsiElement {
 
-	private Project project = null;
-	private LatteFile file = null;
+    private Project project = null;
+    private LatteFile file = null;
 
-	public LattePsiElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LattePsiElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	public @Nullable LatteFile getLatteFile() {
-		if (file == null) {
-			PsiFile containingFile = getContainingFile();
-			file = containingFile instanceof LatteFile ? (LatteFile) containingFile : null;
-		}
-		return file;
-	}
+    public @Nullable LatteFile getLatteFile() {
+        if (file == null) {
+            PsiFile containingFile = getContainingFile();
+            file = containingFile instanceof LatteFile ? (LatteFile) containingFile : null;
+        }
+        return file;
+    }
 
-	@Override
-	public @NotNull Project getProject() {
-		if (project == null) {
-			project = super.getProject();
-		}
-		return project;
-	}
+    @Override
+    public @NotNull Project getProject() {
+        if (project == null) {
+            project = super.getProject();
+        }
+        return project;
+    }
 }

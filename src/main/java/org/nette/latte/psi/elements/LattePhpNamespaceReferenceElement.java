@@ -5,6 +5,6 @@ import org.nette.latte.indexes.stubs.LattePhpNamespaceStub;
 
 public interface LattePhpNamespaceReferenceElement extends BaseLattePhpElement, StubBasedPsiElement<LattePhpNamespaceStub> {
 
-	public abstract String getNamespaceName();
+    public abstract String getNamespaceName();
 
 }

@@ -18,62 +18,61 @@ import javax.swing.*;
 
 public abstract class LattePhpNamespaceReferenceElementImpl extends LatteStubPhpElementImpl<LattePhpNamespaceStub> implements LattePhpNamespaceReferenceElement {
 
-	public LattePhpNamespaceReferenceElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LattePhpNamespaceReferenceElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	public LattePhpNamespaceReferenceElementImpl(final LattePhpNamespaceStub stub, final IStubElementType nodeType) {
-		super(stub, nodeType);
-	}
+    public LattePhpNamespaceReferenceElementImpl(final LattePhpNamespaceStub stub, final IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
-	@Override
-	public String getPhpElementName()
-	{
-		return getNamespaceName();
-	}
+    @Override
+    public String getPhpElementName() {
+        return getNamespaceName();
+    }
 
-	@Override
-	public NettePhpType getReturnType() {
-		return NettePhpType.create(getNamespaceName());
-	}
+    @Override
+    public NettePhpType getReturnType() {
+        return NettePhpType.create(getNamespaceName());
+    }
 
-	@Override
-	public @Nullable Icon getIcon(int flags) {
-		return PhpIcons.NAMESPACE;
-	}
+    @Override
+    public @Nullable Icon getIcon(int flags) {
+        return PhpIcons.NAMESPACE;
+    }
 
-	@Override
-	public String getNamespaceName() {
-		final LattePhpNamespaceStub stub = getStub();
-		if (stub != null) {
-			return stub.getNamespaceName();
-		}
+    @Override
+    public String getNamespaceName() {
+        final LattePhpNamespaceStub stub = getStub();
+        if (stub != null) {
+            return stub.getNamespaceName();
+        }
 
-		StringBuilder out = new StringBuilder();
-		for (PsiElement element : getParent().getChildren()) {
-			if (element instanceof LattePhpNamespaceReference) {
-				out.append("\\").append(element.getText());
-			}
+        StringBuilder out = new StringBuilder();
+        for (PsiElement element : getParent().getChildren()) {
+            if (element instanceof LattePhpNamespaceReference) {
+                out.append("\\").append(element.getText());
+            }
 
-			if (element == this) {
-				break;
-			}
-		}
-		return LattePhpUtil.normalizeClassName(out.toString());
-	}
+            if (element == this) {
+                break;
+            }
+        }
+        return LattePhpUtil.normalizeClassName(out.toString());
+    }
 
-	@Override
-	public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
-		return this;
-	}
+    @Override
+    public PsiElement setName(@NotNull String name) throws IncorrectOperationException {
+        return this;
+    }
 
-	@Override
-	public @Nullable PsiElement getNameIdentifier() {
-		return this;
-	}
+    @Override
+    public @Nullable PsiElement getNameIdentifier() {
+        return this;
+    }
 
-	@Override
-	public String getName() {
-		return getNamespaceName();
-	}
+    @Override
+    public String getName() {
+        return getNamespaceName();
+    }
 }

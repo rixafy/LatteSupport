@@ -31,25 +31,25 @@ public class LatteIndexUtil {
 
     public static Collection<LattePhpStaticVariable> findStaticVariablesByName(@NotNull Project project, String name) {
         return LattePhpStaticVariableIndex.getInstance().get(
-                LattePhpVariableUtil.normalizePhpVariable(name),
-                project,
-                GlobalSearchScope.allScope(project)
+            LattePhpVariableUtil.normalizePhpVariable(name),
+            project,
+            GlobalSearchScope.allScope(project)
         );
     }
 
     public static Collection<LattePhpNamespaceReference> findNamespacesByFqn(@NotNull Project project, String fqn) {
         return LattePhpNamespaceIndex.getInstance().get(
-                LattePhpUtil.normalizeClassName(fqn),
-                project,
-                GlobalSearchScope.allScope(project)
+            LattePhpUtil.normalizeClassName(fqn),
+            project,
+            GlobalSearchScope.allScope(project)
         );
     }
 
     public static Collection<LattePhpClassReference> getClassesByFqn(@NotNull Project project, String fqn) {
         return LattePhpClassIndex.getInstance().get(
-                LattePhpUtil.normalizeClassName(fqn),
-                project,
-                GlobalSearchScope.allScope(project)
+            LattePhpUtil.normalizeClassName(fqn),
+            project,
+            GlobalSearchScope.allScope(project)
         );
     }
 

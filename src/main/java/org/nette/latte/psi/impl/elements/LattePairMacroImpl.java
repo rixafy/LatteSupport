@@ -12,27 +12,27 @@ import java.util.List;
 
 public abstract class LattePairMacroImpl extends LattePsiElementImpl implements LattePairMacroElement {
 
-	public LattePairMacroImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LattePairMacroImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public @NotNull List<LatteMacroTag> getMacroTagList() {
-		return PsiTreeUtil.getChildrenOfTypeAsList(this, LatteMacroTag.class);
-	}
+    @Override
+    public @NotNull List<LatteMacroTag> getMacroTagList() {
+        return PsiTreeUtil.getChildrenOfTypeAsList(this, LatteMacroTag.class);
+    }
 
-	@Nullable
-	public LatteMacroTag getMacroOpenTag() {
-		return getMacroTagList().stream().findFirst().orElse(null);
-	}
+    @Nullable
+    public LatteMacroTag getMacroOpenTag() {
+        return getMacroTagList().stream().findFirst().orElse(null);
+    }
 
-	@Override
-	public @Nullable LatteMacroTag getCloseTag() {
-		List<LatteMacroTag> tags = getMacroTagList();
-		return tags.size() < 2 ? null : tags.get(1);
-	}
+    @Override
+    public @Nullable LatteMacroTag getCloseTag() {
+        List<LatteMacroTag> tags = getMacroTagList();
+        return tags.size() < 2 ? null : tags.get(1);
+    }
 
-	public @NotNull LatteMacroTag getOpenTag() {
-		return getMacroTagList().get(0);
-	}
+    public @NotNull LatteMacroTag getOpenTag() {
+        return getMacroTagList().get(0);
+    }
 }

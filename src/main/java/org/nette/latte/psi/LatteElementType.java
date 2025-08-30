@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 public class LatteElementType extends IElementType {
-	public LatteElementType(@NotNull @NonNls String debugName) {
-		super(debugName, LatteLanguage.INSTANCE);
-	}
+    public LatteElementType(@NotNull @NonNls String debugName) {
+        super(debugName, LatteLanguage.INSTANCE);
+    }
 }

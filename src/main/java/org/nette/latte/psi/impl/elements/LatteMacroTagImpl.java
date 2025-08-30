@@ -9,12 +9,12 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class LatteMacroTagImpl extends LattePsiElementImpl implements LattePairMacroElement {
 
-	public LatteMacroTagImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LatteMacroTagImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	@Nullable
-	public LatteMacroTag getMacroOpenTag() {
-		return getMacroTagList().stream().findFirst().orElse(null);
-	}
+    @Nullable
+    public LatteMacroTag getMacroOpenTag() {
+        return getMacroTagList().stream().findFirst().orElse(null);
+    }
 }

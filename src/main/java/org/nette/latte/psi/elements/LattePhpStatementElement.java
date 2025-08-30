@@ -10,16 +10,16 @@ import java.util.List;
 
 public interface LattePhpStatementElement extends LattePsiElement {
 
-	@NotNull LattePhpStatementFirstPart getPhpStatementFirstPart();
+    @NotNull LattePhpStatementFirstPart getPhpStatementFirstPart();
 
-	@NotNull List<LattePhpStatementPart> getPhpStatementPartList();
+    @NotNull List<LattePhpStatementPart> getPhpStatementPartList();
 
-	NettePhpType getReturnType();
+    NettePhpType getReturnType();
 
-	boolean isPhpVariableOnly();
+    boolean isPhpVariableOnly();
 
-	boolean isPhpClassReferenceOnly();
+    boolean isPhpClassReferenceOnly();
 
-	@Nullable BaseLattePhpElement getLastPhpElement();
+    @Nullable BaseLattePhpElement getLastPhpElement();
 
 }

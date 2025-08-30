@@ -16,42 +16,42 @@ import org.jetbrains.annotations.Nullable;
 
 public class LatteIndexPatternBuilder implements IndexPatternBuilder {
 
-	@Nullable
-	@Override
-	public Lexer getIndexingLexer(@NotNull PsiFile file) {
-		if (!(file instanceof LatteFile)) {
-			return null;
-		}
-		VirtualFile virtualFile = file.getVirtualFile();
-		if (virtualFile == null) {
-			virtualFile = file.getViewProvider().getVirtualFile();
-		}
+    @Nullable
+    @Override
+    public Lexer getIndexingLexer(@NotNull PsiFile file) {
+        if (!(file instanceof LatteFile)) {
+            return null;
+        }
+        VirtualFile virtualFile = file.getVirtualFile();
+        if (virtualFile == null) {
+            virtualFile = file.getViewProvider().getVirtualFile();
+        }
 
-		try {
-			LayeredLexer.ourDisableLayersFlag.set(Boolean.TRUE);
-			EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(file.getProject(), virtualFile);
-			return new LexerEditorHighlighterLexer(highlighter, false);
-		} finally {
-			LayeredLexer.ourDisableLayersFlag.set(Boolean.FALSE);
-		}
-	}
+        try {
+            LayeredLexer.ourDisableLayersFlag.set(Boolean.TRUE);
+            EditorHighlighter highlighter = EditorHighlighterFactory.getInstance().createEditorHighlighter(file.getProject(), virtualFile);
+            return new LexerEditorHighlighterLexer(highlighter, false);
+        } finally {
+            LayeredLexer.ourDisableLayersFlag.set(Boolean.FALSE);
+        }
+    }
 
-	@Nullable
-	@Override
-	public TokenSet getCommentTokenSet(@NotNull PsiFile file) {
-		return TokenSet.create(LatteTypes.T_MACRO_COMMENT);
-	}
+    @Nullable
+    @Override
+    public TokenSet getCommentTokenSet(@NotNull PsiFile file) {
+        return TokenSet.create(LatteTypes.T_MACRO_COMMENT);
+    }
 
-	@Override
-	public int getCommentStartDelta(IElementType tokenType) {
-		return 0;
-	}
+    @Override
+    public int getCommentStartDelta(IElementType tokenType) {
+        return 0;
+    }
 
-	@Override
-	public int getCommentEndDelta(IElementType tokenType) {
-		if (tokenType == LatteTypes.T_MACRO_COMMENT) {
-			return 2;
-		}
-		return 0;
-	}
+    @Override
+    public int getCommentEndDelta(IElementType tokenType) {
+        if (tokenType == LatteTypes.T_MACRO_COMMENT) {
+            return 2;
+        }
+        return 0;
+    }
 }

@@ -2,10 +2,10 @@ package org.nette.latte.psi.elements;
 
 public interface LattePhpClassUsageElement extends BaseLattePhpElement {
 
-	String getClassName();
+    String getClassName();
 
-	boolean isTemplateType();
+    boolean isTemplateType();
 
-	void reset();
+    void reset();
 
 }

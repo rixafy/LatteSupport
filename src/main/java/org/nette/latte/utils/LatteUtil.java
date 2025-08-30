@@ -27,8 +27,8 @@ public class LatteUtil {
         }
         String attributeName = ((LatteNetteAttr) foundElement).getAttrName().getText();
         return attributeName.replace("n:inner-", "")
-                .replace("n:tag-", "")
-                .replace("n:", "");
+            .replace("n:tag-", "")
+            .replace("n:", "");
     }
 
     public static String getSpacesBeforeCaret(@NotNull Editor editor) {

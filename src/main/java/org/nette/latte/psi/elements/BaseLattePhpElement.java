@@ -12,24 +12,24 @@ import java.util.List;
 
 public interface BaseLattePhpElement extends LattePsiNamedElement {
 
-	default @NotNull List<LattePhpArrayUsage> getPhpArrayUsageList() {
-		return Collections.emptyList();
-	}
+    default @NotNull List<LattePhpArrayUsage> getPhpArrayUsageList() {
+        return Collections.emptyList();
+    }
 
-	default NettePhpType getPrevReturnType() {
-		return getReturnType();
-	}
+    default NettePhpType getPrevReturnType() {
+        return getReturnType();
+    }
 
-	default NettePhpType getReturnType() {
-		return LattePhpTypeDetector.detectPhpType(this);
-	}
+    default NettePhpType getReturnType() {
+        return LattePhpTypeDetector.detectPhpType(this);
+    }
 
-	String getPhpElementName();
+    String getPhpElementName();
 
-	int getPhpArrayLevel();
+    int getPhpArrayLevel();
 
-	@Nullable PsiElement getTextElement();
+    @Nullable PsiElement getTextElement();
 
-	@Nullable LattePhpStatementPartElement getPhpStatementPart();
+    @Nullable LattePhpStatementPartElement getPhpStatementPart();
 
 }

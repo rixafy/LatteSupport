@@ -10,9 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class LatteBraceMatcher implements PairedBraceMatcher {
     private static final BracePair[] PAIRS = new BracePair[]{
-            new BracePair(LatteTypes.T_PHP_LEFT_BRACKET, LatteTypes.T_PHP_RIGHT_BRACKET, false),
-            new BracePair(LatteTypes.T_PHP_LEFT_CURLY_BRACE, LatteTypes.T_PHP_RIGHT_CURLY_BRACE, true),
-            new BracePair(LatteTypes.T_PHP_LEFT_NORMAL_BRACE, LatteTypes.T_PHP_RIGHT_NORMAL_BRACE, false),
+        new BracePair(LatteTypes.T_PHP_LEFT_BRACKET, LatteTypes.T_PHP_RIGHT_BRACKET, false),
+        new BracePair(LatteTypes.T_PHP_LEFT_CURLY_BRACE, LatteTypes.T_PHP_RIGHT_CURLY_BRACE, true),
+        new BracePair(LatteTypes.T_PHP_LEFT_NORMAL_BRACE, LatteTypes.T_PHP_RIGHT_NORMAL_BRACE, false),
     };
 
     @NotNull

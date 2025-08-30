@@ -17,15 +17,15 @@ import java.util.Collection;
 
 public class LattePhpNamespaceCompletionProvider extends BaseLatteCompletionProvider {
 
-	public LattePhpNamespaceCompletionProvider() {
-	}
+    public LattePhpNamespaceCompletionProvider() {
+    }
 
-	@Override
-	protected void addCompletions(@NotNull CompletionParameters params, ProcessingContext context, @NotNull CompletionResultSet result) {
-		PsiElement curr = params.getPosition().getOriginalElement();
-		if (PsiTreeUtil.getParentOfType(curr, LattePhpContent.class) == null) {
-			return;
-		}
+    @Override
+    protected void addCompletions(@NotNull CompletionParameters params, ProcessingContext context, @NotNull CompletionResultSet result) {
+        PsiElement curr = params.getPosition().getOriginalElement();
+        if (PsiTreeUtil.getParentOfType(curr, LattePhpContent.class) == null) {
+            return;
+        }
 
         /*
 
@@ -47,28 +47,28 @@ public class LattePhpNamespaceCompletionProvider extends BaseLatteCompletionProv
             return;
         }*/
 
-		String namespaceName = getNamespaceName(curr);
-		Collection<String> namespaceNames = LattePhpUtil.getAllExistingNamespacesByName(curr.getProject(), namespaceName);
-		Collection<PhpNamespace> namespaces = LattePhpUtil.getAlNamespaces(curr.getProject(), namespaceNames);
-		for (PhpNamespace namespace : namespaces) {
-			PhpLookupElement lookupItem = getPhpLookupElement(namespace, null, getTypeText(namespace.getParentNamespaceName()));
-			lookupItem.handler = PhpNamespaceInsertHandler.getInstance();
-			result.addElement(lookupItem);
-		}
-	}
+        String namespaceName = getNamespaceName(curr);
+        Collection<String> namespaceNames = LattePhpUtil.getAllExistingNamespacesByName(curr.getProject(), namespaceName);
+        Collection<PhpNamespace> namespaces = LattePhpUtil.getAlNamespaces(curr.getProject(), namespaceNames);
+        for (PhpNamespace namespace : namespaces) {
+            PhpLookupElement lookupItem = getPhpLookupElement(namespace, null, getTypeText(namespace.getParentNamespaceName()));
+            lookupItem.handler = PhpNamespaceInsertHandler.getInstance();
+            result.addElement(lookupItem);
+        }
+    }
 
-	@Nullable
-	private String getTypeText(String parentNamespace) {
-		if (parentNamespace.length() > 1) {
-			if (parentNamespace.startsWith("\\")) {
-				parentNamespace = parentNamespace.substring(1);
-			}
-			if (parentNamespace.endsWith("\\") && parentNamespace.length() > 1) {
-				parentNamespace = parentNamespace.substring(0, parentNamespace.length() - 1);
-			}
-			return " [" + parentNamespace + "]";
-		}
-		return null;
-	}
+    @Nullable
+    private String getTypeText(String parentNamespace) {
+        if (parentNamespace.length() > 1) {
+            if (parentNamespace.startsWith("\\")) {
+                parentNamespace = parentNamespace.substring(1);
+            }
+            if (parentNamespace.endsWith("\\") && parentNamespace.length() > 1) {
+                parentNamespace = parentNamespace.substring(0, parentNamespace.length() - 1);
+            }
+            return " [" + parentNamespace + "]";
+        }
+        return null;
+    }
 
 }

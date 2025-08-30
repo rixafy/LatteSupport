@@ -9,45 +9,45 @@ import org.jetbrains.annotations.NotNull;
 
 public class PhpClassInsertHandler extends PhpReferenceInsertHandler {
 
-	private static final PhpClassInsertHandler instance = new PhpClassInsertHandler();
+    private static final PhpClassInsertHandler instance = new PhpClassInsertHandler();
 
-	public PhpClassInsertHandler() {
-		super();
-	}
+    public PhpClassInsertHandler() {
+        super();
+    }
 
-	public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement lookupElement) {
-		final Object object = lookupElement.getObject();
-		final String classNamespace = object instanceof PhpClass ? ((PhpClass) object).getNamespaceName() : "";
+    public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement lookupElement) {
+        final Object object = lookupElement.getObject();
+        final String classNamespace = object instanceof PhpClass ? ((PhpClass) object).getNamespaceName() : "";
 
-		if (!classNamespace.isEmpty()) {
-			int startOffset = context.getEditor().getCaretModel().getOffset();
-			String fileText = context.getEditor().getDocument().getText();
-			String current = fileText.substring(0, startOffset);
-			int lastSpace = current.lastIndexOf(" ");
-			current = current.substring(lastSpace + 1);
-			int index = current.lastIndexOf("\\");
-			String existingNamespace = "";
-			if (index > 0 && current.length() >= index) {
-				existingNamespace = current.substring(0, index) + "\\";
-			}
+        if (!classNamespace.isEmpty()) {
+            int startOffset = context.getEditor().getCaretModel().getOffset();
+            String fileText = context.getEditor().getDocument().getText();
+            String current = fileText.substring(0, startOffset);
+            int lastSpace = current.lastIndexOf(" ");
+            current = current.substring(lastSpace + 1);
+            int index = current.lastIndexOf("\\");
+            String existingNamespace = "";
+            if (index > 0 && current.length() >= index) {
+                existingNamespace = current.substring(0, index) + "\\";
+            }
 
-			String fqn = classNamespace;
-			if (!classNamespace.equals("\\") && !existingNamespace.startsWith("\\") && fqn.startsWith("\\")) {
-				fqn = fqn.substring(1);
-			} else if (classNamespace.equals("\\") && existingNamespace.length() == 0) {
-				fqn = "\\";
-			}
+            String fqn = classNamespace;
+            if (!classNamespace.equals("\\") && !existingNamespace.startsWith("\\") && fqn.startsWith("\\")) {
+                fqn = fqn.substring(1);
+            } else if (classNamespace.equals("\\") && existingNamespace.length() == 0) {
+                fqn = "\\";
+            }
 
-			if (existingNamespace.length() > 0 && fqn.contains(existingNamespace)) {
-				fqn = fqn.replace(existingNamespace, "");
-			}
+            if (existingNamespace.length() > 0 && fqn.contains(existingNamespace)) {
+                fqn = fqn.replace(existingNamespace, "");
+            }
 
-			context.getDocument().insertString(context.getStartOffset(), fqn);
-			PsiDocumentManager.getInstance(context.getProject()).commitDocument(context.getDocument());
-		}
-	}
+            context.getDocument().insertString(context.getStartOffset(), fqn);
+            PsiDocumentManager.getInstance(context.getProject()).commitDocument(context.getDocument());
+        }
+    }
 
-	public static PhpClassInsertHandler getInstance() {
-		return instance;
-	}
+    public static PhpClassInsertHandler getInstance() {
+        return instance;
+    }
 }

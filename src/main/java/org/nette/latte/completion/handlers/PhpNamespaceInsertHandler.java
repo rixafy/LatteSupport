@@ -10,39 +10,39 @@ import org.jetbrains.annotations.NotNull;
 
 public class PhpNamespaceInsertHandler extends PhpReferenceInsertHandler {
 
-	private static final PhpNamespaceInsertHandler instance = new PhpNamespaceInsertHandler();
+    private static final PhpNamespaceInsertHandler instance = new PhpNamespaceInsertHandler();
 
-	public PhpNamespaceInsertHandler() {
-		super();
-	}
+    public PhpNamespaceInsertHandler() {
+        super();
+    }
 
-	public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement lookupElement) {
-		final Object object = lookupElement.getObject();
-		String fqn = object instanceof PhpNamespace ? ((PhpNamespace) object).getParentNamespaceName() : "";
-		if (fqn.isEmpty()) {
-			return;
-		}
+    public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement lookupElement) {
+        final Object object = lookupElement.getObject();
+        String fqn = object instanceof PhpNamespace ? ((PhpNamespace) object).getParentNamespaceName() : "";
+        if (fqn.isEmpty()) {
+            return;
+        }
 
-		int startOffset = context.getEditor().getCaretModel().getOffset();
-		String fileText = context.getEditor().getDocument().getText();
-		String current = fileText.substring(0, startOffset);
-		int lastSpace = current.lastIndexOf(" ");
-		current = current.substring(lastSpace + 1);
+        int startOffset = context.getEditor().getCaretModel().getOffset();
+        String fileText = context.getEditor().getDocument().getText();
+        String current = fileText.substring(0, startOffset);
+        int lastSpace = current.lastIndexOf(" ");
+        current = current.substring(lastSpace + 1);
 
-		if (fqn.startsWith("\\")) {
-			fqn = fqn.substring(1);
-		}
+        if (fqn.startsWith("\\")) {
+            fqn = fqn.substring(1);
+        }
 
-		context.getDocument().insertString(context.getStartOffset(), fqn);
+        context.getDocument().insertString(context.getStartOffset(), fqn);
 
-		if (!current.endsWith("\\")) {
-			EditorModificationUtil.insertStringAtCaret(context.getEditor(), "\\");
-		}
+        if (!current.endsWith("\\")) {
+            EditorModificationUtil.insertStringAtCaret(context.getEditor(), "\\");
+        }
 
-		PsiDocumentManager.getInstance(context.getProject()).commitDocument(context.getDocument());
-	}
+        PsiDocumentManager.getInstance(context.getProject()).commitDocument(context.getDocument());
+    }
 
-	public static PhpNamespaceInsertHandler getInstance() {
-		return instance;
-	}
+    public static PhpNamespaceInsertHandler getInstance() {
+        return instance;
+    }
 }

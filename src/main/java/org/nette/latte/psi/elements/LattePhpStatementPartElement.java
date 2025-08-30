@@ -8,14 +8,14 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LattePhpStatementPartElement extends LattePsiElement {
 
-	default @NotNull NettePhpType getReturnType() {
-		return LattePhpTypeDetector.detectPhpType(this);
-	}
+    default @NotNull NettePhpType getReturnType() {
+        return LattePhpTypeDetector.detectPhpType(this);
+    }
 
-	@NotNull LattePhpStatement getPhpStatement();
+    @NotNull LattePhpStatement getPhpStatement();
 
-	@Nullable LattePhpStatementPartElement getPrevPhpStatementPart();
+    @Nullable LattePhpStatementPartElement getPrevPhpStatementPart();
 
-	@Nullable BaseLattePhpElement getPhpElement();
+    @Nullable BaseLattePhpElement getPhpElement();
 
 }

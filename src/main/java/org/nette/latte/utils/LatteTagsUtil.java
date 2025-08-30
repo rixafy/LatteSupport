@@ -56,39 +56,39 @@ public class LatteTagsUtil {
     }
 
     public static final List<String> LINK_TAGS_LIST = Arrays.asList(
-            Type.LINK.getTagName(),
-            Type.PLINK.getTagName(),
-            Type.N_HREF.getTagName()
+        Type.LINK.getTagName(),
+        Type.PLINK.getTagName(),
+        Type.N_HREF.getTagName()
     );
 
     public static final List<String> CONTROL_TAGS_LIST = Arrays.asList(
-            Type.CONTROL.getTagName(),
-            Type.FORM.getTagName()
+        Type.CONTROL.getTagName(),
+        Type.FORM.getTagName()
     );
 
     public static final List<String> FILE_TAGS_LIST = Arrays.asList(
-            Type.IMPORT.getTagName(),
-            Type.INCLUDE.getTagName(),
-            Type.LAYOUT.getTagName(),
-            Type.EXTENDS.getTagName(),
-            Type.SANDBOX.getTagName(),
-            Type.EMBED.getTagName()
+        Type.IMPORT.getTagName(),
+        Type.INCLUDE.getTagName(),
+        Type.LAYOUT.getTagName(),
+        Type.EXTENDS.getTagName(),
+        Type.SANDBOX.getTagName(),
+        Type.EMBED.getTagName()
     );
 
     public static final List<String> CONTEXT_TAGS_LIST = Arrays.asList(
-            Type.FOREACH.getTagName(),
-            Type.FOR.getTagName(),
-            Type.BLOCK.getTagName(),
-            Type.DEFINE.getTagName(),
-            Type.SNIPPET.getTagName(),
-            Type.SNIPPETAREA.getTagName(),
-            Type.IF.getTagName(),
-            Type.IFCHANGED.getTagName(),
-            Type.ELSE.getTagName(),
-            Type.ELSEIF.getTagName(),
-            Type.ELSEIFSET.getTagName(),
-            Type.WHILE.getTagName(),
-            Type.IFSET.getTagName()
+        Type.FOREACH.getTagName(),
+        Type.FOR.getTagName(),
+        Type.BLOCK.getTagName(),
+        Type.DEFINE.getTagName(),
+        Type.SNIPPET.getTagName(),
+        Type.SNIPPETAREA.getTagName(),
+        Type.IF.getTagName(),
+        Type.IFCHANGED.getTagName(),
+        Type.ELSE.getTagName(),
+        Type.ELSEIF.getTagName(),
+        Type.ELSEIFSET.getTagName(),
+        Type.WHILE.getTagName(),
+        Type.IFSET.getTagName()
     );
     public static final List<String> TYPE_TAGS_LIST = Arrays.asList(Type.VAR_TYPE.getTagName(), Type.TEMPLATE_TYPE.getTagName(), Type.VAR.getTagName());
 

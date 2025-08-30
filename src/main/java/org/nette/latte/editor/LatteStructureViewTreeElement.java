@@ -19,60 +19,60 @@ import java.util.regex.Pattern;
 
 public class LatteStructureViewTreeElement extends PsiTreeElementBase<PsiElement> {
 
-	public LatteStructureViewTreeElement(PsiElement psiElement) {
-		super(psiElement);
-	}
+    public LatteStructureViewTreeElement(PsiElement psiElement) {
+        super(psiElement);
+    }
 
-	@NotNull
-	@Override
-	public Collection<StructureViewTreeElement> getChildrenBase() {
-		Collection<StructureViewTreeElement> elements = new ArrayList<>();
-		if (getElement() == null) {
-			return elements;
-		}
-		for (PsiElement el : getElement().getChildren()) {
-			if (el instanceof LatteMacroClassic || el instanceof LatteAutoClosedBlock || el instanceof LatteNetteAttr) {
-				elements.add(new LatteStructureViewTreeElement(el));
-			}
-		}
-		return elements;
-	}
+    @NotNull
+    @Override
+    public Collection<StructureViewTreeElement> getChildrenBase() {
+        Collection<StructureViewTreeElement> elements = new ArrayList<>();
+        if (getElement() == null) {
+            return elements;
+        }
+        for (PsiElement el : getElement().getChildren()) {
+            if (el instanceof LatteMacroClassic || el instanceof LatteAutoClosedBlock || el instanceof LatteNetteAttr) {
+                elements.add(new LatteStructureViewTreeElement(el));
+            }
+        }
+        return elements;
+    }
 
-	@Override
-	public Icon getIcon(boolean open) {
-		PsiElement element = getElement();
-		if (element instanceof LatteMacroClassic || element instanceof LatteAutoClosedBlock) {
-			return LatteIcons.MACRO;
-		} else if (element instanceof LatteNetteAttr) {
-			return LatteIcons.N_TAG;
-		} else if (element instanceof LatteFile) {
-			return LatteIcons.FILE;
-		}
-		return super.getIcon(open);
-	}
+    @Override
+    public Icon getIcon(boolean open) {
+        PsiElement element = getElement();
+        if (element instanceof LatteMacroClassic || element instanceof LatteAutoClosedBlock) {
+            return LatteIcons.MACRO;
+        } else if (element instanceof LatteNetteAttr) {
+            return LatteIcons.N_TAG;
+        } else if (element instanceof LatteFile) {
+            return LatteIcons.FILE;
+        }
+        return super.getIcon(open);
+    }
 
-	@Nullable
-	@Override
-	public String getPresentableText() {
-		PsiElement element = getElement();
-		if (element instanceof LatteMacroClassic) {
-			LatteMacroClassic macroClassic = (LatteMacroClassic) element;
-			String presentableText = macroClassic.getOpenTag().getMacroName();
-			if (macroClassic.getOpenTag().getMacroContent() != null) {
-				String macroText = macroClassic.getOpenTag().getMacroContent().getText().trim();
-				Pattern pattern  = Pattern.compile("([\\S]+).*");
-				Matcher matcher = pattern.matcher(macroText);
-				if (matcher.matches()) {
-					presentableText += " " + matcher.group(1);
-				}
+    @Nullable
+    @Override
+    public String getPresentableText() {
+        PsiElement element = getElement();
+        if (element instanceof LatteMacroClassic) {
+            LatteMacroClassic macroClassic = (LatteMacroClassic) element;
+            String presentableText = macroClassic.getOpenTag().getMacroName();
+            if (macroClassic.getOpenTag().getMacroContent() != null) {
+                String macroText = macroClassic.getOpenTag().getMacroContent().getText().trim();
+                Pattern pattern = Pattern.compile("([\\S]+).*");
+                Matcher matcher = pattern.matcher(macroText);
+                if (matcher.matches()) {
+                    presentableText += " " + matcher.group(1);
+                }
 
-			}
-			return presentableText;
-		} else if (element instanceof LatteNetteAttr) {
-			return ((LatteNetteAttr) element).getAttrName().getText();
-		} else if (element instanceof LatteFile) {
-			return ((LatteFile) element).getName();
-		}
-		return "";
-	}
+            }
+            return presentableText;
+        } else if (element instanceof LatteNetteAttr) {
+            return ((LatteNetteAttr) element).getAttrName().getText();
+        } else if (element instanceof LatteFile) {
+            return ((LatteFile) element).getName();
+        }
+        return "";
+    }
 }

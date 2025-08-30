@@ -11,110 +11,111 @@ import org.nette.latte.psi.LatteTypes;
 import org.nette.latte.psi.elements.LatteFilePathElement;
 import org.nette.latte.psi.impl.LattePsiElementImpl;
 import org.nette.latte.psi.impl.LattePsiImplUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class LatteFilePathElementImpl extends LattePsiElementImpl implements LatteFilePathElement {
-	private @Nullable List<PsiReference> references = null;
-	private @Nullable PsiElement identifier = null;
+    private @Nullable List<PsiReference> references = null;
+    private @Nullable PsiElement identifier = null;
 
-	public LatteFilePathElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LatteFilePathElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public void subtreeChanged() {
-		super.subtreeChanged();
-		identifier = null;
-		references = null;
-	}
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        identifier = null;
+        references = null;
+    }
 
-	@Override
-	public @Nullable PsiElement getNameIdentifier() {
-		if (identifier == null) {
-			identifier = LattePsiImplUtil.findFirstChildWithType(this, LatteTypes.T_FILE_PATH);
-		}
+    @Override
+    public @Nullable PsiElement getNameIdentifier() {
+        if (identifier == null) {
+            identifier = LattePsiImplUtil.findFirstChildWithType(this, LatteTypes.T_FILE_PATH);
+        }
 
-		return identifier;
-	}
+        return identifier;
+    }
 
-	@Override
-	public @NotNull String getFilePath() {
-		return this.getText();
-	}
+    @Override
+    public @NotNull String getFilePath() {
+        return this.getText();
+    }
 
-	@Override
-	public PsiReference @NotNull [] getReferences() {
-		if (references == null) {
-			references = new ArrayList<>();
-			StringBuilder current = new StringBuilder();
-			int textRangeIndex = 0;
+    @Override
+    public PsiReference @NotNull [] getReferences() {
+        if (references == null) {
+            references = new ArrayList<>();
+            StringBuilder current = new StringBuilder();
+            int textRangeIndex = 0;
 
-			for (String entity : this.getFilePath().trim().split("/")) {
-				if (!entity.isEmpty()) {
-					int finalTextRangeIndex = textRangeIndex;
+            for (String entity : this.getFilePath().trim().split("/")) {
+                if (!entity.isEmpty()) {
+                    int finalTextRangeIndex = textRangeIndex;
 
-					references.add(new PsiReferenceBase<PsiElement>(this, new TextRange(finalTextRangeIndex, finalTextRangeIndex + entity.length()), true) {
-						private final String directoryPath = current.append('/').toString();
-						private final String path = current.append(entity).toString();
+                    references.add(new PsiReferenceBase<PsiElement>(this, new TextRange(finalTextRangeIndex, finalTextRangeIndex + entity.length()), true) {
+                        private final String directoryPath = current.append('/').toString();
+                        private final String path = current.append(entity).toString();
 
-						@Override
-						public @Nullable PsiElement resolve() {
-							VirtualFile virtual = VirtualFileManager.getInstance().findFileByUrl("file://" + myElement.getContainingFile().getContainingDirectory().getVirtualFile().getPath() + path);
-							if (virtual == null) {
-								return null;
-							}
+                        @Override
+                        public @Nullable PsiElement resolve() {
+                            VirtualFile virtual = VirtualFileManager.getInstance().findFileByUrl("file://" + myElement.getContainingFile().getContainingDirectory().getVirtualFile().getPath() + path);
+                            if (virtual == null) {
+                                return null;
+                            }
 
-							PsiFileSystemItem fileOrDirectory = PsiManager.getInstance(myElement.getProject()).findDirectory(virtual);
-							if (fileOrDirectory == null) {
-								fileOrDirectory = PsiManager.getInstance(myElement.getProject()).findFile(virtual);
-							}
+                            PsiFileSystemItem fileOrDirectory = PsiManager.getInstance(myElement.getProject()).findDirectory(virtual);
+                            if (fileOrDirectory == null) {
+                                fileOrDirectory = PsiManager.getInstance(myElement.getProject()).findFile(virtual);
+                            }
 
-							return fileOrDirectory;
+                            return fileOrDirectory;
                         }
 
-						@Override
-						public Object @NotNull [] getVariants() {
-							String target = "file://" + getContainingFile().getOriginalFile().getContainingDirectory().getVirtualFile().getPath() + directoryPath;
-							if (target.endsWith("/")) {
-								target = target.substring(0, target.length() - 1);
-							}
+                        @Override
+                        public Object @NotNull [] getVariants() {
+                            String target = "file://" + getContainingFile().getOriginalFile().getContainingDirectory().getVirtualFile().getPath() + directoryPath;
+                            if (target.endsWith("/")) {
+                                target = target.substring(0, target.length() - 1);
+                            }
 
-							VirtualFile virtual = VirtualFileManager.getInstance().findFileByUrl(target);
-							if (virtual == null || !virtual.isDirectory()) {
-								return new Object[0];
-							}
+                            VirtualFile virtual = VirtualFileManager.getInstance().findFileByUrl(target);
+                            if (virtual == null || !virtual.isDirectory()) {
+                                return new Object[0];
+                            }
 
-							PsiDirectory directory = PsiManager.getInstance(getProject()).findDirectory(virtual);
-							if (directory == null) {
-								return new Object[0];
-							}
+                            PsiDirectory directory = PsiManager.getInstance(getProject()).findDirectory(virtual);
+                            if (directory == null) {
+                                return new Object[0];
+                            }
 
-							List<PsiFileSystemItem> items = new ArrayList<>();
-							for (VirtualFile file : virtual.getChildren()) {
-								if (!file.isDirectory() && !file.getName().endsWith(".latte")) {
-									continue;
-								}
+                            List<PsiFileSystemItem> items = new ArrayList<>();
+                            for (VirtualFile file : virtual.getChildren()) {
+                                if (!file.isDirectory() && !file.getName().endsWith(".latte")) {
+                                    continue;
+                                }
 
-								PsiFileSystemItem fileOrDirectory = PsiManager.getInstance(getProject()).findDirectory(file);
-								if (fileOrDirectory == null) {
-									fileOrDirectory = PsiManager.getInstance(getProject()).findFile(file);
-								}
+                                PsiFileSystemItem fileOrDirectory = PsiManager.getInstance(getProject()).findDirectory(file);
+                                if (fileOrDirectory == null) {
+                                    fileOrDirectory = PsiManager.getInstance(getProject()).findFile(file);
+                                }
 
-								items.add(fileOrDirectory);
-							}
+                                items.add(fileOrDirectory);
+                            }
 
-							return items.toArray();
-						}
-					});
-					textRangeIndex += entity.length() + 1;
+                            return items.toArray();
+                        }
+                    });
+                    textRangeIndex += entity.length() + 1;
 
-				} else {
-					textRangeIndex++;
-				}
-			}
-		}
+                } else {
+                    textRangeIndex++;
+                }
+            }
+        }
 
-		return references.toArray(new PsiReference[0]);
-	}
+        return references.toArray(new PsiReference[0]);
+    }
 }

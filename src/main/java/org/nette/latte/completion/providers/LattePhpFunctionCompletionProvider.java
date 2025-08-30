@@ -28,17 +28,17 @@ import java.util.*;
  */
 public class LattePhpFunctionCompletionProvider extends BaseLatteCompletionProvider {
 
-	public LattePhpFunctionCompletionProvider() {
-		super();
-	}
+    public LattePhpFunctionCompletionProvider() {
+        super();
+    }
 
-	@Override
-	protected void addCompletions(
-            @NotNull CompletionParameters params,
-            @NotNull ProcessingContext ctx,
-            @NotNull CompletionResultSet results
-	) {
-		PsiElement curr = params.getPosition().getOriginalElement();
+    @Override
+    protected void addCompletions(
+        @NotNull CompletionParameters params,
+        @NotNull ProcessingContext ctx,
+        @NotNull CompletionResultSet results
+    ) {
+        PsiElement curr = params.getPosition().getOriginalElement();
         PrefixMatcher prefixMatcher = results.getPrefixMatcher();
 
         // When typing after {, we suggest only functions that start with the prefix to avoid noise
@@ -49,38 +49,38 @@ public class LattePhpFunctionCompletionProvider extends BaseLatteCompletionProvi
             return;
         }
 
-		String prefix = prefixMatcher.getPrefix();
-		if (prefix.contains("\\")) {
-			int index = prefix.lastIndexOf("\\");
-			prefixMatcher = prefixMatcher.cloneWithPrefix(prefix.substring(index + 1));
-		}
+        String prefix = prefixMatcher.getPrefix();
+        if (prefix.contains("\\")) {
+            int index = prefix.lastIndexOf("\\");
+            prefixMatcher = prefixMatcher.cloneWithPrefix(prefix.substring(index + 1));
+        }
 
-		Project project = params.getPosition().getProject();
-		Collection<String> functionNames = LattePhpUtil.getAllExistingFunctionNames(project, prefixMatcher);
-		Collection<Function> variants = LattePhpUtil.getAllFunctions(project, functionNames);
+        Project project = params.getPosition().getProject();
+        Collection<String> functionNames = LattePhpUtil.getAllExistingFunctionNames(project, prefixMatcher);
+        Collection<Function> variants = LattePhpUtil.getAllFunctions(project, functionNames);
 
-		// Add variants
-		for (Function item : variants) {
-			PhpLookupElement lookupItem = getPhpLookupElement(item, null);
-			lookupItem.handler = PhpFunctionInsertHandler.getInstance();
-			results.addElement(lookupItem);
-		}
+        // Add variants
+        for (Function item : variants) {
+            PhpLookupElement lookupItem = getPhpLookupElement(item, null);
+            lookupItem.handler = PhpFunctionInsertHandler.getInstance();
+            results.addElement(lookupItem);
+        }
 
-		Collection<LatteFunctionSettings> customFunctions = LatteConfiguration.getInstance(project).getFunctions();
-		for (LatteFunctionSettings item : customFunctions) {
-			LookupElementBuilder builder = createBuilderWithHelp(item);
-			results.addElement(builder);
-		}
-	}
+        Collection<LatteFunctionSettings> customFunctions = LatteConfiguration.getInstance(project).getFunctions();
+        for (LatteFunctionSettings item : customFunctions) {
+            LookupElementBuilder builder = createBuilderWithHelp(item);
+            results.addElement(builder);
+        }
+    }
 
-	private LookupElementBuilder createBuilderWithHelp(LatteFunctionSettings settings) {
-		LookupElementBuilder builder = LookupElementBuilder.create(settings.getFunctionName());
-		builder = builder.withIcon(PhpIcons.FUNCTION);
-		builder = builder.withInsertHandler(MacroCustomFunctionInsertHandler.getInstance());
-		if (settings.getFunctionHelp().trim().length() > 0) {
-			builder = builder.withTailText(settings.getFunctionHelp());
-		}
-		return builder.withTypeText(settings.getFunctionReturnType());
-	}
+    private LookupElementBuilder createBuilderWithHelp(LatteFunctionSettings settings) {
+        LookupElementBuilder builder = LookupElementBuilder.create(settings.getFunctionName());
+        builder = builder.withIcon(PhpIcons.FUNCTION);
+        builder = builder.withInsertHandler(MacroCustomFunctionInsertHandler.getInstance());
+        if (settings.getFunctionHelp().trim().length() > 0) {
+            builder = builder.withTailText(settings.getFunctionHelp());
+        }
+        return builder.withTypeText(settings.getFunctionReturnType());
+    }
 
 }

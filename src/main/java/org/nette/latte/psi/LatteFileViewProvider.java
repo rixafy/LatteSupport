@@ -23,65 +23,65 @@ import java.util.regex.Pattern;
 
 public class LatteFileViewProvider extends MultiplePsiFilesPerDocumentFileViewProvider implements TemplateLanguageFileViewProvider {
 
-	public static LatteOuterElementType OUTER_LATTE = new LatteOuterElementType("Outer latte");
-	private static Pattern xmlContentType = Pattern.compile("^\\{contentType [^}]*xml[^}]*}.*");
-	private static IElementType templateDataElement = new LatteTemplateDataElementType(
-			"Outer HTML/XML in Latte",
-			LatteLanguage.INSTANCE,
-			LatteHtmlUtil.HTML_TOKENS,
-			OUTER_LATTE
-	);
+    public static LatteOuterElementType OUTER_LATTE = new LatteOuterElementType("Outer latte");
+    private static Pattern xmlContentType = Pattern.compile("^\\{contentType [^}]*xml[^}]*}.*");
+    private static IElementType templateDataElement = new LatteTemplateDataElementType(
+        "Outer HTML/XML in Latte",
+        LatteLanguage.INSTANCE,
+        LatteHtmlUtil.HTML_TOKENS,
+        OUTER_LATTE
+    );
 
-	public LatteFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean eventSystemEnabled) {
-		super(manager, virtualFile, eventSystemEnabled);
-	}
+    public LatteFileViewProvider(PsiManager manager, VirtualFile virtualFile, boolean eventSystemEnabled) {
+        super(manager, virtualFile, eventSystemEnabled);
+    }
 
-	@NotNull
-	@Override
-	public Language getBaseLanguage() {
-		return LatteLanguage.INSTANCE;
-	}
+    @NotNull
+    @Override
+    public Language getBaseLanguage() {
+        return LatteLanguage.INSTANCE;
+    }
 
-	@NotNull
-	public Set<Language> getLanguages() {
-		Set<Language> languages = new HashSet<>(3);
-		languages.add(LatteLanguage.INSTANCE);
-		languages.add(getTemplateDataLanguage());
+    @NotNull
+    public Set<Language> getLanguages() {
+        Set<Language> languages = new HashSet<>(3);
+        languages.add(LatteLanguage.INSTANCE);
+        languages.add(getTemplateDataLanguage());
 
-		return languages;
-	}
+        return languages;
+    }
 
-	@Override
-	protected MultiplePsiFilesPerDocumentFileViewProvider cloneInner(VirtualFile fileCopy) {
-		return new LatteFileViewProvider(getManager(), fileCopy, false);
-	}
+    @Override
+    protected MultiplePsiFilesPerDocumentFileViewProvider cloneInner(VirtualFile fileCopy) {
+        return new LatteFileViewProvider(getManager(), fileCopy, false);
+    }
 
-	@NotNull
-	@Override
-	public Language getTemplateDataLanguage() {
-		return isXml() ? XMLLanguage.INSTANCE : HTMLLanguage.INSTANCE;
-	}
+    @NotNull
+    @Override
+    public Language getTemplateDataLanguage() {
+        return isXml() ? XMLLanguage.INSTANCE : HTMLLanguage.INSTANCE;
+    }
 
-	@Nullable
-	protected PsiFile createFile(@NotNull Language lang) {
-		ParserDefinition parser = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
-		if (parser == null) {
-			return null;
-		} else if (lang == XMLLanguage.INSTANCE || lang == HTMLLanguage.INSTANCE) {
-			PsiFileImpl file = (PsiFileImpl) parser.createFile(this);
-			file.setContentElementType(templateDataElement);
-			return file;
-		} else {
-			return lang == this.getBaseLanguage() ? parser.createFile(this) : null;
-		}
-	}
+    @Nullable
+    protected PsiFile createFile(@NotNull Language lang) {
+        ParserDefinition parser = LanguageParserDefinitions.INSTANCE.forLanguage(lang);
+        if (parser == null) {
+            return null;
+        } else if (lang == XMLLanguage.INSTANCE || lang == HTMLLanguage.INSTANCE) {
+            PsiFileImpl file = (PsiFileImpl) parser.createFile(this);
+            file.setContentElementType(templateDataElement);
+            return file;
+        } else {
+            return lang == this.getBaseLanguage() ? parser.createFile(this) : null;
+        }
+    }
 
-	private boolean isXml() {
-		String text = getContents().toString();
-		int pos = text.indexOf("\n");
-		if (pos > 0) {
-			text = text.substring(0, pos);
-		}
-		return xmlContentType.matcher(text).matches();
-	}
+    private boolean isXml() {
+        String text = getContents().toString();
+        int pos = text.indexOf("\n");
+        if (pos > 0) {
+            text = text.substring(0, pos);
+        }
+        return xmlContentType.matcher(text).matches();
+    }
 }

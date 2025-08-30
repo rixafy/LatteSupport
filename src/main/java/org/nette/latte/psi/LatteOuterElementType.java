@@ -9,12 +9,12 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 public class LatteOuterElementType extends IElementType implements ILeafElementType {
-	public LatteOuterElementType(@NotNull @NonNls String debugName) {
-		super(debugName, LatteLanguage.INSTANCE);
-	}
+    public LatteOuterElementType(@NotNull @NonNls String debugName) {
+        super(debugName, LatteLanguage.INSTANCE);
+    }
 
-	public @NotNull
-	ASTNode createLeafNode(@NotNull CharSequence charSequence) {
-		return new OuterLanguageElementImpl(this, charSequence);
-	}
+    public @NotNull
+    ASTNode createLeafNode(@NotNull CharSequence charSequence) {
+        return new OuterLanguageElementImpl(this, charSequence);
+    }
 }

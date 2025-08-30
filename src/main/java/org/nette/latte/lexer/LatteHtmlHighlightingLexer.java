@@ -7,20 +7,20 @@ import org.nette.latte.psi.LatteTypes;
 import org.nette.latte.utils.LatteHtmlUtil;
 
 public class LatteHtmlHighlightingLexer extends LookAheadLexer {
-	public LatteHtmlHighlightingLexer(Lexer baseLexer) {
-		super(baseLexer, 1);
-	}
+    public LatteHtmlHighlightingLexer(Lexer baseLexer) {
+        super(baseLexer, 1);
+    }
 
-	@Override
-	protected void lookAhead(Lexer baseLexer) {
-		IElementType currentToken = baseLexer.getTokenType();
+    @Override
+    protected void lookAhead(Lexer baseLexer) {
+        IElementType currentToken = baseLexer.getTokenType();
 
-		if (currentToken != LatteTypes.T_TEXT && LatteHtmlUtil.HTML_TOKENS.contains(currentToken)) {
-			advanceLexer(baseLexer);
-			replaceCachedType(0, LatteTypes.T_TEXT);
+        if (currentToken != LatteTypes.T_TEXT && LatteHtmlUtil.HTML_TOKENS.contains(currentToken)) {
+            advanceLexer(baseLexer);
+            replaceCachedType(0, LatteTypes.T_TEXT);
 
-		} else {
-			super.lookAhead(baseLexer);
-		}
-	}
+        } else {
+            super.lookAhead(baseLexer);
+        }
+    }
 }

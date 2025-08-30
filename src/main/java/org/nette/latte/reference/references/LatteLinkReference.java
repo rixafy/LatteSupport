@@ -22,7 +22,8 @@ import java.util.List;
 public class LatteLinkReference extends PsiReferenceBase<PsiElement> {
     private final String text;
     private final String currentPresenter;
-    @NotNull private final List<String> previousPresenters;
+    @NotNull
+    private final List<String> previousPresenters;
 
     public LatteLinkReference(@NotNull PsiElement element, TextRange rangeInElement, boolean soft, String text, String currentPresenter, @NotNull List<String> previousPresenters) {
         super(element, rangeInElement, soft);

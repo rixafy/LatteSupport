@@ -16,33 +16,35 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddCustomLatteFunction extends BaseIntentionAction {
 
-	/** custom macro which will be registered on invocation */
-	protected final LatteFunctionSettings defaultFunction;
+    /**
+     * custom macro which will be registered on invocation
+     */
+    protected final LatteFunctionSettings defaultFunction;
 
-	@NotNull
-	@Override
-	public String getText() {
-		return "Add custom latte function " + defaultFunction.getFunctionName() + "()";
-	}
+    @NotNull
+    @Override
+    public String getText() {
+        return "Add custom latte function " + defaultFunction.getFunctionName() + "()";
+    }
 
-	public AddCustomLatteFunction(String functionName) {
-		this.defaultFunction = new LatteFunctionSettings(functionName);
-	}
+    public AddCustomLatteFunction(String functionName) {
+        this.defaultFunction = new LatteFunctionSettings(functionName);
+    }
 
-	@NotNull
-	@Override
-	public String getFamilyName() {
-		return "Latte";
-	}
+    @NotNull
+    @Override
+    public String getFamilyName() {
+        return "Latte";
+    }
 
-	@Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-		return file.getLanguage() == LatteLanguage.INSTANCE;
-	}
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+        return file.getLanguage() == LatteLanguage.INSTANCE;
+    }
 
-	@Override
-	public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-		LatteSettings.getInstance(project).functionSettings.add(defaultFunction);
-		DaemonCodeAnalyzer.getInstance(project).restart(); // force re-analyzing
-	}
+    @Override
+    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        LatteSettings.getInstance(project).functionSettings.add(defaultFunction);
+        DaemonCodeAnalyzer.getInstance(project).restart(); // force re-analyzing
+    }
 }

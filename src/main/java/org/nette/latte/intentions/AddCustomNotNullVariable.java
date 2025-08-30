@@ -7,18 +7,18 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddCustomNotNullVariable extends AddCustomVariable {
 
-	public AddCustomNotNullVariable(String variableName) {
-		super(variableName);
-	}
+    public AddCustomNotNullVariable(String variableName) {
+        super(variableName);
+    }
 
-	@Override
-	public boolean isNullable() {
-		return false;
-	}
+    @Override
+    public boolean isNullable() {
+        return false;
+    }
 
-	@NotNull
-	@Override
-	public String getText() {
-		return "Add custom not null variable " + defaultVariable.getVarName();
-	}
+    @NotNull
+    @Override
+    public String getText() {
+        return "Add custom not null variable " + defaultVariable.getVarName();
+    }
 }

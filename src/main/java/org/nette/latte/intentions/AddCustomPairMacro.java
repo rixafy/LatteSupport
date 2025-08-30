@@ -8,19 +8,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddCustomPairMacro extends AddCustomMacro {
 
-	public AddCustomPairMacro(String macroName) {
-		super(macroName);
-	}
+    public AddCustomPairMacro(String macroName) {
+        super(macroName);
+    }
 
-	@NotNull
-	@Override
-	public LatteTagSettings.Type getMacroType() {
-		return LatteTagSettings.Type.PAIR;
-	}
+    @NotNull
+    @Override
+    public LatteTagSettings.Type getMacroType() {
+        return LatteTagSettings.Type.PAIR;
+    }
 
-	@NotNull
-	@Override
-	public String getText() {
-		return "Add custom pair tag {" + macro.getMacroName() + "}...{/" + macro.getMacroName() + "} and n:" + macro.getMacroName();
-	}
+    @NotNull
+    @Override
+    public String getText() {
+        return "Add custom pair tag {" + macro.getMacroName() + "}...{/" + macro.getMacroName() + "} and n:" + macro.getMacroName();
+    }
 }

@@ -13,32 +13,32 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class LatteStubElementImpl<T extends StubElement> extends LatteStubBasedPsiElement<T> implements StubBasedPsiElement<T> {
 
-	private Project project = null;
+    private Project project = null;
 
-	public LatteStubElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LatteStubElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	public LatteStubElementImpl(final T stub, final IStubElementType nodeType) {
-		super(stub, nodeType);
-	}
+    public LatteStubElementImpl(final T stub, final IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
-	@Override
-	public @NotNull Project getProject() {
-		if (project == null) {
-			project = super.getProject();
-		}
-		return project;
-	}
+    @Override
+    public @NotNull Project getProject() {
+        if (project == null) {
+            project = super.getProject();
+        }
+        return project;
+    }
 
-	@Nullable
-	public PsiReference getReference() {
-		PsiReference[] references = getReferences();
-		return references.length == 0 ? null : references[0];
-	}
+    @Nullable
+    public PsiReference getReference() {
+        PsiReference[] references = getReferences();
+        return references.length == 0 ? null : references[0];
+    }
 
-	@NotNull
-	public PsiReference[] getReferences() {
-		return ReferenceProvidersRegistry.getReferencesFromProviders(this);
-	}
+    @NotNull
+    public PsiReference[] getReferences() {
+        return ReferenceProvidersRegistry.getReferencesFromProviders(this);
+    }
 }

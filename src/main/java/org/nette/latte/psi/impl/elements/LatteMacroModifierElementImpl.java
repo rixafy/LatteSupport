@@ -22,70 +22,70 @@ import javax.swing.*;
 
 public abstract class LatteMacroModifierElementImpl extends LatteStubElementImpl<LatteFilterStub> implements LatteMacroModifierElement {
 
-	private @Nullable String modifierName = null;
-	private @Nullable PsiElement identifier = null;
+    private @Nullable String modifierName = null;
+    private @Nullable PsiElement identifier = null;
 
-	public LatteMacroModifierElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LatteMacroModifierElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	public LatteMacroModifierElementImpl(final LatteFilterStub stub, final IStubElementType nodeType) {
-		super(stub, nodeType);
-	}
+    public LatteMacroModifierElementImpl(final LatteFilterStub stub, final IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
-	@Override
-	public void subtreeChanged() {
-		super.subtreeChanged();
-		modifierName = null;
-		identifier = null;
-	}
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        modifierName = null;
+        identifier = null;
+    }
 
-	@Nullable
-	public LatteMacroContent getMacroContent() {
-		return findChildByClass(LatteMacroContent.class);
-	}
+    @Nullable
+    public LatteMacroContent getMacroContent() {
+        return findChildByClass(LatteMacroContent.class);
+    }
 
-	@Override
-	public String getModifierName() {
-		if (modifierName == null) {
-			final LatteFilterStub stub = getStub();
-			if (stub != null) {
-				modifierName = stub.getModifierName();
-				return modifierName;
-			}
+    @Override
+    public String getModifierName() {
+        if (modifierName == null) {
+            final LatteFilterStub stub = getStub();
+            if (stub != null) {
+                modifierName = stub.getModifierName();
+                return modifierName;
+            }
 
-			PsiElement found = getTextElement();
-			modifierName = found != null ? LatteUtil.normalizeMacroModifier(found.getText()) : null;
-		}
-		return modifierName;
-	}
+            PsiElement found = getTextElement();
+            modifierName = found != null ? LatteUtil.normalizeMacroModifier(found.getText()) : null;
+        }
+        return modifierName;
+    }
 
-	@Override
-	public @Nullable PsiElement getNameIdentifier() {
-		if (identifier == null) {
-			identifier = LattePsiImplUtil.findFirstChildWithType(this, LatteTypes.T_MACRO_FILTERS);
-		}
-		return identifier;
-	}
+    @Override
+    public @Nullable PsiElement getNameIdentifier() {
+        if (identifier == null) {
+            identifier = LattePsiImplUtil.findFirstChildWithType(this, LatteTypes.T_MACRO_FILTERS);
+        }
+        return identifier;
+    }
 
-	@Override
-	public boolean isVariableModifier() {
-		LattePhpInBrackets variableModifier = PsiTreeUtil.getParentOfType(this, LattePhpInBrackets.class);
-		return variableModifier != null;
-	}
+    @Override
+    public boolean isVariableModifier() {
+        LattePhpInBrackets variableModifier = PsiTreeUtil.getParentOfType(this, LattePhpInBrackets.class);
+        return variableModifier != null;
+    }
 
-	@Override
-	public @Nullable PsiElement getTextElement() {
-		return getNameIdentifier();
-	}
+    @Override
+    public @Nullable PsiElement getTextElement() {
+        return getNameIdentifier();
+    }
 
-	@Nullable
-	public LatteFilterSettings getMacroModifier() {
-		return LatteConfiguration.getInstance(getProject()).getFilter(getModifierName());
-	}
+    @Nullable
+    public LatteFilterSettings getMacroModifier() {
+        return LatteConfiguration.getInstance(getProject()).getFilter(getModifierName());
+    }
 
-	@Override
-	public @Nullable Icon getIcon(int flags) {
-		return LatteIcons.MODIFIER;
-	}
+    @Override
+    public @Nullable Icon getIcon(int flags) {
+        return LatteIcons.MODIFIER;
+    }
 }

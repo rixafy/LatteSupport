@@ -13,25 +13,25 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 abstract public class AbstractLatteTemplateContext extends TemplateContextType {
-	protected AbstractLatteTemplateContext(@NotNull String id, @NotNull String presentableName) {
-		super(id, presentableName);
-	}
+    protected AbstractLatteTemplateContext(@NotNull String id, @NotNull String presentableName) {
+        super(id, presentableName);
+    }
 
-	@Override
-	public boolean isInContext(@NotNull TemplateActionContext templateActionContext) {
-		PsiFile file = templateActionContext.getFile();
-		int offset = templateActionContext.getStartOffset();
-		if (PsiUtilCore.getLanguageAtOffset(file, offset).isKindOf(PhpLanguage.INSTANCE)) {
-			PsiElement element = file.findElementAt(offset);
-			if (element instanceof PsiWhiteSpace && offset > 0) {
-				element = file.findElementAt(offset - 1);
-			}
+    @Override
+    public boolean isInContext(@NotNull TemplateActionContext templateActionContext) {
+        PsiFile file = templateActionContext.getFile();
+        int offset = templateActionContext.getStartOffset();
+        if (PsiUtilCore.getLanguageAtOffset(file, offset).isKindOf(PhpLanguage.INSTANCE)) {
+            PsiElement element = file.findElementAt(offset);
+            if (element instanceof PsiWhiteSpace && offset > 0) {
+                element = file.findElementAt(offset - 1);
+            }
 
-			return element != null && this.isInContext(element);
-		} else {
-			return false;
-		}
-	}
+            return element != null && this.isInContext(element);
+        } else {
+            return false;
+        }
+    }
 
-	protected abstract boolean isInContext(@NotNull PsiElement element);
+    protected abstract boolean isInContext(@NotNull PsiElement element);
 }

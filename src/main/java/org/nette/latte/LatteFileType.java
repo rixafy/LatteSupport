@@ -12,42 +12,43 @@ import org.nette.latte.icons.LatteIcons;
 import org.nette.latte.syntaxHighlighter.LatteEditorHighlighter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 
 public class LatteFileType extends LanguageFileType {
-	public static final LatteFileType INSTANCE = new LatteFileType();
+    public static final LatteFileType INSTANCE = new LatteFileType();
 
-	private LatteFileType() {
-		super(LatteLanguage.INSTANCE);
+    private LatteFileType() {
+        super(LatteLanguage.INSTANCE);
 
-		FileTypeEditorHighlighterProviders.INSTANCE.addExplicitExtension(this, new EditorHighlighterProvider() {
-			public EditorHighlighter getEditorHighlighter(@Nullable Project project, @NotNull FileType fileType, @Nullable VirtualFile virtualFile, @NotNull EditorColorsScheme colors) {
-				return new LatteEditorHighlighter(project, virtualFile,colors);
-			}
-		});
-	}
+        FileTypeEditorHighlighterProviders.INSTANCE.addExplicitExtension(this, new EditorHighlighterProvider() {
+            public EditorHighlighter getEditorHighlighter(@Nullable Project project, @NotNull FileType fileType, @Nullable VirtualFile virtualFile, @NotNull EditorColorsScheme colors) {
+                return new LatteEditorHighlighter(project, virtualFile, colors);
+            }
+        });
+    }
 
-	@NotNull
-	@Override
-	public String getName() {
-		return "Latte";
-	}
+    @NotNull
+    @Override
+    public String getName() {
+        return "Latte";
+    }
 
-	@NotNull
-	@Override
-	public String getDescription() {
-		return "Latte template files";
-	}
+    @NotNull
+    @Override
+    public String getDescription() {
+        return "Latte template files";
+    }
 
-	@NotNull
-	@Override
-	public String getDefaultExtension() {
-		return "latte";
-	}
+    @NotNull
+    @Override
+    public String getDefaultExtension() {
+        return "latte";
+    }
 
-	@Nullable
-	@Override
-	public Icon getIcon() {
-		return LatteIcons.FILE;
-	}
+    @Nullable
+    @Override
+    public Icon getIcon() {
+        return LatteIcons.FILE;
+    }
 }

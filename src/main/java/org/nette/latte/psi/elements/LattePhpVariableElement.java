@@ -9,14 +9,14 @@ import java.util.List;
 
 public interface LattePhpVariableElement extends BaseLattePhpElement {
 
-	String getVariableName();
+    String getVariableName();
 
-	@Nullable LattePhpCachedVariable getCachedVariable();
+    @Nullable LattePhpCachedVariable getCachedVariable();
 
-	boolean isDefinition();
+    boolean isDefinition();
 
-	@Nullable PsiElement getVariableContext();
+    @Nullable PsiElement getVariableContext();
 
-	@NotNull List<LattePhpCachedVariable> getVariableDefinition();
+    @NotNull List<LattePhpCachedVariable> getVariableDefinition();
 
 }

@@ -16,29 +16,31 @@ import org.jetbrains.annotations.NotNull;
  */
 abstract public class AddCustomVariable extends BaseIntentionAction {
 
-	/** custom macro which will be registered on invocation */
-	protected final LatteVariableSettings defaultVariable;
+    /**
+     * custom macro which will be registered on invocation
+     */
+    protected final LatteVariableSettings defaultVariable;
 
-	public AddCustomVariable(String variableName) {
-		this.defaultVariable = new LatteVariableSettings(variableName, "mixed");
-	}
+    public AddCustomVariable(String variableName) {
+        this.defaultVariable = new LatteVariableSettings(variableName, "mixed");
+    }
 
-	protected abstract boolean isNullable();
+    protected abstract boolean isNullable();
 
-	@NotNull
-	@Override
-	public String getFamilyName() {
-		return "Latte";
-	}
+    @NotNull
+    @Override
+    public String getFamilyName() {
+        return "Latte";
+    }
 
-	@Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-		return file.getLanguage() == LatteLanguage.INSTANCE;
-	}
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+        return file.getLanguage() == LatteLanguage.INSTANCE;
+    }
 
-	@Override
-	public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-		LatteSettings.getInstance(project).variableSettings.add(defaultVariable);
-		DaemonCodeAnalyzer.getInstance(project).restart(); // force re-analyzing
-	}
+    @Override
+    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        LatteSettings.getInstance(project).variableSettings.add(defaultVariable);
+        DaemonCodeAnalyzer.getInstance(project).restart(); // force re-analyzing
+    }
 }

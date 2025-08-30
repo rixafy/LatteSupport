@@ -9,27 +9,27 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class LattePhpElementImpl extends LatteReferencedElementImpl implements BaseLattePhpElement {
 
-	public LattePhpElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LattePhpElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public String getName() {
-		return getPhpElementName();
-	}
+    @Override
+    public String getName() {
+        return getPhpElementName();
+    }
 
-	@Override
-	public @Nullable PsiElement getTextElement() {
-		return getNameIdentifier();
-	}
+    @Override
+    public @Nullable PsiElement getTextElement() {
+        return getNameIdentifier();
+    }
 
-	public int getPhpArrayLevel() {
-		return this.getPhpArrayUsageList().size();
-	}
+    public int getPhpArrayLevel() {
+        return this.getPhpArrayUsageList().size();
+    }
 
-	@Override
-	public @Nullable LattePhpStatementPartElement getPhpStatementPart() {
-		PsiElement parent = this.getParent();
-		return parent instanceof LattePhpStatementPartElement ? (LattePhpStatementPartElement) parent : null;
-	}
+    @Override
+    public @Nullable LattePhpStatementPartElement getPhpStatementPart() {
+        PsiElement parent = this.getParent();
+        return parent instanceof LattePhpStatementPartElement ? (LattePhpStatementPartElement) parent : null;
+    }
 }

@@ -15,10 +15,10 @@ public class LatteFindUsagesProvider implements FindUsagesProvider {
     @Override
     public WordsScanner getWordsScanner() {
         return new DefaultWordsScanner(
-                new LatteLookAheadLexer(new LatteLexer()),
-                TokenSet.create(LatteTypes.PHP_VARIABLE),
-                TokenSet.create(LatteTypes.MACRO_COMMENT),
-                TokenSet.EMPTY
+            new LatteLookAheadLexer(new LatteLexer()),
+            TokenSet.create(LatteTypes.PHP_VARIABLE),
+            TokenSet.create(LatteTypes.MACRO_COMMENT),
+            TokenSet.EMPTY
         );
     }
 

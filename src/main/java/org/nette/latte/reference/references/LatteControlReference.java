@@ -19,7 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class LatteControlReference extends PsiReferenceBase<PsiElement> {
-    public enum SegmentType { Component, RenderMethod, Subcomponent }
+    public enum SegmentType {Component, RenderMethod, Subcomponent}
 
     private final String text;
     private final @Nullable String previousSegment; // For Subcomponent and RenderMethod context

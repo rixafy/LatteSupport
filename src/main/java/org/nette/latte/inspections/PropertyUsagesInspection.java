@@ -21,67 +21,67 @@ import java.util.List;
 
 public class PropertyUsagesInspection extends BaseLocalInspectionTool {
 
-	@NotNull
-	@Override
-	public String getShortName() {
-		return "LattePropertyUsages";
-	}
+    @NotNull
+    @Override
+    public String getShortName() {
+        return "LattePropertyUsages";
+    }
 
-	@Nullable
-	@Override
-	public ProblemDescriptor[] checkFile(@NotNull PsiFile file, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
-		if (!(file instanceof LatteFile)) {
-			return null;
-		}
+    @Nullable
+    @Override
+    public ProblemDescriptor[] checkFile(@NotNull PsiFile file, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
+        if (!(file instanceof LatteFile)) {
+            return null;
+        }
 
-		final List<ProblemDescriptor> problems = new ArrayList<>();
-		file.acceptChildren(new PsiRecursiveElementWalkingVisitor() {
-			@Override
-			public void visitElement(@NotNull PsiElement element) {
-				if (element instanceof LattePhpProperty) {
-					NettePhpType phpType = ((LattePhpProperty) element).getPrevReturnType();
+        final List<ProblemDescriptor> problems = new ArrayList<>();
+        file.acceptChildren(new PsiRecursiveElementWalkingVisitor() {
+            @Override
+            public void visitElement(@NotNull PsiElement element) {
+                if (element instanceof LattePhpProperty) {
+                    NettePhpType phpType = ((LattePhpProperty) element).getPrevReturnType();
 
-					Collection<PhpClass> phpClasses = phpType.getPhpClasses(element.getProject());
-					if (phpClasses.size() == 0) {
-						return;
-					}
+                    Collection<PhpClass> phpClasses = phpType.getPhpClasses(element.getProject());
+                    if (phpClasses.size() == 0) {
+                        return;
+                    }
 
-					boolean isFound = false;
-					String variableName = ((LattePhpProperty) element).getPropertyName();
-					for (PhpClass phpClass : phpClasses) {
-						for (Field field : phpClass.getFields()) {
-							if (!field.isConstant() && field.getName().equals(LattePhpVariableUtil.normalizePhpVariable(variableName))) {
-								PhpModifier modifier = field.getModifier();
-								if (modifier.isPrivate()) {
-									addProblem(manager, problems, element, "Used private property '" + variableName + "'", isOnTheFly);
-								} else if (modifier.isProtected()) {
-									addProblem(manager, problems, element, "Used protected property '" + variableName + "'", isOnTheFly);
-								} else if (field.isDeprecated()) {
-									addDeprecated(manager, problems, element, "Used property '" + variableName + "' is marked as deprecated", isOnTheFly);
-								} else if (field.isInternal()) {
-									addDeprecated(manager, problems, element, "Used property '" + variableName + "' is marked as internal", isOnTheFly);
-								}
+                    boolean isFound = false;
+                    String variableName = ((LattePhpProperty) element).getPropertyName();
+                    for (PhpClass phpClass : phpClasses) {
+                        for (Field field : phpClass.getFields()) {
+                            if (!field.isConstant() && field.getName().equals(LattePhpVariableUtil.normalizePhpVariable(variableName))) {
+                                PhpModifier modifier = field.getModifier();
+                                if (modifier.isPrivate()) {
+                                    addProblem(manager, problems, element, "Used private property '" + variableName + "'", isOnTheFly);
+                                } else if (modifier.isProtected()) {
+                                    addProblem(manager, problems, element, "Used protected property '" + variableName + "'", isOnTheFly);
+                                } else if (field.isDeprecated()) {
+                                    addDeprecated(manager, problems, element, "Used property '" + variableName + "' is marked as deprecated", isOnTheFly);
+                                } else if (field.isInternal()) {
+                                    addDeprecated(manager, problems, element, "Used property '" + variableName + "' is marked as internal", isOnTheFly);
+                                }
 
-								if (modifier.isStatic()) {
-									String description = "Property '" + variableName + "' is static but used non statically";
-									addProblem(manager, problems, element, description, isOnTheFly);
+                                if (modifier.isStatic()) {
+                                    String description = "Property '" + variableName + "' is static but used non statically";
+                                    addProblem(manager, problems, element, description, isOnTheFly);
 
-								}
-								isFound = true;
-							}
-						}
-					}
+                                }
+                                isFound = true;
+                            }
+                        }
+                    }
 
-					if (!isFound) {
-						addProblem(manager, problems, element, "Property '" + variableName + "' not found for type '" + phpType.toString() + "'", isOnTheFly);
-					}
+                    if (!isFound) {
+                        addProblem(manager, problems, element, "Property '" + variableName + "' not found for type '" + phpType.toString() + "'", isOnTheFly);
+                    }
 
-				} else {
-					super.visitElement(element);
-				}
-			}
-		});
+                } else {
+                    super.visitElement(element);
+                }
+            }
+        });
 
-		return problems.toArray(new ProblemDescriptor[0]);
-	}
+        return problems.toArray(new ProblemDescriptor[0]);
+    }
 }

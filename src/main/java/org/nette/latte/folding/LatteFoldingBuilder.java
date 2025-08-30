@@ -17,41 +17,41 @@ import java.util.Collection;
 import java.util.List;
 
 public class LatteFoldingBuilder extends FoldingBuilderEx {
-	@SuppressWarnings("unchecked")
-	@NotNull
-	@Override
-	public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
-		List<FoldingDescriptor> descriptors = new ArrayList<>();
+    @SuppressWarnings("unchecked")
+    @NotNull
+    @Override
+    public FoldingDescriptor[] buildFoldRegions(@NotNull PsiElement root, @NotNull Document document, boolean quick) {
+        List<FoldingDescriptor> descriptors = new ArrayList<>();
 
-		if (!quick) {
-			Collection<LatteMacroClassic> nodes = PsiTreeUtil.findChildrenOfAnyType(root, LatteMacroClassic.class);
-			for (PsiElement node : nodes) {
-				int start = node.getFirstChild().getTextRange().getEndOffset();
-				int end = node.getLastChild().getTextRange().getEndOffset();
-				if (end == start) {
-					continue;
-				}
-				if (node instanceof LatteMacroClassic) {
-					start--;
-					end--;
-				}
+        if (!quick) {
+            Collection<LatteMacroClassic> nodes = PsiTreeUtil.findChildrenOfAnyType(root, LatteMacroClassic.class);
+            for (PsiElement node : nodes) {
+                int start = node.getFirstChild().getTextRange().getEndOffset();
+                int end = node.getLastChild().getTextRange().getEndOffset();
+                if (end == start) {
+                    continue;
+                }
+                if (node instanceof LatteMacroClassic) {
+                    start--;
+                    end--;
+                }
 
-				descriptors.add(new FoldingDescriptor(node, TextRange.create(start, end)));
+                descriptors.add(new FoldingDescriptor(node, TextRange.create(start, end)));
 
-			}
-		}
+            }
+        }
 
-		return descriptors.toArray(new FoldingDescriptor[0]);
-	}
+        return descriptors.toArray(new FoldingDescriptor[0]);
+    }
 
-	@Nullable
-	@Override
-	public String getPlaceholderText(@NotNull ASTNode node) {
-		return null;
-	}
+    @Nullable
+    @Override
+    public String getPlaceholderText(@NotNull ASTNode node) {
+        return null;
+    }
 
-	@Override
-	public boolean isCollapsedByDefault(@NotNull ASTNode node) {
-		return false;
-	}
+    @Override
+    public boolean isCollapsedByDefault(@NotNull ASTNode node) {
+        return false;
+    }
 }

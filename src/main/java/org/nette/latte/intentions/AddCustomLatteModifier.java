@@ -16,33 +16,35 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddCustomLatteModifier extends BaseIntentionAction {
 
-	/** custom macro which will be registered on invocation */
-	protected final LatteFilterSettings defaultModifier;
+    /**
+     * custom macro which will be registered on invocation
+     */
+    protected final LatteFilterSettings defaultModifier;
 
-	@NotNull
-	@Override
-	public String getText() {
-		return "Add custom filter |" + defaultModifier.getModifierName();
-	}
+    @NotNull
+    @Override
+    public String getText() {
+        return "Add custom filter |" + defaultModifier.getModifierName();
+    }
 
-	public AddCustomLatteModifier(String modifierName) {
-		this.defaultModifier = new LatteFilterSettings(modifierName);
-	}
+    public AddCustomLatteModifier(String modifierName) {
+        this.defaultModifier = new LatteFilterSettings(modifierName);
+    }
 
-	@NotNull
-	@Override
-	public String getFamilyName() {
-		return "Latte";
-	}
+    @NotNull
+    @Override
+    public String getFamilyName() {
+        return "Latte";
+    }
 
-	@Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-		return file.getLanguage() == LatteLanguage.INSTANCE;
-	}
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+        return file.getLanguage() == LatteLanguage.INSTANCE;
+    }
 
-	@Override
-	public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-		LatteSettings.getInstance(project).filterSettings.add(defaultModifier);
-		DaemonCodeAnalyzer.getInstance(project).restart(); // force re-analyzing
-	}
+    @Override
+    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        LatteSettings.getInstance(project).filterSettings.add(defaultModifier);
+        DaemonCodeAnalyzer.getInstance(project).restart(); // force re-analyzing
+    }
 }

@@ -67,10 +67,10 @@ public class LatteCustomFunctionSettingsDialog extends JDialog {
 
     private void onOK() {
         LatteFunctionSettings settings = new LatteFunctionSettings(
-                this.textName.getText(),
-                this.textReturnType.getText(),
-                this.textHelp.getText(),
-                this.textDescription.getText()
+            this.textName.getText(),
+            this.textReturnType.getText(),
+            this.textHelp.getText(),
+            this.textDescription.getText()
         );
         settings.setVendor(LatteConfiguration.Vendor.CUSTOM);
 

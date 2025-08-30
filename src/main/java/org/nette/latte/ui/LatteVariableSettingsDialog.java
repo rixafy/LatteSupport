@@ -77,7 +77,7 @@ public class LatteVariableSettingsDialog extends JDialog {
     private void setOkState() {
         this.buttonOK.setEnabled(
             this.textVarName.getText().length() > 0 &&
-            this.textVarType.getText().length() > 0
+                this.textVarType.getText().length() > 0
         );
     }
 

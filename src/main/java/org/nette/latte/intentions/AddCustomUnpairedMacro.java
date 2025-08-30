@@ -8,19 +8,19 @@ import org.jetbrains.annotations.NotNull;
  */
 public class AddCustomUnpairedMacro extends AddCustomMacro {
 
-	public AddCustomUnpairedMacro(String macroName) {
-		super(macroName);
-	}
+    public AddCustomUnpairedMacro(String macroName) {
+        super(macroName);
+    }
 
-	@NotNull
-	@Override
-	public LatteTagSettings.Type getMacroType() {
-		return LatteTagSettings.Type.UNPAIRED;
-	}
+    @NotNull
+    @Override
+    public LatteTagSettings.Type getMacroType() {
+        return LatteTagSettings.Type.UNPAIRED;
+    }
 
-	@NotNull
-	@Override
-	public String getText() {
-		return "Add custom unpaired tag {" + macro.getMacroName() + "}";
-	}
+    @NotNull
+    @Override
+    public String getText() {
+        return "Add custom unpaired tag {" + macro.getMacroName() + "}";
+    }
 }

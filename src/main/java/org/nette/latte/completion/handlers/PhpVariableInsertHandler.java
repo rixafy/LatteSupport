@@ -15,29 +15,29 @@ import org.jetbrains.annotations.NotNull;
 
 public class PhpVariableInsertHandler implements InsertHandler<LookupElement> {
 
-	private static final PhpVariableInsertHandler instance = new PhpVariableInsertHandler();
+    private static final PhpVariableInsertHandler instance = new PhpVariableInsertHandler();
 
-	public PhpVariableInsertHandler() {
-		super();
-	}
+    public PhpVariableInsertHandler() {
+        super();
+    }
 
-	public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement lookupElement) {
-		PsiElement element = context.getFile().findElementAt(context.getStartOffset());
-		if (element != null && element.getLanguage() == LatteLanguage.INSTANCE) {
-			PsiElement parent = element.getParent();
-			if (!(parent instanceof Variable) && !element.getText().startsWith("$")) {
-				Editor editor = context.getEditor();
-				CaretModel caretModel = editor.getCaretModel();
-				int offset = caretModel.getOffset();
-				caretModel.moveToOffset(element.getTextOffset() + (PhpPsiUtil.isOfType(parent, PhpElementTypes.CAST_EXPRESSION) ? 1 : 0));
-				EditorModificationUtil.insertStringAtCaret(editor, "$");
-				caretModel.moveToOffset(offset + 1);
-				PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
-			}
-		}
-	}
+    public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement lookupElement) {
+        PsiElement element = context.getFile().findElementAt(context.getStartOffset());
+        if (element != null && element.getLanguage() == LatteLanguage.INSTANCE) {
+            PsiElement parent = element.getParent();
+            if (!(parent instanceof Variable) && !element.getText().startsWith("$")) {
+                Editor editor = context.getEditor();
+                CaretModel caretModel = editor.getCaretModel();
+                int offset = caretModel.getOffset();
+                caretModel.moveToOffset(element.getTextOffset() + (PhpPsiUtil.isOfType(parent, PhpElementTypes.CAST_EXPRESSION) ? 1 : 0));
+                EditorModificationUtil.insertStringAtCaret(editor, "$");
+                caretModel.moveToOffset(offset + 1);
+                PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+            }
+        }
+    }
 
-	public static PhpVariableInsertHandler getInstance() {
-		return instance;
-	}
+    public static PhpVariableInsertHandler getInstance() {
+        return instance;
+    }
 }

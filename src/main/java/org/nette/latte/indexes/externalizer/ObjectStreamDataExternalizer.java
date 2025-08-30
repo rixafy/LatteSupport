@@ -25,7 +25,7 @@ public class ObjectStreamDataExternalizer<T extends Serializable> implements Dat
         in.readFully(buffer, 0, bufferSize);
 
         ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
-        ObjectInput input  = new ObjectInputStream(stream);
+        ObjectInput input = new ObjectInputStream(stream);
 
         T object = null;
         try {

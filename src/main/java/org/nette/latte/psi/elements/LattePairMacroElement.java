@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface LattePairMacroElement extends LattePsiElement {
 
-	@NotNull
-	List<LatteMacroTag> getMacroTagList();
+    @NotNull
+    List<LatteMacroTag> getMacroTagList();
 
-	@Nullable
-	LatteMacroTag getMacroOpenTag();
+    @Nullable
+    LatteMacroTag getMacroOpenTag();
 
-	@NotNull
-	LatteMacroTag getOpenTag();
+    @NotNull
+    LatteMacroTag getOpenTag();
 
-	@Nullable
-	LatteMacroTag getCloseTag();
+    @Nullable
+    LatteMacroTag getCloseTag();
 }

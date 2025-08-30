@@ -6,6 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 public interface LattePsiElement extends PsiElement {
 
-	@Nullable LatteFile getLatteFile();
+    @Nullable LatteFile getLatteFile();
 
 }

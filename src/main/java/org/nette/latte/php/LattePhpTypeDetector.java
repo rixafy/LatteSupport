@@ -111,8 +111,8 @@ public class LattePhpTypeDetector {
                 if (type != LatteTypes.T_PHP_DOUBLE_ARROW) {
                     LattePhpForeach phpForeach = PsiTreeUtil.getParentOfType(variable, LattePhpForeach.class);
                     return phpForeach != null && phpForeach.getPhpExpression().getPhpStatementList().size() > 0
-                            ? detect(phpForeach.getPhpExpression()).withDepth(variable.getParent().getNode().getElementType() == LatteTypes.PHP_ARRAY_OF_VARIABLES ? 2 : 1)
-                            : NettePhpType.MIXED;
+                        ? detect(phpForeach.getPhpExpression()).withDepth(variable.getParent().getNode().getElementType() == LatteTypes.PHP_ARRAY_OF_VARIABLES ? 2 : 1)
+                        : NettePhpType.MIXED;
                 }
             }
 

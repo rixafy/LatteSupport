@@ -67,10 +67,10 @@ public class LatteCustomModifierSettingsDialog extends JDialog {
 
     private void onOK() {
         LatteFilterSettings settings = new LatteFilterSettings(
-                this.textName.getText(),
-                this.textDescription.getText(),
-                this.textHelp.getText(),
-                this.textInsert.getText()
+            this.textName.getText(),
+            this.textDescription.getText(),
+            this.textHelp.getText(),
+            this.textInsert.getText()
         );
         settings.setVendor(LatteConfiguration.Vendor.CUSTOM);
 

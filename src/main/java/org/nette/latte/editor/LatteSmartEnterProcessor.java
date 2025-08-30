@@ -14,25 +14,25 @@ import org.jetbrains.annotations.NotNull;
 
 public class LatteSmartEnterProcessor extends SmartEnterProcessor {
 
-	@Override
-	public boolean process(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile psiFile) {
-		if (!(psiFile instanceof LatteFile)) {
-			return false;
-		} else {
-			int offset = editor.getCaretModel().getOffset() - 1;
-			FileViewProvider viewProvider = psiFile.getViewProvider();
-			PsiElement currElement = viewProvider.findElementAt(offset, PhpLanguage.INSTANCE);
-			if (currElement instanceof PsiWhiteSpace) {
-				currElement = PsiTreeUtil.prevLeaf(currElement);
-			}
+    @Override
+    public boolean process(@NotNull Project project, @NotNull Editor editor, @NotNull PsiFile psiFile) {
+        if (!(psiFile instanceof LatteFile)) {
+            return false;
+        } else {
+            int offset = editor.getCaretModel().getOffset() - 1;
+            FileViewProvider viewProvider = psiFile.getViewProvider();
+            PsiElement currElement = viewProvider.findElementAt(offset, PhpLanguage.INSTANCE);
+            if (currElement instanceof PsiWhiteSpace) {
+                currElement = PsiTreeUtil.prevLeaf(currElement);
+            }
 
-			if (true) {
-				return false;
-			} else {
-				//boolean result = this.completeStatement(psiFile, editor, statement);
-				//result |= completeParentStatement(psiFile, statement, editor);
-				return false;
-			}
-		}
-	}
+            if (true) {
+                return false;
+            } else {
+                //boolean result = this.completeStatement(psiFile, editor, statement);
+                //result |= completeParentStatement(psiFile, statement, editor);
+                return false;
+            }
+        }
+    }
 }

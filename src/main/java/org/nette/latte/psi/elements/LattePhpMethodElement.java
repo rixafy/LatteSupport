@@ -7,14 +7,14 @@ import org.nette.latte.php.NettePhpType;
 
 public interface LattePhpMethodElement extends BaseLattePhpElement, StubBasedPsiElement<LattePhpMethodStub> {
 
-	default NettePhpType getPrevReturnType() {
-		return LattePhpTypeDetector.detectPrevPhpType(this);
-	}
+    default NettePhpType getPrevReturnType() {
+        return LattePhpTypeDetector.detectPrevPhpType(this);
+    }
 
-	String getMethodName();
+    String getMethodName();
 
-	boolean isStatic();
+    boolean isStatic();
 
-	boolean isFunction();
+    boolean isFunction();
 
 }

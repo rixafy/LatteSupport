@@ -7,10 +7,10 @@ import org.nette.latte.php.NettePhpType;
 
 public interface LattePhpPropertyElement extends BaseLattePhpElement, StubBasedPsiElement<LattePhpPropertyStub> {
 
-	default NettePhpType getPrevReturnType() {
-		return LattePhpTypeDetector.detectPrevPhpType(this);
-	}
+    default NettePhpType getPrevReturnType() {
+        return LattePhpTypeDetector.detectPrevPhpType(this);
+    }
 
-	String getPropertyName();
+    String getPropertyName();
 
 }

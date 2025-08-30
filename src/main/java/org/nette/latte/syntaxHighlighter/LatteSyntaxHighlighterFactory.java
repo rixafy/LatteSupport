@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class LatteSyntaxHighlighterFactory extends SyntaxHighlighterFactory {
-	@NotNull
-	@Override
-	public SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
-		return new LatteSyntaxHighlighter();
-	}
+    @NotNull
+    @Override
+    public SyntaxHighlighter getSyntaxHighlighter(@Nullable Project project, @Nullable VirtualFile virtualFile) {
+        return new LatteSyntaxHighlighter();
+    }
 }

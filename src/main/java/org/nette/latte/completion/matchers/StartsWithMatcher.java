@@ -9,11 +9,13 @@ public final class StartsWithMatcher extends PrefixMatcher {
         super(prefix);
     }
 
-    @Override public boolean prefixMatches(@NotNull String name) {
+    @Override
+    public boolean prefixMatches(@NotNull String name) {
         return StringUtil.startsWithIgnoreCase(name, getPrefix()); // or name.startsWith(getPrefix())
     }
 
-    @Override public @NotNull PrefixMatcher cloneWithPrefix(@NotNull String newPrefix) {
+    @Override
+    public @NotNull PrefixMatcher cloneWithPrefix(@NotNull String newPrefix) {
         return new StartsWithMatcher(newPrefix);
     }
 }

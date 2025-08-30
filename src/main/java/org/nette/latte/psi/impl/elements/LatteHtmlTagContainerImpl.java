@@ -9,12 +9,12 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class LatteHtmlTagContainerImpl extends LattePsiElementImpl implements LatteHtmlTagContainerElement {
 
-	public LatteHtmlTagContainerImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LatteHtmlTagContainerImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public LatteHtmlOpenTag getHtmlOpenTag() {
-		return LattePsiImplUtil.getHtmlOpenTag(this);
-	}
+    @Override
+    public LatteHtmlOpenTag getHtmlOpenTag() {
+        return LattePsiImplUtil.getHtmlOpenTag(this);
+    }
 }

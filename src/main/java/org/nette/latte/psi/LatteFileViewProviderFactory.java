@@ -9,9 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class LatteFileViewProviderFactory implements FileViewProviderFactory {
 
-	@NotNull
-	@Override
-	public FileViewProvider createFileViewProvider(@NotNull VirtualFile file, Language language, @NotNull PsiManager manager, boolean eventSystemEnabled) {
-		return new LatteFileViewProvider(manager, file, eventSystemEnabled);
-	}
+    @NotNull
+    @Override
+    public FileViewProvider createFileViewProvider(@NotNull VirtualFile file, Language language, @NotNull PsiManager manager, boolean eventSystemEnabled) {
+        return new LatteFileViewProvider(manager, file, eventSystemEnabled);
+    }
 }

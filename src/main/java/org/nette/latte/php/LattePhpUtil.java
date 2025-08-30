@@ -130,8 +130,8 @@ public class LattePhpUtil {
         for (PhpClass phpClass : phpClasses) {
             for (Field field : phpClass.getFields()) {
                 if (
-                        ((isConstant && field.isConstant()) || (!isConstant && !field.isConstant()))
-                                && field.getName().equals(name)
+                    ((isConstant && field.isConstant()) || (!isConstant && !field.isConstant()))
+                        && field.getName().equals(name)
                 ) {
                     fields.add(field);
                 }

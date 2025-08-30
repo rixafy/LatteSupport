@@ -110,10 +110,10 @@ abstract class PresenterResolver {
                     PhpClass superClass = presenter.getSuperClass();
                     if (superClass == null || !presenters.contains(superClass) || getPresenterNameForAutoCompletion(superClass).isEmpty()) {
                         result.add(LookupElementBuilder
-                                .create((root ? ":" : "") + name + ":")
-                                .withPresentableText(":" + name)
-                                .withTailText(": from " + presenter.getName())
-                                .withIcon(AllIcons.Actions.GroupByTestProduction)
+                            .create((root ? ":" : "") + name + ":")
+                            .withPresentableText(":" + name)
+                            .withTailText(": from " + presenter.getName())
+                            .withIcon(AllIcons.Actions.GroupByTestProduction)
                         );
                     }
                 }
@@ -124,10 +124,10 @@ abstract class PresenterResolver {
 
                 if (superClass != null && superClass.isEquivalentTo(parentClass) && !name.isEmpty()) {
                     result.add(LookupElementBuilder
-                            .create(name + ":")
-                            .withPresentableText(name)
-                            .withTailText(": from " + presenter.getName())
-                            .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
+                        .create(name + ":")
+                        .withPresentableText(name)
+                        .withTailText(": from " + presenter.getName())
+                        .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
                     );
                 }
 
@@ -137,19 +137,19 @@ abstract class PresenterResolver {
                 if (parentClass != null) {
                     if (presenter.getSuperClass() != null && presenter.getSuperClass().isEquivalentTo(parentClass)) {
                         result.add(LookupElementBuilder
-                                .create(name + ":")
-                                .withPresentableText(name)
-                                .withTailText(": from " + presenter.getName())
-                                .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
+                            .create(name + ":")
+                            .withPresentableText(name)
+                            .withTailText(": from " + presenter.getName())
+                            .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
                         );
                     }
 
                 } else {
                     result.add(LookupElementBuilder
-                            .create(name + ":")
-                            .withPresentableText(name)
-                            .withTailText(": from " + presenter.getName())
-                            .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
+                        .create(name + ":")
+                        .withPresentableText(name)
+                        .withTailText(": from " + presenter.getName())
+                        .withIcon(presenter.isAbstract() ? AllIcons.Actions.GroupByTestProduction : AllIcons.Nodes.Property)
                     );
                 }
             }
@@ -187,7 +187,8 @@ abstract class PresenterResolver {
         String templatePath = null;
         try {
             templatePath = file.getOriginalFile().getContainingDirectory().getVirtualFile().getPath();
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         for (String presenterName : presenterNames) {
             for (PhpClass presenter : presenters) {
@@ -219,7 +220,7 @@ abstract class PresenterResolver {
                             int commonPrefixLength = 0;
                             int maxLength = Math.min(templatePath.length(), presenterPath.length());
                             while (commonPrefixLength < maxLength &&
-                                    templatePath.charAt(commonPrefixLength) == presenterPath.charAt(commonPrefixLength)) {
+                                templatePath.charAt(commonPrefixLength) == presenterPath.charAt(commonPrefixLength)) {
                                 commonPrefixLength++;
                             }
 

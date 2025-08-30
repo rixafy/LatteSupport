@@ -15,62 +15,62 @@ import javax.swing.*;
 
 public abstract class LatteMacroTagElementImpl extends LatteReferencedElementImpl implements LatteMacroTagElement {
 
-	private @Nullable String tagName = null;
-	private @Nullable PsiElement identifier = null;
-	private int macroNameLength = -1;
+    private @Nullable String tagName = null;
+    private @Nullable PsiElement identifier = null;
+    private int macroNameLength = -1;
 
-	public LatteMacroTagElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LatteMacroTagElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public void subtreeChanged() {
-		super.subtreeChanged();
-		tagName = null;
-		identifier = null;
-		macroNameLength = -1;
-	}
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        tagName = null;
+        identifier = null;
+        macroNameLength = -1;
+    }
 
-	@Nullable
-	public LatteMacroContent getMacroContent() {
-		return findChildByClass(LatteMacroContent.class);
-	}
+    @Nullable
+    public LatteMacroContent getMacroContent() {
+        return findChildByClass(LatteMacroContent.class);
+    }
 
-	@Override
-	public @Nullable Icon getIcon(int flags) {
-		return LatteIcons.MACRO;
-	}
+    @Override
+    public @Nullable Icon getIcon(int flags) {
+        return LatteIcons.MACRO;
+    }
 
-	@Override
-	public @NotNull String getMacroName() {
-		if (tagName == null) {
-			tagName = LattePsiImplUtil.getMacroName(this);
-		}
-		return tagName;
-	}
+    @Override
+    public @NotNull String getMacroName() {
+        if (tagName == null) {
+            tagName = LattePsiImplUtil.getMacroName(this);
+        }
+        return tagName;
+    }
 
-	@Override
-	public String getName() {
-		return getMacroName();
-	}
+    @Override
+    public String getName() {
+        return getMacroName();
+    }
 
-	@Override
-	public @Nullable PsiElement getNameIdentifier() {
-		if (identifier == null) {
-			identifier = LattePsiImplUtil.findFirstChildWithType(this, LatteTypes.T_MACRO_NAME);
-		}
-		return identifier;
-	}
+    @Override
+    public @Nullable PsiElement getNameIdentifier() {
+        if (identifier == null) {
+            identifier = LattePsiImplUtil.findFirstChildWithType(this, LatteTypes.T_MACRO_NAME);
+        }
+        return identifier;
+    }
 
-	public boolean matchMacroName(@NotNull String name) {
-		return LattePsiImplUtil.matchMacroName(this, name);
-	}
+    public boolean matchMacroName(@NotNull String name) {
+        return LattePsiImplUtil.matchMacroName(this, name);
+    }
 
-	@Override
-	public int getMacroNameLength() {
-		if (macroNameLength == -1) {
-			macroNameLength = LattePsiImplUtil.getMacroNameLength(this);
-		}
-		return macroNameLength;
-	}
+    @Override
+    public int getMacroNameLength() {
+        if (macroNameLength == -1) {
+            macroNameLength = LattePsiImplUtil.getMacroNameLength(this);
+        }
+        return macroNameLength;
+    }
 }

@@ -26,103 +26,103 @@ import java.util.*;
 
 public class LatteVariableCompletionProvider extends BaseLatteCompletionProvider {
 
-	public LatteVariableCompletionProvider() {
-		super();
-	}
+    public LatteVariableCompletionProvider() {
+        super();
+    }
 
-	@Override
-	protected void addCompletions(
-			@NotNull CompletionParameters parameters,
-			@NotNull ProcessingContext context,
-			@NotNull CompletionResultSet result
-	) {
-		PsiElement element = parameters.getPosition().getParent();
-		if ((element instanceof LattePhpVariable) && ((LattePhpVariable) element).isDefinition()) {
-			return;
-		}
+    @Override
+    protected void addCompletions(
+        @NotNull CompletionParameters parameters,
+        @NotNull ProcessingContext context,
+        @NotNull CompletionResultSet result
+    ) {
+        PsiElement element = parameters.getPosition().getParent();
+        if ((element instanceof LattePhpVariable) && ((LattePhpVariable) element).isDefinition()) {
+            return;
+        }
 
-		List<LookupElement> elements = attachPhpVariableCompletions(element);
-		result.addAllElements(elements);
+        List<LookupElement> elements = attachPhpVariableCompletions(element);
+        result.addAllElements(elements);
 
-		if (parameters.getOriginalFile() instanceof LatteFile) {
-			attachTemplateTypeCompletions(result, element.getProject(), (LatteFile) parameters.getOriginalFile());
-		}
-	}
+        if (parameters.getOriginalFile() instanceof LatteFile) {
+            attachTemplateTypeCompletions(result, element.getProject(), (LatteFile) parameters.getOriginalFile());
+        }
+    }
 
-	private void attachTemplateTypeCompletions(@NotNull CompletionResultSet result, @NotNull Project project, @NotNull LatteFile file) {
-		NettePhpType type = LatteUtil.findFirstLatteTemplateType(file);
-		if (type == null) {
-			return;
-		}
+    private void attachTemplateTypeCompletions(@NotNull CompletionResultSet result, @NotNull Project project, @NotNull LatteFile file) {
+        NettePhpType type = LatteUtil.findFirstLatteTemplateType(file);
+        if (type == null) {
+            return;
+        }
 
-		Collection<PhpClass> phpClasses = type.getPhpClasses(project);
-		for (PhpClass phpClass : phpClasses) {
-			for (Field field : phpClass.getFields()) {
-				if (!field.isConstant() && field.getModifier().isPublic()) {
-					LookupElementBuilder builder = LookupElementBuilder.create(field, "$" + field.getName());
-					builder = builder.withInsertHandler(PhpVariableInsertHandler.getInstance());
+        Collection<PhpClass> phpClasses = type.getPhpClasses(project);
+        for (PhpClass phpClass : phpClasses) {
+            for (Field field : phpClass.getFields()) {
+                if (!field.isConstant() && field.getModifier().isPublic()) {
+                    LookupElementBuilder builder = LookupElementBuilder.create(field, "$" + field.getName());
+                    builder = builder.withInsertHandler(PhpVariableInsertHandler.getInstance());
 
-					String foundType = field.getType().toString();
-					for (String text : field.getType().getTypesWithParametrisedParts()) {
-						if (text.contains("<")) {
-							foundType = text;
-						}
-					}
+                    String foundType = field.getType().toString();
+                    for (String text : field.getType().getTypesWithParametrisedParts()) {
+                        if (text.contains("<")) {
+                            foundType = text;
+                        }
+                    }
 
-					builder = builder.withTypeText(NettePhpType.create(foundType).toString());
+                    builder = builder.withTypeText(NettePhpType.create(foundType).toString());
 
-					builder = builder.withIcon(PhpIcons.VARIABLE);
-					if (field.isDeprecated() || field.isInternal()) {
-						builder = builder.withStrikeoutness(true);
-					}
-					result.addElement(builder);
-				}
-			}
-		}
-	}
+                    builder = builder.withIcon(PhpIcons.VARIABLE);
+                    if (field.isDeprecated() || field.isInternal()) {
+                        builder = builder.withStrikeoutness(true);
+                    }
+                    result.addElement(builder);
+                }
+            }
+        }
+    }
 
-	private List<LookupElement> attachPhpVariableCompletions(@NotNull PsiElement psiElement) {
-		PsiFile file = psiElement instanceof LattePsiElement ? ((LattePsiElement) psiElement).getLatteFile() : psiElement.getContainingFile();
-		if (!(file instanceof LatteFile)) {
-			return Collections.emptyList();
-		}
+    private List<LookupElement> attachPhpVariableCompletions(@NotNull PsiElement psiElement) {
+        PsiFile file = psiElement instanceof LattePsiElement ? ((LattePsiElement) psiElement).getLatteFile() : psiElement.getContainingFile();
+        if (!(file instanceof LatteFile)) {
+            return Collections.emptyList();
+        }
 
-		List<LookupElement> lookupElements = new ArrayList<>();
-		List<String> foundVariables = new ArrayList<>();
+        List<LookupElement> lookupElements = new ArrayList<>();
+        List<String> foundVariables = new ArrayList<>();
 
-		for (LattePhpCachedVariable element : ((LatteFile) file).getCachedVariableDefinitions(psiElement.getTextOffset())) {
-			String variableName = element.getElement().getVariableName();
-			if (foundVariables.stream().anyMatch(variableName::equals)) {
-				continue;
-			}
+        for (LattePhpCachedVariable element : ((LatteFile) file).getCachedVariableDefinitions(psiElement.getTextOffset())) {
+            String variableName = element.getElement().getVariableName();
+            if (foundVariables.stream().anyMatch(variableName::equals)) {
+                continue;
+            }
 
-			LookupElementBuilder builder = LookupElementBuilder.create(element.getElement(), "$" + variableName);
-			builder = builder.withInsertHandler(PhpVariableInsertHandler.getInstance());
-			builder = builder.withTypeText(element.getElement().getPrevReturnType().toString());
-			builder = builder.withIcon(PhpIcons.VARIABLE);
-			builder = builder.withBoldness(true);
-			lookupElements.add(builder);
+            LookupElementBuilder builder = LookupElementBuilder.create(element.getElement(), "$" + variableName);
+            builder = builder.withInsertHandler(PhpVariableInsertHandler.getInstance());
+            builder = builder.withTypeText(element.getElement().getPrevReturnType().toString());
+            builder = builder.withIcon(PhpIcons.VARIABLE);
+            builder = builder.withBoldness(true);
+            lookupElements.add(builder);
 
-			foundVariables.add(variableName);
-		}
+            foundVariables.add(variableName);
+        }
 
-		Collection<LatteVariableSettings> defaultVariables = LatteConfiguration.getInstance(psiElement.getProject()).getVariables();
-		for (LatteVariableSettings variable : defaultVariables) {
-			String variableName = variable.getVarName();
-			if (foundVariables.stream().anyMatch(variableName::equals)) {
-				continue;
-			}
+        Collection<LatteVariableSettings> defaultVariables = LatteConfiguration.getInstance(psiElement.getProject()).getVariables();
+        for (LatteVariableSettings variable : defaultVariables) {
+            String variableName = variable.getVarName();
+            if (foundVariables.stream().anyMatch(variableName::equals)) {
+                continue;
+            }
 
-			LookupElementBuilder builder = LookupElementBuilder.create("$" + variableName);
-			builder = builder.withInsertHandler(PhpVariableInsertHandler.getInstance());
-			builder = builder.withTypeText(variable.toPhpType().toString());
-			builder = builder.withIcon(PhpIcons.VARIABLE);
-			builder = builder.withBoldness(false);
-			lookupElements.add(builder);
+            LookupElementBuilder builder = LookupElementBuilder.create("$" + variableName);
+            builder = builder.withInsertHandler(PhpVariableInsertHandler.getInstance());
+            builder = builder.withTypeText(variable.toPhpType().toString());
+            builder = builder.withIcon(PhpIcons.VARIABLE);
+            builder = builder.withBoldness(false);
+            lookupElements.add(builder);
 
-			foundVariables.add(variableName);
-		}
-		return lookupElements;
-	}
+            foundVariables.add(variableName);
+        }
+        return lookupElements;
+    }
 
 }

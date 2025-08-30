@@ -114,7 +114,10 @@ public abstract class LatteControlPartElementImpl extends LattePsiElementImpl im
                     for (int j = i + 1; j < tokens.size(); j++) {
                         Token n = tokens.get(j);
                         if (n.isColon()) break;
-                        if (n.isHyphen()) { firstSegmentHasHyphen = true; break; }
+                        if (n.isHyphen()) {
+                            firstSegmentHasHyphen = true;
+                            break;
+                        }
                     }
                 }
 
@@ -162,8 +165,19 @@ public abstract class LatteControlPartElementImpl extends LattePsiElementImpl im
         final String text;
         final int start;
         final int end;
-        Token(String text, int start, int end) { this.text = text; this.start = start; this.end = end; }
-        boolean isColon() { return ":".equals(text); }
-        boolean isHyphen() { return "-".equals(text); }
+
+        Token(String text, int start, int end) {
+            this.text = text;
+            this.start = start;
+            this.end = end;
+        }
+
+        boolean isColon() {
+            return ":".equals(text);
+        }
+
+        boolean isHyphen() {
+            return "-".equals(text);
+        }
     }
 }

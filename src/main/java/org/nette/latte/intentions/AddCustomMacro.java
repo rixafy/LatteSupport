@@ -16,30 +16,32 @@ import org.jetbrains.annotations.NotNull;
  */
 abstract public class AddCustomMacro extends BaseIntentionAction {
 
-	/** custom macro which will be registered on invocation */
-	protected final LatteTagSettings macro;
+    /**
+     * custom macro which will be registered on invocation
+     */
+    protected final LatteTagSettings macro;
 
-	public AddCustomMacro(String macroName) {
-		this.macro = new LatteTagSettings(macroName, getMacroType());
-	}
+    public AddCustomMacro(String macroName) {
+        this.macro = new LatteTagSettings(macroName, getMacroType());
+    }
 
-	@NotNull
-	protected abstract LatteTagSettings.Type getMacroType();
+    @NotNull
+    protected abstract LatteTagSettings.Type getMacroType();
 
-	@NotNull
-	@Override
-	public String getFamilyName() {
-		return "Latte";
-	}
+    @NotNull
+    @Override
+    public String getFamilyName() {
+        return "Latte";
+    }
 
-	@Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-		return file.getLanguage() == LatteLanguage.INSTANCE;
-	}
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+        return file.getLanguage() == LatteLanguage.INSTANCE;
+    }
 
-	@Override
-	public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-		LatteSettings.getInstance(project).tagSettings.add(macro);
-		DaemonCodeAnalyzer.getInstance(project).restart(); // force re-analyzing
-	}
+    @Override
+    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        LatteSettings.getInstance(project).tagSettings.add(macro);
+        DaemonCodeAnalyzer.getInstance(project).restart(); // force re-analyzing
+    }
 }

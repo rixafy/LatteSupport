@@ -12,31 +12,31 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class LatteStubPhpElementImpl<T extends StubElement> extends LatteStubElementImpl<T> implements BaseLattePhpElement, StubBasedPsiElement<T> {
 
-	public LatteStubPhpElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LatteStubPhpElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	public LatteStubPhpElementImpl(final T stub, final IStubElementType nodeType) {
-		super(stub, nodeType);
-	}
+    public LatteStubPhpElementImpl(final T stub, final IStubElementType nodeType) {
+        super(stub, nodeType);
+    }
 
-	@Override
-	public String getName() {
-		return getPhpElementName();
-	}
+    @Override
+    public String getName() {
+        return getPhpElementName();
+    }
 
-	@Override
-	public @Nullable PsiElement getTextElement() {
-		return getNameIdentifier();
-	}
+    @Override
+    public @Nullable PsiElement getTextElement() {
+        return getNameIdentifier();
+    }
 
-	public int getPhpArrayLevel() {
-		return this.getPhpArrayUsageList().size();
-	}
+    public int getPhpArrayLevel() {
+        return this.getPhpArrayUsageList().size();
+    }
 
-	@Override
-	public @Nullable LattePhpStatementPartElement getPhpStatementPart() {
-		PsiElement parent = this.getParent();
-		return parent instanceof LattePhpStatementPartElement ? (LattePhpStatementPartElement) parent : null;
-	}
+    @Override
+    public @Nullable LattePhpStatementPartElement getPhpStatementPart() {
+        PsiElement parent = this.getParent();
+        return parent instanceof LattePhpStatementPartElement ? (LattePhpStatementPartElement) parent : null;
+    }
 }

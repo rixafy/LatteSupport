@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class LattePhpTypedPartElementImpl extends LattePsiElementImpl implements LattePhpTypedPartElement {
 
-	public LattePhpTypedPartElementImpl(@NotNull ASTNode node) {
-		super(node);
-	}
+    public LattePhpTypedPartElementImpl(@NotNull ASTNode node) {
+        super(node);
+    }
 }

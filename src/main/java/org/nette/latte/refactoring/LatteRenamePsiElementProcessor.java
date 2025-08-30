@@ -10,15 +10,15 @@ import org.nette.latte.psi.*;
 
 class LatteRenamePsiElementProcessor extends RenamePsiElementProcessor {
 
-	@Override
-	public boolean canProcessElement(@NotNull PsiElement psiElement) {
-		return psiElement instanceof LattePhpMethod
-				|| psiElement instanceof LattePhpClassUsage
-				// || psiElement instanceof LattePhpNamespaceReference todo: temporarily disabled (weird PHPStorm behavior for PhpIndex.getNamespaceByName)
-				|| psiElement instanceof LattePhpConstant
-				|| psiElement instanceof LattePhpStaticVariable
-				|| psiElement instanceof LattePhpProperty
-				|| psiElement instanceof Field
-				|| psiElement instanceof Method;
-	}
+    @Override
+    public boolean canProcessElement(@NotNull PsiElement psiElement) {
+        return psiElement instanceof LattePhpMethod
+            || psiElement instanceof LattePhpClassUsage
+            // || psiElement instanceof LattePhpNamespaceReference todo: temporarily disabled (weird PHPStorm behavior for PhpIndex.getNamespaceByName)
+            || psiElement instanceof LattePhpConstant
+            || psiElement instanceof LattePhpStaticVariable
+            || psiElement instanceof LattePhpProperty
+            || psiElement instanceof Field
+            || psiElement instanceof Method;
+    }
 }

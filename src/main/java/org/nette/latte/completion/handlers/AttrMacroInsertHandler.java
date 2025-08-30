@@ -16,37 +16,37 @@ import org.jetbrains.annotations.NotNull;
 
 public class AttrMacroInsertHandler implements InsertHandler<LookupElement> {
 
-	private static final AttrMacroInsertHandler instance = new AttrMacroInsertHandler();
+    private static final AttrMacroInsertHandler instance = new AttrMacroInsertHandler();
 
-	public static AttrMacroInsertHandler getInstance() {
-		return instance;
-	}
+    public static AttrMacroInsertHandler getInstance() {
+        return instance;
+    }
 
-	protected AttrMacroInsertHandler() {
-		super();
-	}
+    protected AttrMacroInsertHandler() {
+        super();
+    }
 
-	public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement lookupElement) {
-		PsiElement element = context.getFile().findElementAt(context.getStartOffset());
-		if (element != null && element.getLanguage() == LatteLanguage.INSTANCE && element.getNode().getElementType() == LatteTypes.T_HTML_TAG_NATTR_NAME) {
-			Editor editor = context.getEditor();
-			CaretModel caretModel = editor.getCaretModel();
-			int offset = caretModel.getOffset();
-			if (LatteUtil.isStringAtCaret(editor, "=")) {
-				caretModel.moveToOffset(offset + 2);
-				return;
-			}
+    public void handleInsert(@NotNull InsertionContext context, @NotNull LookupElement lookupElement) {
+        PsiElement element = context.getFile().findElementAt(context.getStartOffset());
+        if (element != null && element.getLanguage() == LatteLanguage.INSTANCE && element.getNode().getElementType() == LatteTypes.T_HTML_TAG_NATTR_NAME) {
+            Editor editor = context.getEditor();
+            CaretModel caretModel = editor.getCaretModel();
+            int offset = caretModel.getOffset();
+            if (LatteUtil.isStringAtCaret(editor, "=")) {
+                caretModel.moveToOffset(offset + 2);
+                return;
+            }
 
-			String attrName = LatteUtil.normalizeNAttrNameModifier(element.getText());
-			LatteTagSettings macro = LatteConfiguration.getInstance(element.getProject()).getTag(attrName);
-			if (macro != null && !macro.hasParameters()) {
-				return;
-			}
+            String attrName = LatteUtil.normalizeNAttrNameModifier(element.getText());
+            LatteTagSettings macro = LatteConfiguration.getInstance(element.getProject()).getTag(attrName);
+            if (macro != null && !macro.hasParameters()) {
+                return;
+            }
 
-			editor.getDocument().insertString(offset, "=\"\"");
-			caretModel.moveToOffset(offset + 2);
+            editor.getDocument().insertString(offset, "=\"\"");
+            caretModel.moveToOffset(offset + 2);
 
-			PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
-		}
-	}
+            PsiDocumentManager.getInstance(context.getProject()).commitDocument(editor.getDocument());
+        }
+    }
 }

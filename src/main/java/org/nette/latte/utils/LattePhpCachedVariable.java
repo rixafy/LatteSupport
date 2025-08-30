@@ -82,7 +82,7 @@ public class LattePhpCachedVariable {
 
         if (definitions == null) {
             definitions = new ArrayList<>();
-            for (LattePhpCachedVariable variable: element.getVariableDefinition()) {
+            for (LattePhpCachedVariable variable : element.getVariableDefinition()) {
                 definitions.add(variable.getElement());
             }
         }
@@ -118,7 +118,7 @@ public class LattePhpCachedVariable {
 
     public boolean isVarDefinition() {
         return LatteTagsUtil.Type.VAR.getTagName().equals(getParentMacroName())
-                || LatteTagsUtil.Type.DEFAULT.getTagName().equals(getParentMacroName());
+            || LatteTagsUtil.Type.DEFAULT.getTagName().equals(getParentMacroName());
     }
 
     public boolean isParametersDefinition() {
@@ -127,8 +127,8 @@ public class LattePhpCachedVariable {
 
     public boolean isPhpArrayVarDefinition() {
         return element.getParent() instanceof LattePhpArrayOfVariables
-                && (LatteTagsUtil.Type.PHP.getTagName().equals(getParentMacroName())
-                || LatteTagsUtil.Type.DO.getTagName().equals(getParentMacroName()));
+            && (LatteTagsUtil.Type.PHP.getTagName().equals(getParentMacroName())
+            || LatteTagsUtil.Type.DO.getTagName().equals(getParentMacroName()));
     }
 
     public boolean isDefinitionInForeach() {
