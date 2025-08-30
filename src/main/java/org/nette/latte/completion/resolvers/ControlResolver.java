@@ -33,8 +33,7 @@ public class ControlResolver extends PresenterResolver {
     }
 
     private @Nullable PsiElement calculateComponent(String component) {
-        List<String> presenterNames = guessPresenterNames();
-        List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, false);
+        List<PhpClass> matchingPresenters = getMatchingPresenters(null, false);
 
         if (matchingPresenters.isEmpty()) {
             return null;
@@ -51,8 +50,7 @@ public class ControlResolver extends PresenterResolver {
     }
 
     public List<Method> getComponents() {
-        List<String> presenterNames = guessPresenterNames();
-        List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, false);
+        List<PhpClass> matchingPresenters = getMatchingPresenters(null, false);
 
         if (matchingPresenters.isEmpty()) {
             return new ArrayList<>();

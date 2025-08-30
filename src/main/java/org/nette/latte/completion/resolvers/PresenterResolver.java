@@ -39,7 +39,7 @@ abstract class PresenterResolver {
     }
 
     private @Nullable PhpClass calculatePresenter(String presenter, List<String> previousPresenters, boolean preferAbstract) {
-        List<PhpClass> matchingPresenters = getMatchingPresenters(List.of(presenter), preferAbstract, previousPresenters);
+        List<PhpClass> matchingPresenters = getMatchingPresenters(presenter, preferAbstract, previousPresenters);
 
         if (matchingPresenters.isEmpty()) {
             return null;
@@ -60,11 +60,9 @@ abstract class PresenterResolver {
     }
 
     public @Nullable PhpClass findPresenter(List<String> previousPresenters, boolean preferAbstract) {
-        for (String name : guessPresenterNames()) {
-            List<PhpClass> matching = getMatchingPresenters(List.of(name), preferAbstract, previousPresenters);
-            if (!matching.isEmpty()) {
-                return matching.get(0);
-            }
+        List<PhpClass> matching = getMatchingPresenters(null, preferAbstract, previousPresenters);
+        if (!matching.isEmpty()) {
+            return matching.get(0);
         }
 
         return null;
@@ -75,17 +73,14 @@ abstract class PresenterResolver {
 
         PhpClass parentClass = null;
         if (parent != null) {
-            parentClass = getMatchingPresenters(List.of(parent), true).stream().findFirst().orElse(null);
+            parentClass = getMatchingPresenters(parent, true).stream().findFirst().orElse(null);
         } else {
-            String guessFromTemplate = guessPresenterNames().stream().findFirst().orElse(null);
-            if (guessFromTemplate != null) {
-                PhpClass templatePresenter = getMatchingPresenters(List.of(guessFromTemplate), true).stream().findFirst().orElse(null);
-                if (templatePresenter != null) {
-                    if (templatePresenter.isAbstract() && presenters.contains(templatePresenter)) {
-                        parentClass = templatePresenter;
-                    } else if (templatePresenter.getSuperClass() != null && presenters.contains(templatePresenter.getSuperClass())) {
-                        parentClass = templatePresenter.getSuperClass();
-                    }
+            PhpClass templatePresenter = getMatchingPresenters(null, true).stream().findFirst().orElse(null);
+            if (templatePresenter != null) {
+                if (templatePresenter.isAbstract() && presenters.contains(templatePresenter)) {
+                    parentClass = templatePresenter;
+                } else if (templatePresenter.getSuperClass() != null && presenters.contains(templatePresenter.getSuperClass())) {
+                    parentClass = templatePresenter.getSuperClass();
                 }
             }
         }
@@ -171,11 +166,18 @@ abstract class PresenterResolver {
         return presenter.getName().replace("Presenter", "");
     }
 
-    protected List<PhpClass> getMatchingPresenters(List<String> presenterNames, boolean preferAbstract) {
-        return getMatchingPresenters(presenterNames, preferAbstract, new ArrayList<>());
+    protected List<PhpClass> getMatchingPresenters(String name, boolean preferAbstract) {
+        return getMatchingPresenters(name, preferAbstract, new ArrayList<>());
     }
 
-    protected List<PhpClass> getMatchingPresenters(List<String> presenterNames, boolean preferAbstract, List<String> previousPresenters) {
+    protected List<PhpClass> getMatchingPresenters(@Nullable String name, boolean preferAbstract, List<String> previousPresenters) {
+        List<String> presenterNames = new ArrayList<>();
+        if (name == null) {
+            presenterNames.addAll(guessPresenterNames());
+        } else {
+            presenterNames.add(name);
+        }
+
         List<PhpClass> presenters = getPresenters();
 
         HashMap<String, PhpClass> candidates = new HashMap<>();

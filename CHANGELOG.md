@@ -12,6 +12,10 @@
 - Usage info in unused PHP fields that are used in latte
 - Autocompletion of global functions at the start of the macro
 
+### Improved
+
+- Presenter resolving
+
 ## [1.5.5] - 2025-08-25
 
 ### Fixed

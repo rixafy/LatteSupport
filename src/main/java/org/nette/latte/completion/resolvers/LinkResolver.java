@@ -39,9 +39,7 @@ public class LinkResolver extends PresenterResolver {
     private @Nullable PsiElement calculateAction(PhpClass presenterClass, String action) {
         List<String> actions = new ArrayList<>(action.equals("this") ? guessActionName() : List.of(action));
         if (presenterClass == null) {
-            // Fallback: guess presenter from file context when not provided
-            List<String> presenterNames = guessPresenterNames();
-            List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, false);
+            List<PhpClass> matchingPresenters = getMatchingPresenters(null, false);
             if (matchingPresenters.isEmpty()) {
                 return null;
             }
@@ -80,8 +78,7 @@ public class LinkResolver extends PresenterResolver {
 
     private @Nullable PsiElement calculateSignal(PhpClass presenterClass, String signal) {
         if (presenterClass == null) {
-            List<String> presenterNames = guessPresenterNames();
-            List<PhpClass> matchingPresenters = getMatchingPresenters(presenterNames, false);
+            List<PhpClass> matchingPresenters = getMatchingPresenters(null, false);
             if (matchingPresenters.isEmpty()) {
                 return null;
             }
