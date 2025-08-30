@@ -85,10 +85,62 @@ public class LatteLookAheadLexer extends LookAheadLexer {
 
 	private void checkMacroType(@NotNull String identifier, IElementType type, @NotNull List<String> types, boolean currentValid) {
 		boolean current = (type == LatteTypes.T_MACRO_NAME || type == LatteTypes.T_HTML_TAG_NATTR_NAME) && isMacroTypeMacro(lexer, types);
+
+		// Special-case: treat n:name as a control only inside <form> tags
+		if (!current && identifier.equals(IDENTIFIER_CONTROLS) && type == LatteTypes.T_HTML_TAG_NATTR_NAME) {
+			if (isCurrentTokenEquals(lexer, "n:name") && isInsideCurrentHtmlOpenTagNamed(lexer, "form")) {
+				current = true;
+			}
+		}
+
 		replaceAs.put(identifier, (currentValid && !WHITESPACES.contains(type))
 				|| (!currentValid && lastValid.containsKey(identifier) && lastValid.getOrDefault(identifier, false) && WHITESPACES.contains(type))
 				|| current);
 		lastValid.put(identifier, current);
+	}
+
+	private static boolean isCurrentTokenEquals(@NotNull Lexer baseLexer, @NotNull String text) {
+		CharSequence seq = baseLexer.getBufferSequence();
+		int start = baseLexer.getTokenStart();
+		int end = baseLexer.getTokenEnd();
+		if (start < 0 || end > seq.length() || start >= end) {
+			return false;
+		}
+		CharSequence token = seq.subSequence(start, end);
+		return text.contentEquals(token);
+	}
+
+	private static boolean isInsideCurrentHtmlOpenTagNamed(@NotNull Lexer baseLexer, @NotNull String tagName) {
+		CharSequence seq = baseLexer.getBufferSequence();
+		int pos = baseLexer.getTokenStart();
+		// Walk backwards until we hit '<' (start of tag) or '>' (start of previous tag end)
+		for (int i = pos - 1; i >= 0; i--) {
+			char ch = seq.charAt(i);
+			if (ch == '>') {
+				// We passed the beginning of this tag; not inside an open tag context
+				break;
+			}
+			if (ch == '<') {
+				int j = i + 1;
+				if (j < seq.length() && seq.charAt(j) == '/') {
+					// It's a close tag; not relevant for attribute
+					return false;
+				}
+				// Read tag name
+				StringBuilder name = new StringBuilder();
+				while (j < seq.length()) {
+					char c = seq.charAt(j);
+					if (Character.isLetterOrDigit(c) || c == '-' || c == '_' || c == ':') {
+						name.append(c);
+						j++;
+					} else {
+						break;
+					}
+				}
+				return tagName.equalsIgnoreCase(name.toString());
+			}
+		}
+		return false;
 	}
 
 	public static boolean isCharacterAtCurrentPosition(Lexer baseLexer, char ...characters) {
