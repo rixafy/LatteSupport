@@ -121,7 +121,7 @@ tasks {
 
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
-        kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=17")
+        kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=all")
     }
 
     withType<KoverXmlTask> {
