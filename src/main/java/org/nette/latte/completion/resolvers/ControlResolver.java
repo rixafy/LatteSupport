@@ -36,8 +36,13 @@ public class ControlResolver extends PresenterResolver {
         List<PhpClass> matchingPresenters = getMatchingPresenters(null, false);
 
         if (matchingPresenters.isEmpty()) {
-            // TODO: This is the lLast resort, REMOVE when refactoring is added
-            matchingPresenters = getPresenters();
+            String lowerCase = component.toLowerCase();
+            if (!lowerCase.equals("form") && !lowerCase.equals("grid") && !lowerCase.equals("datagrid") && !lowerCase.equals("addform") && !lowerCase.equals("editform")) {
+                // TODO: This is the lLast resort, REMOVE when refactoring is added
+                matchingPresenters = getPresenters();
+            } else {
+                return null;
+            }
         }
 
         for (PhpClass presenterClass : matchingPresenters) {
