@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.6.1] - Unreleased
+
+### Fixed
+
+- Detection of absolute links
+
 ## [1.6.0] - 2025-08-31
 
 ### Added

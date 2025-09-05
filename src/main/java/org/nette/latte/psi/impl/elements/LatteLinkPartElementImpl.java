@@ -53,7 +53,7 @@ public abstract class LatteLinkPartElementImpl extends LattePsiElementImpl imple
         if (references == null) {
             references = new ArrayList<>();
 
-            if (getName().equals(":")) {
+            if (getName().equals(":") || getName().equals("/")) {
                 return PsiReference.EMPTY_ARRAY;
             }
 
@@ -61,7 +61,7 @@ public abstract class LatteLinkPartElementImpl extends LattePsiElementImpl imple
 
             // Build presenters list from whole text (capitalized tokens)
             List<String> presenters = new ArrayList<>();
-            for (String presenter : wholeText.trim().split(":")) {
+            for (String presenter : wholeText.replace("IntellijIdeaRulezzz", "").replace("/", "").trim().split(":")) {
                 if (!presenter.isEmpty() && presenter.equals(StringUtils.capitalize(presenter))) {
                     presenters.add(presenter);
                 }

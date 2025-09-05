@@ -35,7 +35,7 @@ public class LatteLinkReference extends PsiReferenceBase<PsiElement> {
     @Override
     public @Nullable PsiElement resolve() {
         LatteFile file = (LatteFile) myElement.getContainingFile();
-        if (file == null || text.equals(":")) {
+        if (file == null || text.equals(":") || text.contains("/")) {
             return null;
         }
 

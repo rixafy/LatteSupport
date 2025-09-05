@@ -47,7 +47,7 @@ public class LatteLookAheadLexer extends LookAheadLexer {
         }
 
         boolean wasLink = false;
-        if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_CONTROL || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, '#', ':'))) && needReplaceAsMacro(IDENTIFIER_LINKS)) {
+        if ((type == LatteTypes.T_PHP_IDENTIFIER || type == LatteTypes.T_CONTROL || type == LatteTypes.T_PHP_KEYWORD || (type == LatteTypes.T_MACRO_ARGS && isCharacterAtCurrentPosition(lexer, '#', ':', '/'))) && needReplaceAsMacro(IDENTIFIER_LINKS)) {
             type = LatteTypes.T_LINK;
             wasLink = true;
         }
