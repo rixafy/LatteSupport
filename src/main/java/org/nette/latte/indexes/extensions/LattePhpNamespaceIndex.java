@@ -30,8 +30,7 @@ public class LattePhpNamespaceIndex extends StringStubIndexExtension<LattePhpNam
         return KEY;
     }
 
-    @Override
-    public Collection<LattePhpNamespaceReference> get(@NotNull String key, @NotNull Project project, @NotNull GlobalSearchScope scope) {
+    public Collection<LattePhpNamespaceReference> getElement(@NotNull String key, @NotNull Project project, @NotNull GlobalSearchScope scope) {
         return StubIndex.getElements(getKey(), key, project, scope, LattePhpNamespaceReference.class);
     }
 }

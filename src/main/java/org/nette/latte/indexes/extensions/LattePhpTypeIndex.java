@@ -1,14 +1,9 @@
 package org.nette.latte.indexes.extensions;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.stubs.StringStubIndexExtension;
-import com.intellij.psi.stubs.StubIndex;
 import com.intellij.psi.stubs.StubIndexKey;
 import org.nette.latte.psi.LattePhpType;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
 
 public class LattePhpTypeIndex extends StringStubIndexExtension<LattePhpType> {
     public static final StubIndexKey<String, LattePhpType> KEY = StubIndexKey.createIndexKey("latte.phpType.index");
@@ -28,10 +23,5 @@ public class LattePhpTypeIndex extends StringStubIndexExtension<LattePhpType> {
     @NotNull
     public StubIndexKey<String, LattePhpType> getKey() {
         return KEY;
-    }
-
-    @Override
-    public Collection<LattePhpType> get(@NotNull String key, @NotNull Project project, @NotNull GlobalSearchScope scope) {
-        return StubIndex.getElements(getKey(), key, project, scope, LattePhpType.class);
     }
 }

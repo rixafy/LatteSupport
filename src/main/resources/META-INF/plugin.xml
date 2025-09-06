@@ -44,9 +44,7 @@
 		<renamePsiElementProcessor implementation="org.nette.latte.refactoring.LatteRenamePsiElementProcessor"/>
 		<lang.smartEnterProcessor implementationClass="org.nette.latte.editor.LatteSmartEnterProcessor" />
 
-		<!-- needed? -->
 		<referencesSearch implementation="org.nette.latte.reference.LatteReferenceSearch"/>
-
 		<implicitUsageProvider implementation="org.nette.latte.reference.LatteImplicitUsageProvider"/>
 
 		<stubElementTypeHolder class="org.nette.latte.psi.LatteTypes" externalIdPrefix="latte."/>
@@ -60,7 +58,7 @@
 		<stubIndex implementation="org.nette.latte.indexes.extensions.LattePhpTypeIndex"/>
 
 		<defaultLiveTemplates file="/liveTemplates/Latte.xml"/>
-		<liveTemplateContext implementation="org.nette.latte.liveTemplates.LatteTemplateContext"/>
+		<liveTemplateContext contextId="LATTE" implementation="org.nette.latte.liveTemplates.LatteTemplateContext"/>
 		<liveTemplatePreprocessor implementation="org.nette.latte.liveTemplates.LatteTemplatePreprocessor"/>
 
 		<projectConfigurable instance="org.nette.latte.ui.LatteSettingsForm"

@@ -30,8 +30,7 @@ public class LatteFilterIndex extends StringStubIndexExtension<LatteMacroModifie
         return KEY;
     }
 
-    @Override
-    public Collection<LatteMacroModifier> get(@NotNull String key, @NotNull Project project, @NotNull GlobalSearchScope scope) {
+    public Collection<LatteMacroModifier> getElement(@NotNull String key, @NotNull Project project, @NotNull GlobalSearchScope scope) {
         return StubIndex.getElements(getKey(), key, project, scope, LatteMacroModifier.class);
     }
 }

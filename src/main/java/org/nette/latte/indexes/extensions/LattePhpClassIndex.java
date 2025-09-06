@@ -30,8 +30,7 @@ public class LattePhpClassIndex extends StringStubIndexExtension<LattePhpClassRe
         return KEY;
     }
 
-    @Override
-    public Collection<LattePhpClassReference> get(@NotNull String key, @NotNull Project project, @NotNull GlobalSearchScope scope) {
+    public Collection<LattePhpClassReference> getElement(@NotNull String key, @NotNull Project project, @NotNull GlobalSearchScope scope) {
         return StubIndex.getElements(getKey(), key, project, scope, LattePhpClassReference.class);
     }
 }
