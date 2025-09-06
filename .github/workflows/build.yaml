@@ -18,7 +18,7 @@ jobs:
       - name: Build with Gradle
         run: |
           chmod +x gradlew
-          ./gradlew build -x test
+          ./gradlew buildPlugin
       - name: Create artifact name
         id: vars
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
@@ -26,16 +26,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: artifact-${{ steps.vars.outputs.sha_short }}
-          path: build/libs/instrumented*.jar
+          path: build/libs/*instrumented.jar
       - name: Download artifact
         uses: actions/download-artifact@v4
       - name: IntelliJ Platform Plugin Verifier
         uses: ChrisCarini/intellij-platform-plugin-verifier-action@v2.0.1
         with:
           ide-versions: |
-            phpstorm:2022.2
             phpstorm:2023.1
             phpstorm:2024.1
+            phpstorm:2025.1
             phpstorm:LATEST-EAP-SNAPSHOT
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
