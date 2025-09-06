@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: artifact-${{ steps.vars.outputs.sha_short }}
-          path: build/libs
+          path: build/libs/*instrumented.jar
       - name: Download artifact
         uses: actions/download-artifact@v4
       - name: IntelliJ Platform Plugin Verifier
