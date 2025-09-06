@@ -82,8 +82,8 @@ intellijPlatform {
 }
 
 grammarKit {
-    jflexRelease.set(cfg("jflexRelease"))
-    grammarKitRelease.set(cfg("grammarKitRelease"))
+    jflexRelease = cfg("jflexRelease")
+    grammarKitRelease = cfg("grammarKitRelease")
 }
 
 changelog {
@@ -100,35 +100,35 @@ qodana {
 }
 
 val generateLatteParser = tasks.register<GenerateParserTask>("generateLatteParser") {
-    sourceFile.set(File("src/main/java/org/nette/latte/parser/LatteParser.bnf"))
-    targetRootOutputDir.set(File("src/main/gen"))
-    pathToParser.set("/org/nette/latte/parser/LatteParser.java")
-    pathToPsiRoot.set("/org/nette/latte/psi")
-    purgeOldFiles.set(false)
+    sourceFile = File("src/main/java/org/nette/latte/parser/LatteParser.bnf")
+    targetRootOutputDir = File("src/main/gen")
+    pathToParser = "/org/nette/latte/parser/LatteParser.java"
+    pathToPsiRoot = "/org/nette/latte/psi"
+    purgeOldFiles = false
 }
 
 val generateLatteMacroContentLexer = tasks.register<GenerateLexerTask>("generateLatteMacroContentLexer") {
-    sourceFile.set(File("src/main/java/org/nette/latte/lexer/grammars/LatteMacroContentLexer.flex"))
-    targetOutputDir.set(File("src/main/gen/org/nette/latte/lexer"))
-    purgeOldFiles.set(false)
+    sourceFile = File("src/main/java/org/nette/latte/lexer/grammars/LatteMacroContentLexer.flex")
+    targetOutputDir = File("src/main/gen/org/nette/latte/lexer")
+    purgeOldFiles = false
 }
 
 val generateLatteMacroLexer = tasks.register<GenerateLexerTask>("generateLatteMacroLexer") {
-    sourceFile.set(File("src/main/java/org/nette/latte/lexer/grammars/LatteMacroLexer.flex"))
-    targetOutputDir.set(File("src/main/gen/org/nette/latte/lexer"))
-    purgeOldFiles.set(false)
+    sourceFile = File("src/main/java/org/nette/latte/lexer/grammars/LatteMacroLexer.flex")
+    targetOutputDir = File("src/main/gen/org/nette/latte/lexer")
+    purgeOldFiles = false
 }
 
 val generateLatteTopLexer = tasks.register<GenerateLexerTask>("generateLatteTopLexer") {
-    sourceFile.set(File("src/main/java/org/nette/latte/lexer/grammars/LatteTopLexer.flex"))
-    targetOutputDir.set(File("src/main/gen/org/nette/latte/lexer"))
-    purgeOldFiles.set(false)
+    sourceFile = File("src/main/java/org/nette/latte/lexer/grammars/LatteTopLexer.flex")
+    targetOutputDir = File("src/main/gen/org/nette/latte/lexer")
+    purgeOldFiles = false
 }
 
 val generateLattePhpLexer = tasks.register<GenerateLexerTask>("generateLattePhpLexer") {
-    sourceFile.set(File("src/main/java/org/nette/latte/lexer/grammars/LattePhpLexer.flex"))
-    targetOutputDir.set(File("src/main/gen/org/nette/latte/lexer"))
-    purgeOldFiles.set(false)
+    sourceFile = File("src/main/java/org/nette/latte/lexer/grammars/LattePhpLexer.flex")
+    targetOutputDir = File("src/main/gen/org/nette/latte/lexer")
+    purgeOldFiles = false
 }
 
 tasks {
