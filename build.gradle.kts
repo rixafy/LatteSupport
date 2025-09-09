@@ -44,8 +44,8 @@ sourceSets {
 
 dependencies {
     intellijPlatform {
-        create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
-        plugins(providers.gradleProperty("platformPlugins").map { it.split(',') })
+        cfg("intellij.localPath").orNull?.let { local(it) } ?: create(cfg("platformType"), cfg("platformVersion"))
+        plugins(cfg("platformPlugins").map { it.split(',') })
         testFramework(TestFrameworkType.Platform)
     }
 

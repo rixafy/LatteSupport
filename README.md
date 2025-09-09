@@ -39,7 +39,7 @@ Building
 ------------
 
 ```$xslt
-$ ./gradlew build -x test
+$ ./gradlew buildPlugin
 ```
 
 Testing in dummy IDE
