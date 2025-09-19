@@ -18,8 +18,8 @@ public class LatteHighlightingLexerTest {
 			Pair.create(T_MACRO_OPEN_TAG_OPEN, "{"),
 			Pair.create(T_MACRO_NAME, "include"),
 			Pair.create(T_WHITESPACE, " "),
-			Pair.create(T_BLOCK_NAME, "#"),
-			Pair.create(T_BLOCK_NAME, "blockName"),
+			Pair.create(T_FILE_PATH, "#"),
+			Pair.create(T_FILE_PATH, "blockName"),
 			Pair.create(T_MACRO_TAG_CLOSE, "}"),
 		});
 
