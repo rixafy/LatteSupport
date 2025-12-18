@@ -1,10 +1,12 @@
 # Changelog
 
-## [1.6.1] - Unreleased
+## [1.6.1] - 2025-12-18
 
 ### Fixed
 
 - Detection of absolute links
+- Warning about LatteCodeStyleSettingsProvider
+- Few other deprecations
 
 ## [1.6.0] - 2025-08-31
 
