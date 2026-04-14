@@ -86,7 +86,7 @@ public class LatteDefaultConfiguration {
         addLatteTag(tag("elseif", LatteTagSettings.Type.UNPAIRED, requiredArgument("condition", "bool", LatteArgumentSettings.Type.PHP_CONDITION)));
         addLatteTag(tag("elseifset", LatteTagSettings.Type.UNPAIRED, requiredArgument("var", "string", LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.BLOCK)));
         addLatteTag(tag("extends", LatteTagSettings.Type.UNPAIRED, requiredArgument("file", "string", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.PHP_EXPRESSION, LatteArgumentSettings.Type.NONE)));
-        addLatteTag(tag("first", LatteTagSettings.Type.UNPAIRED, requiredArgument("width", "int", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION)));
+        addLatteTag(tag("first", LatteTagSettings.Type.PAIR, argument("width", "int", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(multiTag("for", LatteTagSettings.Type.PAIR, "initialization; condition; afterthought"));
         addLatteTag(filtersMultiTag("foreach", LatteTagSettings.Type.PAIR, "expression as [$key =>] $value"));
         addLatteTag(tag("if", LatteTagSettings.Type.PAIR, requiredArgument("condition", "bool", LatteArgumentSettings.Type.PHP_CONDITION)));
@@ -95,7 +95,7 @@ public class LatteDefaultConfiguration {
         addLatteTag(filtersTag("include", LatteTagSettings.Type.UNPAIRED, requiredArgument("file", "string", LatteArgumentSettings.Type.BLOCK, LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION), repeatableArgument("arguments", LatteArgumentSettings.Type.KEY_VALUE)));
         addLatteTag(tag("includeblock", LatteTagSettings.Type.UNPAIRED, requiredArgument("file", "string", LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(tag("l", LatteTagSettings.Type.UNPAIRED));
-        addLatteTag(tag("last", LatteTagSettings.Type.PAIR, requiredArgument("width", "int", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION)));
+        addLatteTag(tag("last", LatteTagSettings.Type.PAIR, argument("width", "int", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(tag("layout", LatteTagSettings.Type.UNPAIRED, requiredArgument("file", "string", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION, LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.NONE)));
         addLatteTag(tag("class", LatteTagSettings.Type.ATTR_ONLY, "class"));
         addLatteTag(tag("attr", LatteTagSettings.Type.ATTR_ONLY, "attr"));

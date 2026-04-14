@@ -120,4 +120,10 @@ public class ParserTest extends BasePsiParsingTestCase {
         doTest(true, true);
     }
 
+    @Test
+    public void testForeachFirstLast() {
+        doTest(true, true);
+    }
+
+
 }

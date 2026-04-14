@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.1] - 2026-04-14
+
+### Fixed
+
+- `{first}...{/first}` producing false parser errors inside `{foreach}` loops
+- `{first}` and `{last}` width argument incorrectly marked as required
+
 ## [1.7.0] - 2026-03-31
 
 ### Added
