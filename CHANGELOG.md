@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.7.2] - 2026-04-21
+
+### Performance
+
+- Faster branch switching and PSI reloads in projects with Latte files, template data language detection no longer rereads the full file on every PSI change
+
+### Fixed
+
+- `IllegalStateException` on EDT when creating PSI for a Latte file
+
 ## [1.7.1] - 2026-04-14
 
 ### Fixed
