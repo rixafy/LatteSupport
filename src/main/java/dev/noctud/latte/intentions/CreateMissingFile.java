@@ -51,12 +51,13 @@ public class CreateMissingFile implements LocalQuickFix {
 
                 VirtualFile newFile = parentDirectory.createChildData(this, new File(absolutePath.substring(absolutePath.lastIndexOf('/') + 1)).getName());
 
-                String firstLine = LoadTextUtil.loadText(currentFile).toString().split("\n")[0];
-                if (firstLine.startsWith("{templateType")) {
-                    newFile.setBinaryContent((firstLine + "\n").getBytes());
+                String firstLine = readFirstLine(currentFile);
+                String content = firstLine.startsWith("{templateType") ? firstLine + "\n" : "";
+                if (!content.isEmpty()) {
+                    newFile.setBinaryContent(content.getBytes());
                 }
 
-                FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, newFile, LoadTextUtil.loadText(currentFile).toString().length()), true);
+                FileEditorManager.getInstance(project).openTextEditor(new OpenFileDescriptor(project, newFile, content.length()), true);
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -67,5 +68,15 @@ public class CreateMissingFile implements LocalQuickFix {
     @Override
     public boolean startInWriteAction() {
         return false;
+    }
+
+    private static String readFirstLine(@NotNull VirtualFile file) {
+        CharSequence text = LoadTextUtil.loadText(file);
+        for (int i = 0, n = text.length(); i < n; i++) {
+            if (text.charAt(i) == '\n') {
+                return text.subSequence(0, i).toString();
+            }
+        }
+        return text.toString();
     }
 }
