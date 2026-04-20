@@ -88,11 +88,11 @@ public class LatteVariableCompletionProvider extends BaseLatteCompletionProvider
         }
 
         List<LookupElement> lookupElements = new ArrayList<>();
-        List<String> foundVariables = new ArrayList<>();
+        Set<String> foundVariables = new HashSet<>();
 
         for (LattePhpCachedVariable element : ((LatteFile) file).getCachedVariableDefinitions(psiElement.getTextOffset())) {
             String variableName = element.getElement().getVariableName();
-            if (foundVariables.stream().anyMatch(variableName::equals)) {
+            if (!foundVariables.add(variableName)) {
                 continue;
             }
 
@@ -102,14 +102,12 @@ public class LatteVariableCompletionProvider extends BaseLatteCompletionProvider
             builder = builder.withIcon(PhpIcons.VARIABLE);
             builder = builder.withBoldness(true);
             lookupElements.add(builder);
-
-            foundVariables.add(variableName);
         }
 
         Collection<LatteVariableSettings> defaultVariables = LatteConfiguration.getInstance(psiElement.getProject()).getVariables();
         for (LatteVariableSettings variable : defaultVariables) {
             String variableName = variable.getVarName();
-            if (foundVariables.stream().anyMatch(variableName::equals)) {
+            if (!foundVariables.add(variableName)) {
                 continue;
             }
 
@@ -119,9 +117,8 @@ public class LatteVariableCompletionProvider extends BaseLatteCompletionProvider
             builder = builder.withIcon(PhpIcons.VARIABLE);
             builder = builder.withBoldness(false);
             lookupElements.add(builder);
-
-            foundVariables.add(variableName);
         }
+
         return lookupElements;
     }
 

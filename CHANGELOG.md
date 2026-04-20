@@ -5,6 +5,7 @@
 ### Performance
 
 - Faster branch switching and PSI reloads in projects with Latte files, template data language detection no longer rereads the full file on every PSI change
+- Faster variable completion in macros, deduplication now uses a hash set instead of a linear scan
 
 ### Fixed
 
