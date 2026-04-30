@@ -14,7 +14,7 @@ import static dev.noctud.latte.psi.LatteTypes.*;
 
 
 WHITE_SPACE=[ \t\r\n]+
-SYMBOL = [_[:letter:]][_0-9[:letter:]]*(-[_0-9[:letter:]]+)* //todo: unicode letters
+SYMBOL = [_\p{L}][_0-9\p{L}]*(-[_0-9\p{L}]+)*
 FUNCTION_CALL=[a-zA-Z_][a-zA-Z0-9_]* "("
 CLASS_NAME=\\?[a-zA-Z_][a-zA-Z0-9_]*\\[a-zA-Z_][a-zA-Z0-9_\\]* | \\[a-zA-Z_][a-zA-Z0-9_]*
 CONTENT_TYPE=[a-zA-Z\-][a-zA-Z0-9\-]*\/[a-zA-Z\-][a-zA-Z0-9\-\.]*

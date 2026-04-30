@@ -637,6 +637,24 @@ public class LattePhpLexerTest {
 
 	@Test
 	@SuppressWarnings("unchecked")
+	public void testUnicodeIdentifierInUnquotedString() throws Exception {
+		Lexer lexer = new LatteLexer();
+		lexer.start("{customTag příliš žluťoučký $kůň}");
+		assertTokens(lexer, new Pair[] {
+			Pair.create(T_MACRO_OPEN_TAG_OPEN, "{"),
+			Pair.create(T_MACRO_NAME, "customTag"),
+			Pair.create(T_WHITESPACE, " "),
+			Pair.create(T_PHP_IDENTIFIER, "příliš"),
+			Pair.create(T_WHITESPACE, " "),
+			Pair.create(T_PHP_IDENTIFIER, "žluťoučký"),
+			Pair.create(T_WHITESPACE, " "),
+			Pair.create(T_MACRO_ARGS_VAR, "$kůň"),
+			Pair.create(T_MACRO_TAG_CLOSE, "}"),
+		});
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
 	public void testModifiers() throws Exception {
 		Lexer lexer = new LatteLexer();
 		lexer.start("{$object|bytes}");
