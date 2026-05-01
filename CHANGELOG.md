@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.3] - 2026-05-01
+
+### Fixed
+
+- Lexing of unicode letters in macro identifiers and unquoted strings
+
 ## [1.7.2] - 2026-04-21
 
 ### Performance
