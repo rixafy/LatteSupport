@@ -170,9 +170,9 @@ public class LatteReferenceSearch extends QueryExecutorBase<PsiReference, Refere
             String name = method.getName();
 
             java.util.List<String> words = new java.util.ArrayList<>();
-            if (name.startsWith("createComponent")) {
+            if (name.startsWith("createComponent") && name.length() > "createComponent".length()) {
                 words.add(StringUtils.uncapitalize(name.substring("createComponent".length())));
-            } else if (name.startsWith("render")) {
+            } else if (name.startsWith("render") && name.length() > "render".length()) {
                 words.add(StringUtils.uncapitalize(name.substring("render".length())));
             }
 

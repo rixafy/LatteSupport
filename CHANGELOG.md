@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.7.4] - Unreleased
+
+### Fixed
+
+- Empty-text search exception for bare render/createComponent methods
+
 ## [1.7.3] - 2026-05-01
 
 ### Fixed
