@@ -5,7 +5,7 @@
 ### Fixed
 
 - Empty-text search exception for bare render/createComponent methods
-- Fix NPE in MissingFileInspection when the file has no containing directory
+- NPE in MissingFileInspection when the file has no containing directory
 
 ## [1.7.3] - 2026-05-01
 
