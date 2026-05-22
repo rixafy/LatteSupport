@@ -6,6 +6,7 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.psi.PsiDirectory;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
@@ -36,6 +37,13 @@ public class MissingFileInspection extends BaseLocalInspectionTool {
             return null;
         }
 
+        final PsiDirectory containingDirectory = file.getContainingDirectory();
+        final VirtualFile containingFileVirtual = file.getVirtualFile();
+        if (containingDirectory == null || containingFileVirtual == null) {
+            return null;
+        }
+        final String baseDirPath = containingDirectory.getVirtualFile().getPath();
+
         final List<ProblemDescriptor> problems = new ArrayList<>();
         file.acceptChildren(new PsiRecursiveElementWalkingVisitor() {
             @Override
@@ -52,10 +60,10 @@ public class MissingFileInspection extends BaseLocalInspectionTool {
                                     relativePath = relativePath.substring(1);
                                 }
 
-                                String absolutePath = "file://" + element.getContainingFile().getContainingDirectory().getVirtualFile().getPath() + "/" + relativePath;
+                                String absolutePath = "file://" + baseDirPath + "/" + relativePath;
                                 VirtualFile virtual = VirtualFileManager.getInstance().findFileByUrl(absolutePath);
                                 if (virtual == null) {
-                                    problems.add(manager.createProblemDescriptor(element, "File " + (new File(absolutePath)).getName() + " is missing", new LocalQuickFix[]{new CreateMissingFile(element.getContainingFile().getVirtualFile(), absolutePath)}, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly, false));
+                                    problems.add(manager.createProblemDescriptor(element, "File " + (new File(absolutePath)).getName() + " is missing", new LocalQuickFix[]{new CreateMissingFile(containingFileVirtual, absolutePath)}, ProblemHighlightType.GENERIC_ERROR_OR_WARNING, isOnTheFly, false));
                                 }
                             }
                         }
