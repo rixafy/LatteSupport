@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class LatteLookAheadLexer extends LookAheadLexer {
     private static final TokenSet WHITESPACES = TokenSet.create(TokenType.WHITE_SPACE, LatteTypes.T_WHITESPACE);
-    private static final TokenSet TAG_TAGS = TokenSet.create(LatteTypes.T_HTML_TAG_ATTR_EQUAL_SIGN, LatteTypes.T_HTML_TAG_ATTR_DQ);
+    private static final TokenSet TAG_TAGS = TokenSet.create(LatteTypes.T_HTML_TAG_ATTR_EQUAL_SIGN, LatteTypes.T_HTML_TAG_ATTR_SQ, LatteTypes.T_HTML_TAG_ATTR_DQ, LatteTypes.T_HTML_TAG_ATTR_CURLY_LEFT, LatteTypes.T_HTML_TAG_ATTR_CURLY_RIGHT);
 
     private static final String IDENTIFIER_FILES = "files";
     private static final String IDENTIFIER_LINKS = "links";

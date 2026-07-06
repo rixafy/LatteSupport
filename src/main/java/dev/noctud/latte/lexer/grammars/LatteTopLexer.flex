@@ -24,6 +24,7 @@ import static dev.noctud.latte.psi.LatteTypes.*;
 %state NETTE_ATTR_VALUE
 %state NETTE_ATTR_SQ
 %state NETTE_ATTR_DQ
+%state NETTE_ATTR_CURLY
 %state HTML_ATTR
 %state HTML_ATTR_VALUE
 %state HTML_ATTR_SQ
@@ -268,7 +269,7 @@ MACRO_STRING_UQ = [^'\"{}]
 }
 
 <NETTE_ATTR> {
-	"=" / [ \t\r\n]* [^ \t\r\n/>{] {
+	"=" / [ \t\r\n]* [^ \t\r\n/>] {
 		pushState(NETTE_ATTR_VALUE);
 		return T_HTML_TAG_ATTR_EQUAL_SIGN;
 	}
@@ -292,6 +293,11 @@ MACRO_STRING_UQ = [^'\"{}]
 	[\"] {
 		pushState(NETTE_ATTR_DQ);
 		return T_HTML_TAG_ATTR_DQ;
+	}
+
+	"{" {
+		pushState(NETTE_ATTR_CURLY);
+		return T_HTML_TAG_ATTR_CURLY_LEFT;
 	}
 
 	[^ \t\r\n/>{'\"][^ \t\r\n/>{]* {
@@ -341,6 +347,27 @@ MACRO_STRING_UQ = [^'\"{}]
 	}
 
 	[^\"]+ {
+		if (lastNAttrName != null && lastNAttrName.equals("n:syntax")) {
+			String val = yytext().toString().trim();
+			if (val.equals("off")) {
+				syntaxOffPending = true;
+			} else if (val.equals("double")) {
+				syntaxDoublePending = true;
+			}
+		}
+		return T_MACRO_CONTENT;
+	}
+}
+
+<NETTE_ATTR_CURLY> {
+	"}" {
+		popState(NETTE_ATTR_VALUE);
+		popState(NETTE_ATTR);
+		popState(SCRIPT_TAG, STYLE_TAG, HTML_TAG);
+		return T_HTML_TAG_ATTR_CURLY_RIGHT;
+	}
+
+	[^}]+ {
 		if (lastNAttrName != null && lastNAttrName.equals("n:syntax")) {
 			String val = yytext().toString().trim();
 			if (val.equals("off")) {
@@ -610,7 +637,7 @@ MACRO_STRING_UQ = [^'\"{}]
 	}
 }
 
-<HTML_TEXT, HTML_OPEN_TAG_OPEN, HTML_CLOSE_TAG_OPEN, HTML_TAG, SCRIPT_TAG, SCRIPT_CDATA, STYLE_TAG, STYLE_CDATA, NETTE_ATTR, NETTE_ATTR_SQ, NETTE_ATTR_DQ, HTML_ATTR, HTML_ATTR_SQ, HTML_ATTR_DQ, HTML_COMMENT, SYNTAX_OFF, SYNTAX_DOUBLE, SYNTAX_OFF_NATTR, SYNTAX_DOUBLE_NATTR> {
+<HTML_TEXT, HTML_OPEN_TAG_OPEN, HTML_CLOSE_TAG_OPEN, HTML_TAG, SCRIPT_TAG, SCRIPT_CDATA, STYLE_TAG, STYLE_CDATA, NETTE_ATTR, NETTE_ATTR_SQ, NETTE_ATTR_DQ, NETTE_ATTR_CURLY, HTML_ATTR, HTML_ATTR_SQ, HTML_ATTR_DQ, HTML_COMMENT, SYNTAX_OFF, SYNTAX_DOUBLE, SYNTAX_OFF_NATTR, SYNTAX_DOUBLE_NATTR> {
 	[^] {
 		// throw new RuntimeException('Lexer failed');
 		return com.intellij.psi.TokenType.BAD_CHARACTER;
