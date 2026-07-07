@@ -106,6 +106,11 @@ public class ParserTest extends BasePsiParsingTestCase {
     }
 
     @Test
+    public void testNAttributeCurly() {
+        doTest(true, true);
+    }
+
+    @Test
     public void testCommentMacro() {
         doTest(true, true);
     }
