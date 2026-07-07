@@ -65,6 +65,16 @@ public class VariableContextTest extends BasePsiParsingTestCase {
     }
 
     @Test
+    public void testNetteAttributeCurly() throws IOException {
+        String name = "NetteAttributeCurly.latte";
+        PsiFile file = parseFile(name, loadFile(name));
+        LattePhpVariable definition = PsiTreeUtil.findChildOfAnyType(file, LattePhpVariable.class);
+        Assert.assertNotNull(definition);
+
+        Assert.assertSame(file, LattePhpVariableUtil.getCurrentContext(definition));
+    }
+
+    @Test
     public void testHtmlTag() throws IOException {
         String name = "HtmlTag.latte";
         PsiFile file = parseFile(name, loadFile(name));
@@ -77,6 +87,26 @@ public class VariableContextTest extends BasePsiParsingTestCase {
     @Test
     public void testNetteAttributeForeach() throws IOException {
         String name = "NetteAttributeForeach.latte";
+        PsiFile file = parseFile(name, loadFile(name));
+        List<LattePhpVariable> variables = collectVariables(file);
+        Assert.assertSame(2, variables.size());
+
+        LattePhpVariable usage = variables.get(0);
+        LattePhpVariable definition = variables.get(1);
+
+        PsiElement context1 = LattePhpVariableUtil.getCurrentContext(usage);
+        Assert.assertSame(file, context1);
+
+        PsiElement context2 = LattePhpVariableUtil.getCurrentContext(definition);
+        LatteHtmlPairTagImpl block = PsiTreeUtil.findChildOfAnyType(file, LatteHtmlPairTagImpl.class);
+        Assert.assertNotNull(block);
+        Assert.assertSame(block, context2);
+    }
+
+
+    @Test
+    public void testNetteAttributeCurlyForeach() throws IOException {
+        String name = "NetteAttributeCurlyForeach.latte";
         PsiFile file = parseFile(name, loadFile(name));
         List<LattePhpVariable> variables = collectVariables(file);
         Assert.assertSame(2, variables.size());
@@ -117,8 +147,52 @@ public class VariableContextTest extends BasePsiParsingTestCase {
     }
 
     @Test
+    public void testNetteAttrCurlyComplexForeach() throws IOException {
+        String name = "NetteAttrCurlyComplexForeach.latte";
+        PsiFile file = parseFile(name, loadFile(name));
+        List<LattePhpVariable> variables = collectVariables(file);
+        Assert.assertSame(3, variables.size());
+
+        LattePhpVariable usage = variables.get(0);
+        LattePhpVariable definition = variables.get(1);
+        LattePhpVariable usage1 = variables.get(2);
+
+        PsiElement context1 = LattePhpVariableUtil.getCurrentContext(usage);
+        Assert.assertSame(file, context1);
+
+        PsiElement context2 = LattePhpVariableUtil.getCurrentContext(definition);
+        PsiElement context3 = LattePhpVariableUtil.getCurrentContext(usage1);
+
+        LatteHtmlPairTagImpl block = PsiTreeUtil.findChildOfAnyType(file, LatteHtmlPairTagImpl.class);
+        Assert.assertNotNull(block);
+        Assert.assertSame(block, context2);
+        Assert.assertSame(block, context3);
+    }
+
+    @Test
     public void testVariableInNFor() throws IOException {
         String name = "VariableInNFor.latte";
+        PsiFile file = parseFile(name, loadFile(name));
+        List<LattePhpVariable> variables = collectVariables(file);
+        Assert.assertSame(4, variables.size());
+
+        LattePhpVariable definition = variables.get(0);
+        LattePhpVariable usage1 = variables.get(1);
+        LattePhpVariable usage2 = variables.get(2);
+        LattePhpVariable usage3 = variables.get(3);
+
+        PsiElement context1 = LattePhpVariableUtil.getCurrentContext(definition);
+        PsiElement context2 = LattePhpVariableUtil.getCurrentContext(usage1);
+        PsiElement context3 = LattePhpVariableUtil.getCurrentContext(usage2);
+        PsiElement context4 = LattePhpVariableUtil.getCurrentContext(usage3);
+        Assert.assertSame(context1, context2);
+        Assert.assertSame(context3, context4);
+        Assert.assertNotSame(file, context1);
+    }
+
+    @Test
+    public void testVariableInNForCurly() throws IOException {
+        String name = "VariableInNForCurly.latte";
         PsiFile file = parseFile(name, loadFile(name));
         List<LattePhpVariable> variables = collectVariables(file);
         Assert.assertSame(4, variables.size());

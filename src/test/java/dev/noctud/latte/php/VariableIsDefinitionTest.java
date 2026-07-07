@@ -64,8 +64,48 @@ public class VariableIsDefinitionTest extends BasePsiParsingTestCase {
     }
 
     @Test
+    public void testDefinitionInNForeachCurly() throws IOException {
+        String name = "DefinitionInNForeachCurly.latte";
+        PsiFile file = parseFile(name, loadFile(name));
+        List<LattePhpVariable> variables = collectVariables(file);
+        Assert.assertSame(3, variables.size());
+
+        LattePhpVariable definition1 = variables.get(0);
+        LattePhpVariable usage = variables.get(1);
+        LattePhpVariable definition2 = variables.get(2);
+
+        Assert.assertTrue(LattePhpVariableUtil.isVariableDefinition(definition1));
+        Assert.assertFalse(LattePhpVariableUtil.isVariableDefinition(usage));
+        Assert.assertTrue(LattePhpVariableUtil.isVariableDefinition(definition2));
+    }
+
+    @Test
     public void testDefinitionInNForeachWithBefore() throws IOException {
         String name = "DefinitionInNForeachWithBefore.latte";
+        PsiFile file = parseFile(name, loadFile(name));
+        List<LattePhpVariable> variables = collectVariables(file);
+        Assert.assertSame(6, variables.size());
+
+        LattePhpVariable definition1 = variables.get(0);
+        LattePhpVariable usage1 = variables.get(1);
+        LattePhpVariable definition2 = variables.get(2);
+
+        LattePhpVariable definition3 = variables.get(3);
+        LattePhpVariable usage2 = variables.get(4);
+        LattePhpVariable definition4 = variables.get(5);
+
+        Assert.assertTrue(LattePhpVariableUtil.isVariableDefinition(definition1));
+        Assert.assertFalse(LattePhpVariableUtil.isVariableDefinition(usage1));
+        Assert.assertTrue(LattePhpVariableUtil.isVariableDefinition(definition2));
+
+        Assert.assertTrue(LattePhpVariableUtil.isVariableDefinition(definition3));
+        Assert.assertFalse(LattePhpVariableUtil.isVariableDefinition(usage2));
+        Assert.assertTrue(LattePhpVariableUtil.isVariableDefinition(definition4));
+    }
+
+    @Test
+    public void testDefinitionInNForeachCurlyWithBefore() throws IOException {
+        String name = "DefinitionInNForeachCurlyWithBefore.latte";
         PsiFile file = parseFile(name, loadFile(name));
         List<LattePhpVariable> variables = collectVariables(file);
         Assert.assertSame(6, variables.size());

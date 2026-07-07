@@ -135,6 +135,11 @@ public class PhpVariableTypeTest extends BasePsiParsingTestCase {
     }
 
     @Test
+    public void testNForeachCurlyArrowDefinition() throws IOException {
+        assertArrowForeachDefinition("NForeachCurlyArrowDefinition.latte");
+    }
+
+    @Test
     public void testForeachNestedArrayDefinition() throws IOException {
         String name = "ForeachNestedArrayDefinition.latte";
         PsiFile file = parseFile(name, loadFile(name));
