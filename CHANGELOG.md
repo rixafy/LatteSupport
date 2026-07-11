@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.8.0] - 2026-07-11
+
+### Added
+
+- Support for the curly-brace syntax in `n:` attributes introduced in Latte 3.1, e.g. `<a n:href={Home:default}>`
+- Latte 3.0/3.1 built-in filters: `clamp`, `column`, `commas`, `filter`, `firstLower`, `group`, `limit`, `localDate`, `stripTags`, `toggle`, `translate`
+- Latte built-in functions: `group`, `hasBlock`, `hasTemplate`
+- `{exitIf}` and `{translate}` tags, plus the `n:elseif` and `n:translate` attributes
+
 ## [1.7.4] - 2026-05-22
 
 ### Fixed
