@@ -68,6 +68,7 @@ public class LatteDefaultConfiguration {
 
     private void loadDefaultLatteTags() {
         addLatteTag(filtersTag("_", LatteTagSettings.Type.AUTO_EMPTY, requiredArgument("expression", "string", LatteArgumentSettings.Type.PHP_EXPRESSION)));
+        addLatteTag(multiTag("translate", LatteTagSettings.Type.PAIR, repeatableArgument("arguments", LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(filtersTag("=", LatteTagSettings.Type.UNPAIRED, requiredArgument("expression", "string", LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(filtersMultiTag("block", LatteTagSettings.Type.AUTO_EMPTY, requiredArgument("name", "string", LatteArgumentSettings.Type.PHP_EXPRESSION, LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.PHP_IDENTIFIER)));
         addLatteTag(tag("breakIf", LatteTagSettings.Type.UNPAIRED, requiredArgument("condition", "bool", LatteArgumentSettings.Type.PHP_CONDITION)));
@@ -83,7 +84,7 @@ public class LatteDefaultConfiguration {
         addLatteTag(tag("do", LatteTagSettings.Type.UNPAIRED, requiredArgument("expression", LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(tag("dump", LatteTagSettings.Type.UNPAIRED, requiredArgument("expression", LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(tag("else", LatteTagSettings.Type.UNPAIRED_ATTR));
-        addLatteTag(tag("elseif", LatteTagSettings.Type.UNPAIRED, requiredArgument("condition", "bool", LatteArgumentSettings.Type.PHP_CONDITION)));
+        addLatteTag(tag("elseif", LatteTagSettings.Type.UNPAIRED_ATTR, requiredArgument("condition", "bool", LatteArgumentSettings.Type.PHP_CONDITION)));
         addLatteTag(tag("elseifset", LatteTagSettings.Type.UNPAIRED, requiredArgument("var", "string", LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.BLOCK)));
         addLatteTag(tag("extends", LatteTagSettings.Type.UNPAIRED, requiredArgument("file", "string", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.VARIABLE, LatteArgumentSettings.Type.PHP_EXPRESSION, LatteArgumentSettings.Type.NONE)));
         addLatteTag(tag("first", LatteTagSettings.Type.PAIR, argument("width", "int", LatteArgumentSettings.Type.PHP_IDENTIFIER, LatteArgumentSettings.Type.PHP_EXPRESSION)));
@@ -116,6 +117,7 @@ public class LatteDefaultConfiguration {
         addLatteTag(tag("tag", LatteTagSettings.Type.ATTR_ONLY, requiredRepeatableArgument("expression", "string", LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(tag("ifchanged", LatteTagSettings.Type.PAIR, requiredRepeatableArgument("expression", LatteArgumentSettings.Type.PHP_EXPRESSION)));
         addLatteTag(tag("skipIf", LatteTagSettings.Type.UNPAIRED, requiredArgument("condition", "bool", LatteArgumentSettings.Type.PHP_CONDITION)));
+        addLatteTag(tag("exitIf", LatteTagSettings.Type.UNPAIRED, requiredArgument("condition", "bool", LatteArgumentSettings.Type.PHP_CONDITION)));
         addLatteTag(tag("var", LatteTagSettings.Type.UNPAIRED, requiredRepeatableArgument("variable", LatteArgumentSettings.Type.VARIABLE_DEFINITION_EXPRESSION)));
         addLatteTag(tag("trace", LatteTagSettings.Type.UNPAIRED));
         addLatteTag(tag("varPrint", LatteTagSettings.Type.UNPAIRED, "all"));
@@ -176,6 +178,19 @@ public class LatteDefaultConfiguration {
         addLatteFilter("slice", ":(int $start, int $length = null, bool $preserveKeys = false)", "extracts a slice of an array or a string", ":");
         addLatteFilter("spaceless", "removes whitespace");
         addLatteFilter("split", ":(string $separator = '')", "splits a string by the given delimiter");
+
+        // Filters added in Latte 3.0 / 3.1
+        addLatteFilter("clamp", ":(int|float $min, int|float $max)", "returns value clamped to the inclusive range of min and max", ":");
+        addLatteFilter("column", ":($columnKey, $indexKey = null)", "returns the values from a single column of the input array", ":");
+        addLatteFilter("commas", ":($lastGlue = null)", "joins array elements with a comma and space");
+        addLatteFilter("filter", ":(callable $predicate)", "filters elements according to a predicate, preserving keys", ":");
+        addLatteFilter("firstLower", "makes the first letter lower case");
+        addLatteFilter("group", ":($by)", "groups data according to various criteria", ":");
+        addLatteFilter("limit", ":(int $length)", "limits the length of an array, string or iterator", ":");
+        addLatteFilter("localDate", ":($format = null, $date = null, $time = null)", "formats date and time according to the locale");
+        addLatteFilter("stripTags", "removes HTML tags, keeping HTML entities");
+        addLatteFilter("toggle", "controls the presence of an attribute based on a boolean value");
+        addLatteFilter("translate", ":(...$args)", "translates the value using the configured translator");
     }
 
     private void loadDefaultLatteFunctions() {
@@ -186,6 +201,9 @@ public class LatteDefaultConfiguration {
         addLatteFunction("last", "mixed", "(string|array $value)", "returns last element of array or character of string");
         addLatteFunction("odd", "bool", "(int $value)", "checks if the given number is odd");
         addLatteFunction("slice", "string|array", "(string|array $value, int $start, int $length = null, bool $preserveKeys = false)", "extracts a slice of an array or a string");
+        addLatteFunction("group", "iterable", "(iterable $values, string|int|Closure $by)", "groups data according to various criteria");
+        addLatteFunction("hasBlock", "bool", "(string $name)", "checks if a block of the given name exists");
+        addLatteFunction("hasTemplate", "bool", "(string $name)", "checks if a template of the given name exists");
     }
 
     private void loadDefaultNetteApplicationTags() {
