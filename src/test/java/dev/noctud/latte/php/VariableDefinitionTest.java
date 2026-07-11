@@ -120,6 +120,47 @@ public class VariableDefinitionTest extends BasePsiParsingTestCase {
     }
 
     @Test
+    public void testBlockWithNAttrCurly() throws IOException {
+        String name = "BlockWithNAttrCurly.latte";
+        PsiFile file = parseFile(name, loadFile(name));
+        List<LattePhpVariable> variables = collectVariables(file);
+        Assert.assertSame(6, variables.size());
+
+        LattePhpVariable definition1 = variables.get(0);
+        LattePhpVariable usage1a = variables.get(1);
+        LattePhpVariable usage1b = variables.get(2);
+        LattePhpVariable definition2 = variables.get(3);
+        LattePhpVariable usage2a = variables.get(4);
+        LattePhpVariable usage2b = variables.get(5);
+
+        List<LattePhpCachedVariable> definitions1 = getVariableDefinition(definition1);
+        Assert.assertSame(0, definitions1.size());
+
+        List<LattePhpCachedVariable> definitions2 = getVariableDefinition(usage1a);
+        Assert.assertSame(1, definitions2.size());
+        Assert.assertSame(definition1, definitions2.get(0).getElement());
+        Assert.assertFalse(definitions2.get(0).isProbablyUndefined());
+
+        List<LattePhpCachedVariable> definitions3 = getVariableDefinition(usage1b);
+        Assert.assertSame(1, definitions3.size());
+        Assert.assertSame(definition1, definitions3.get(0).getElement());
+        Assert.assertTrue(definitions3.get(0).isProbablyUndefined());
+
+        List<LattePhpCachedVariable> definitions4 = getVariableDefinition(definition2);
+        Assert.assertSame(0, definitions4.size());
+
+        List<LattePhpCachedVariable> definitions5 = getVariableDefinition(usage2a);
+        Assert.assertSame(1, definitions5.size());
+        Assert.assertSame(definition2, definitions5.get(0).getElement());
+        Assert.assertFalse(definitions5.get(0).isProbablyUndefined());
+
+        List<LattePhpCachedVariable> definitions6 = getVariableDefinition(usage2b);
+        Assert.assertSame(1, definitions6.size());
+        Assert.assertSame(definition2, definitions6.get(0).getElement());
+        Assert.assertTrue(definitions6.get(0).isProbablyUndefined());
+    }
+
+    @Test
     public void testBlockInIf() throws IOException {
         String name = "BlockInIf.latte";
         PsiFile file = parseFile(name, loadFile(name));
@@ -163,6 +204,35 @@ public class VariableDefinitionTest extends BasePsiParsingTestCase {
     @Test
     public void testVariableInNFor() throws IOException {
         String name = "VariableInNFor.latte";
+        PsiFile file = parseFile(name, loadFile(name));
+        List<LattePhpVariable> variables = collectVariables(file);
+        Assert.assertSame(4, variables.size());
+
+        LattePhpVariable definition = variables.get(0);
+        LattePhpVariable usage1 = variables.get(1);
+        LattePhpVariable usage2 = variables.get(2);
+        LattePhpVariable usage3 = variables.get(3);
+
+        List<LattePhpCachedVariable> definitions = getVariableDefinition(definition);
+        Assert.assertSame(0, definitions.size());
+
+        List<LattePhpCachedVariable> definitions1 = getVariableDefinition(usage1);
+        Assert.assertSame(1, definitions1.size());
+        Assert.assertSame(definition, definitions1.get(0).getElement());
+        Assert.assertFalse(definitions1.get(0).isProbablyUndefined());
+
+        List<LattePhpCachedVariable> definitions2 = getVariableDefinition(usage2);
+        Assert.assertSame(1, definitions2.size());
+        Assert.assertFalse(definitions2.get(0).isProbablyUndefined());
+
+        List<LattePhpCachedVariable> definitions3 = getVariableDefinition(usage3);
+        Assert.assertSame(1, definitions3.size());
+        Assert.assertFalse(definitions3.get(0).isProbablyUndefined());
+    }
+
+    @Test
+    public void testVariableInNForCurly() throws IOException {
+        String name = "VariableInNForCurly.latte";
         PsiFile file = parseFile(name, loadFile(name));
         List<LattePhpVariable> variables = collectVariables(file);
         Assert.assertSame(4, variables.size());

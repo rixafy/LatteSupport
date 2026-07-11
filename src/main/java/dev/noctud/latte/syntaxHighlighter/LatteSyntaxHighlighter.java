@@ -55,7 +55,8 @@ public class LatteSyntaxHighlighter extends SyntaxHighlighterBase {
         if (token == LatteTypes.T_HTML_TAG_NATTR_NAME) {
             return pack(HTML_NATTR_NAME);
 
-        } else if (token == LatteTypes.T_MACRO_OPEN_TAG_OPEN || token == LatteTypes.T_MACRO_CLOSE_TAG_OPEN || token == LatteTypes.T_MACRO_TAG_CLOSE || token == LatteTypes.T_MACRO_TAG_CLOSE_EMPTY) {
+        } else if (token == LatteTypes.T_MACRO_OPEN_TAG_OPEN || token == LatteTypes.T_MACRO_CLOSE_TAG_OPEN || token == LatteTypes.T_MACRO_TAG_CLOSE || token == LatteTypes.T_MACRO_TAG_CLOSE_EMPTY
+                || token == LatteTypes.T_HTML_TAG_ATTR_CURLY_LEFT || token == LatteTypes.T_HTML_TAG_ATTR_CURLY_RIGHT) {
             return pack(MACRO_DELIMITERS);
 
         } else if (token == LatteTypes.T_MACRO_NAME || token == LatteTypes.T_MACRO_SHORTNAME || token == LatteTypes.T_MACRO_NOESCAPE) {

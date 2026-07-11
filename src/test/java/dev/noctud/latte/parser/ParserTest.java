@@ -36,6 +36,11 @@ public class ParserTest extends BasePsiParsingTestCase {
     }
 
     @Test
+    public void testNBlockCurly() {
+        doTest(true, true);
+    }
+
+    @Test
     public void testUnknownInIf() {
         doTest(true, true);
     }
@@ -102,6 +107,11 @@ public class ParserTest extends BasePsiParsingTestCase {
 
     @Test
     public void testNAttribute() {
+        doTest(true, true);
+    }
+
+    @Test
+    public void testNAttributeCurly() {
         doTest(true, true);
     }
 
