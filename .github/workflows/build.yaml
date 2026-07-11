@@ -39,6 +39,7 @@ jobs:
             phpstorm:2023.1
             phpstorm:2024.1
             phpstorm:2025.1
+            phpstorm:2026.1
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
